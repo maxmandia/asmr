@@ -1,6 +1,15 @@
-import Head from "next/head";
-import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
+import BottomNavigation from "~/components/BottomNavigation";
 
 export default function Home() {
-  return <></>;
+  const user = useUser();
+  if (!user.isLoaded) {
+    return <div>Loading...</div>;
+  }
+
+  // if (!user.isSignedIn) {
+  //   return <BottomNavigation />;
+  // }
+
+  return <BottomNavigation />;
 }
