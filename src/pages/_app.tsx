@@ -17,7 +17,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
-    <div className="bg-background h-screen">
+    <div className="text-text h-screen bg-background">
       <ClerkProvider {...pageProps}>
         {getLayout(<Component {...pageProps} />)}
       </ClerkProvider>
