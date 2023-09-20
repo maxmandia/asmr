@@ -27,7 +27,7 @@ function BottomNavigation() {
       <Link className="p-4" href={"/notifications"}>
         <BellIcon height={25} width={25} color="white" />
       </Link>
-      <Link className="p-4" href={"/posts"}>
+      <Link className="p-4" href={"/post"}>
         <PlusCircledIcon height={25} width={25} color="white" />
       </Link>
       <Link className="p-4" href={"/messages"}>

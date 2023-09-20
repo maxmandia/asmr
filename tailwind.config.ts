@@ -6,7 +6,9 @@ export default {
     extend: {
       colors: {
         background: "#161617",
+        primary: "#9C4CD0",
         text: "white",
+        input: "#272727",
       },
     },
   },
