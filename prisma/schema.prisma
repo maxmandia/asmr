@@ -19,7 +19,7 @@ model User {
 }
 
 model Post {
-  id             String     @id @unique
+  id             Int        @id @default(autoincrement())
   image          String?    @unique
   video          String?    @unique
   caption        String?    
