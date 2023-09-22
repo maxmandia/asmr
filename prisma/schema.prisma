@@ -11,8 +11,19 @@ generator client {
   provider = "prisma-client-js"
 }
 model User {
-  id             String   @id @unique
-  email          String   @unique
+  id             String     @id @unique
+  email          String     @unique
   first_name     String?
   last_name      String?
+  posts          Post[]
+}
+
+model Post {
+  id             String     @id @unique
+  image          String?    @unique
+  video          String?    @unique
+  caption        String?    
+  userId         String     
+  user           User       @relation(fields: [userId], references: [id])
+  @@index([userId])
 }
