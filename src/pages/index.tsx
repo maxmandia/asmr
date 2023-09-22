@@ -11,15 +11,17 @@ export default function Home() {
   }
 
   return (
-    <div className="flex items-center justify-between px-5 py-7">
-      <div>[ASMR]</div>
-      <div className="flex items-center justify-center gap-2">
-        <MagnifyingGlassIcon height={25} width={25} color="white" />
-        {user.isSignedIn ? (
-          <UserButton afterSignOutUrl="/sign-in" />
-        ) : (
-          <SignInButton afterSignInUrl="/" />
-        )}
+    <div className="flex items-center justify-between px-5 py-7 md:w-[60%] md:p-0">
+      <div className="flex w-full items-center justify-between">
+        <h2>[ASMR]</h2>
+        <div className="flex items-center justify-center gap-2 md:gap-5">
+          <MagnifyingGlassIcon height={25} width={25} color="white" />
+          {user.isSignedIn ? (
+            <UserButton afterSignOutUrl="/sign-in" />
+          ) : (
+            <SignInButton afterSignInUrl="/" />
+          )}
+        </div>
       </div>
     </div>
   );

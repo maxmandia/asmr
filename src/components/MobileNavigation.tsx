@@ -8,7 +8,7 @@ import {
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 
-function BottomNavigation() {
+function MobileNavigation() {
   const user = useUser();
 
   if (!user.isLoaded) {
@@ -40,4 +40,4 @@ function BottomNavigation() {
   );
 }
 
-export default BottomNavigation;
+export default MobileNavigation;

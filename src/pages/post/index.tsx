@@ -46,7 +46,7 @@ export default function Page() {
   };
 
   return (
-    <div className="flex flex-col px-5 py-7">
+    <div className="flex flex-col px-5 py-7 md:w-[60%]">
       <div className="flex items-start justify-between ">
         <div className="flex items-center gap-3">
           <UserProfileImage />
@@ -61,9 +61,9 @@ export default function Page() {
               startUpload(file);
             }
           }}
-          className="rounded-[6px] bg-primary px-[20px] py-[10px] text-[14px] font-medium"
+          className="hover:bg-primary_hover rounded-[6px] bg-primary px-[20px] py-[10px] text-[14px] font-medium"
         >
-          post!
+          share!
         </button>
       </div>
       <div className="py-5">
