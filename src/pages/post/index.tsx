@@ -4,17 +4,19 @@ import UserProfileImage from "~/components/UserProfileImage";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { ImageIcon } from "@radix-ui/react-icons";
 import { useUploadThing } from "~/lib/utils/uploadthing";
-import { UploadFileResponse } from "uploadthing/client";
 import { useAddTimelineData } from "~/hooks/useTimelineData";
 import { useUser } from "@clerk/nextjs";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import { determineFileType } from "~/lib/helpers/determine-file-type";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+
 export default function Page() {
   const router = useRouter();
   const user = useUser();
   const [file, setFile] = useState<File[] | null>(null);
   const [caption, setCaption] = useState<string>("");
+  const [isPaid, setIsPaid] = useState<boolean>(true);
   const { mutate } = useAddTimelineData(
     () => {
       toast.dismiss();
@@ -65,6 +67,7 @@ export default function Page() {
     // If file exists, try to upload and determine its type
     if (file) {
       const uploadResponse = await startUpload(file);
+      console.log(uploadResponse[0]);
 
       // If upload fails, return early
       if (!uploadResponse || !uploadResponse[0]) {
@@ -80,6 +83,8 @@ export default function Page() {
           userId: user.user.id,
           caption,
           video: uploadResponse[0].url,
+          fileKey: uploadResponse[0].key,
+          isPaid,
         });
         return;
       }
@@ -89,6 +94,8 @@ export default function Page() {
           userId: user.user.id,
           caption,
           image: uploadResponse[0].url,
+          fileKey: uploadResponse[0].key,
+          isPaid,
         });
         return;
       }
@@ -98,6 +105,7 @@ export default function Page() {
     mutate({
       userId: user.user.id,
       caption,
+      isPaid,
     });
   }
 
@@ -107,16 +115,42 @@ export default function Page() {
       <div className="flex items-start justify-between ">
         <div className="flex items-center gap-3">
           <UserProfileImage />
-          <button className="flex items-center gap-1 rounded-[6px] bg-input px-[10px] py-[5px]">
-            <span className="text-[14px] font-medium">subscribers only</span>
-            <ChevronDownIcon height={20} width={20} color="white" />
-          </button>
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger className="hover:bg-input_hover flex  w-[155px] items-center justify-between gap-1 rounded-[6px] bg-input px-[10px] py-[5px] text-center">
+              <span className="text-[14px] font-medium">
+                {isPaid ? "subscribers only" : "free"}
+              </span>
+              <ChevronDownIcon height={20} width={20} color="white" />
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Portal>
+              <DropdownMenu.Content className="mt-2 w-[150px] rounded-[6px] bg-input">
+                <DropdownMenu.Group>
+                  <DropdownMenu.Item
+                    onClick={() => setIsPaid(true)}
+                    className="hover:bg-input_hover rounded-[6px] p-2"
+                  >
+                    <span className="text-[14px] font-medium text-text">
+                      subscribers only
+                    </span>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item
+                    onClick={() => setIsPaid(false)}
+                    className="hover:bg-input_hover rounded-[6px] p-2"
+                  >
+                    <span className="text-[14px] font-medium text-text">
+                      free
+                    </span>
+                  </DropdownMenu.Item>
+                </DropdownMenu.Group>
+              </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+          </DropdownMenu.Root>
         </div>
         <button
           onClick={createPost}
           className="hover:bg-primary_hover rounded-[6px] bg-primary px-[20px] py-[10px] text-[14px] font-medium"
         >
-          share!
+          create!
         </button>
       </div>
       <div className="py-5">
@@ -124,13 +158,13 @@ export default function Page() {
           value={caption}
           onChange={(e) => setCaption(e.target.value)}
           className="max-h-[500px] min-h-[200px] w-full resize-none bg-transparent text-white focus:outline-none"
-          placeholder="Share something :)"
+          placeholder="*whispers* what's on your mind?"
         />
       </div>
       <div className="my-4 h-[1px] w-full bg-input" />
       <button
         onClick={openFileDialog}
-        className="flex w-fit items-center gap-1 rounded-[6px] bg-input px-[15px] py-[5px]"
+        className="hover:bg-input_hover flex w-fit items-center gap-1 rounded-[6px] bg-input px-[15px] py-[5px]"
       >
         <input
           type="file"
@@ -138,7 +172,7 @@ export default function Page() {
           style={{ display: "none" }}
           onChange={handleFileChange}
         />
-        <ImageIcon height={20} width={20} color="white" />
+        <ImageIcon height={15} width={15} color="white" />
         <span className="text-medium">upload media</span>
       </button>
     </div>

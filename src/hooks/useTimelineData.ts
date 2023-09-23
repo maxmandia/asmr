@@ -2,8 +2,8 @@ import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import type { Post } from "@prisma/client";
 
-type RequiredFields = "userId" | "caption";
-type OptionalFields = "video" | "image" | "caption";
+type RequiredFields = "userId" | "caption" | "isPaid";
+type OptionalFields = "video" | "image" | "caption" | "fileKey";
 
 type PostInfo = Pick<Partial<Post>, OptionalFields> &
   Pick<Post, RequiredFields>;

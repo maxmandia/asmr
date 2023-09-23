@@ -7,7 +7,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { userId, caption, image, video }: Post = req.body;
+  const { userId, caption, image, video, fileKey }: Post = req.body;
 
   try {
     await prisma.post.create({
@@ -16,6 +16,7 @@ export default async function handler(
         caption,
         image,
         video,
+        fileKey,
       },
     });
     return res.status(200).json({ message: "Post created successfully" });

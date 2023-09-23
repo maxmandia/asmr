@@ -11,28 +11,28 @@ function DesktopNavigation() {
   return (
     <div className="min-w-[200px]">
       <Link
-        className="hover:bg-button_hover flex items-center gap-5 rounded-[12px] p-4"
+        className="hover:bg-card_hover flex items-center gap-5 rounded-[12px] p-4"
         href={"/"}
       >
         <HomeIcon height={25} width={25} color="white" />
         <span>Home</span>
       </Link>
       <Link
-        className="hover:bg-button_hover flex items-center gap-5 rounded-[12px] p-4"
+        className="hover:bg-card_hover flex items-center gap-5 rounded-[12px] p-4"
         href={"/notifications"}
       >
         <BellIcon height={25} width={25} color="white" />
         <span>Notifications</span>
       </Link>
       <Link
-        className="hover:bg-button_hover flex items-center gap-5 rounded-[12px] p-4"
+        className="hover:bg-card_hover flex items-center gap-5 rounded-[12px] p-4"
         href={"/messages"}
       >
         <ChatBubbleIcon height={25} width={25} color="white" />
         <span>Messages</span>
       </Link>
       <Link
-        className="hover:bg-button_hover flex items-center gap-5 rounded-[12px] p-4"
+        className="hover:bg-card_hover flex items-center gap-5 rounded-[12px] p-4"
         href={"/"}
       >
         <HomeIcon height={25} width={25} color="white" />

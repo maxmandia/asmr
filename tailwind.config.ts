@@ -8,9 +8,10 @@ export default {
         background: "#161617",
         primary: "#9C4CD0",
         primary_hover: "#B777E1",
-        button_hover: "#262626",
+        card_hover: "#262626",
         text: "white",
         input: "#272727",
+        input_hover: "#2F2F2F",
       },
       screens: {
         md: "540px",
