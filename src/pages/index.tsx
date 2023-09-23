@@ -4,20 +4,21 @@ import Layout from "~/components/Layout";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { UserButton, SignInButton } from "@clerk/nextjs";
 import { useTimelineData } from "~/hooks/useTimelineData";
+import UserPost from "~/components/UserPost";
 export default function Home() {
   const user = useUser();
-  const { data } = useTimelineData();
+  const { data, isLoading } = useTimelineData();
 
   useEffect(() => {
     console.log(data);
   }, [data]);
 
-  if (!user.isLoaded) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="flex items-center justify-between px-5 py-7 md:w-[60%] md:p-0">
+    <div className="px-5 py-7 md:w-[60%] md:p-0">
       <div className="flex w-full items-center justify-between">
         <h2>[ASMR]</h2>
         <div className="flex items-center justify-center gap-2 md:gap-5">
@@ -29,6 +30,7 @@ export default function Home() {
           )}
         </div>
       </div>
+      {data?.data.map((post) => <UserPost key={post.id} {...post} />)}
     </div>
   );
 }

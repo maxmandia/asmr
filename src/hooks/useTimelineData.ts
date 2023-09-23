@@ -1,6 +1,7 @@
 import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import type { Post } from "@prisma/client";
+import type { AxiosResponse } from "axios";
 
 type RequiredFields = "userId" | "caption" | "isPaid";
 type OptionalFields = "video" | "image" | "caption" | "fileKey";
@@ -20,7 +21,7 @@ export const useTimelineData = (
   onSuccess?: () => void,
   onError?: () => void,
 ) => {
-  return useQuery("timeline", fetchTimeline, {
+  return useQuery<AxiosResponse<Post[]>>("timeline", fetchTimeline, {
     onSuccess,
     onError,
   });

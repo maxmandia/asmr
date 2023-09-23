@@ -8,7 +8,11 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    const post: Post[] = await prisma.post.findMany();
+    const post = await prisma.user.findMany({
+      include: {
+        posts: true,
+      },
+    });
     res.json(post);
   } catch (error: any) {
     logError("get-timeline", error.message, error);
