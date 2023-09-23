@@ -5,9 +5,13 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { ImageIcon } from "@radix-ui/react-icons";
 import { useUploadThing } from "~/lib/utils/uploadthing";
 import { UploadFileResponse } from "uploadthing/client";
+import { useAddTimelineData } from "~/hooks/useTimelineData";
+import { useUser } from "@clerk/nextjs";
 export default function Page() {
+  const user = useUser();
+  const { mutate } = useAddTimelineData();
   const [file, setFile] = useState<File[] | null>(null);
-
+  const [caption, setCaption] = useState<string>("");
   const {
     startUpload,
     permittedFileInfo = {
@@ -45,10 +49,22 @@ export default function Page() {
     }
   };
 
-  function createPost() {
+  async function createPost() {
+    if (!user?.user?.id) {
+      return;
+    }
+
+    if (!file && caption === "") {
+      return;
+    }
+
     if (file) {
-      let uploadResponse = startUpload(file);
+      let uploadResponse = await startUpload(file);
     } else {
+      mutate({
+        userId: user.user.id,
+        caption,
+      });
     }
   }
 
@@ -71,6 +87,8 @@ export default function Page() {
       </div>
       <div className="py-5">
         <textarea
+          value={caption}
+          onChange={(e) => setCaption(e.target.value)}
           className="max-h-[500px] min-h-[200px] w-full resize-none bg-transparent text-white focus:outline-none"
           placeholder="Share something :)"
         />
