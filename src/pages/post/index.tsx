@@ -4,7 +4,7 @@ import UserProfileImage from "~/components/UserProfileImage";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { ImageIcon } from "@radix-ui/react-icons";
 import { useUploadThing } from "~/lib/utils/uploadthing";
-
+import { UploadFileResponse } from "uploadthing/client";
 export default function Page() {
   const [file, setFile] = useState<File[] | null>(null);
 
@@ -19,14 +19,14 @@ export default function Page() {
       },
     },
   } = useUploadThing("imageUploader", {
-    onClientUploadComplete: () => {
-      alert("uploaded successfully!");
+    onClientUploadComplete: (response: UploadFileResponse[] | undefined) => {
+      console.log("upload complete");
     },
     onUploadError: () => {
       alert("error occurred while uploading");
     },
     onUploadBegin: () => {
-      alert("upload has begun");
+      console.log("...uploading");
     },
   });
 
@@ -45,6 +45,13 @@ export default function Page() {
     }
   };
 
+  function createPost() {
+    if (file) {
+      let uploadResponse = startUpload(file);
+    } else {
+    }
+  }
+
   return (
     <div className="flex flex-col px-5 py-7 md:w-[60%]">
       <div className="flex items-start justify-between ">
@@ -56,11 +63,7 @@ export default function Page() {
           </button>
         </div>
         <button
-          onClick={() => {
-            if (file) {
-              startUpload(file);
-            }
-          }}
+          onClick={createPost}
           className="hover:bg-primary_hover rounded-[6px] bg-primary px-[20px] py-[10px] text-[14px] font-medium"
         >
           share!
