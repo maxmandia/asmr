@@ -38,7 +38,7 @@ export default async function handler(
 
     const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
 
-    let evt: Event | null = wh.verify(
+    const evt: Event | null = wh.verify(
       JSON.stringify(payload),
       heads as IncomingHttpHeaders & WebhookRequiredHeaders,
     ) as Event;

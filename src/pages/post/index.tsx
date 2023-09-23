@@ -23,7 +23,7 @@ export default function Page() {
       toast.success("post created");
       setTimeout(() => {
         toast.dismiss();
-        router.push("/");
+        router.push("/").catch((err) => console.log(err));
       }, 1000);
     },
     () => toast.error("error occurred creating post"),
@@ -67,7 +67,10 @@ export default function Page() {
     // If file exists, try to upload and determine its type
     if (file) {
       const uploadResponse = await startUpload(file);
-      console.log(uploadResponse[0]);
+
+      if (!uploadResponse) {
+        return;
+      }
 
       // If upload fails, return early
       if (!uploadResponse || !uploadResponse[0]) {
