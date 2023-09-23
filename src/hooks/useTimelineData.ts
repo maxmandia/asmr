@@ -26,6 +26,12 @@ export const useTimelineData = (
   });
 };
 
-export const useAddTimelineData = () => {
-  return useMutation(createPost);
+export const useAddTimelineData = (
+  onSuccess?: () => void,
+  onError?: () => void,
+) => {
+  return useMutation(createPost, {
+    onSuccess,
+    onError,
+  });
 };

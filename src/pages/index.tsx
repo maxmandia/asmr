@@ -6,7 +6,7 @@ import { UserButton, SignInButton } from "@clerk/nextjs";
 import { useTimelineData } from "~/hooks/useTimelineData";
 export default function Home() {
   const user = useUser();
-  const { data, error } = useTimelineData();
+  const { data } = useTimelineData();
 
   useEffect(() => {
     console.log(data);

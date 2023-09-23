@@ -7,30 +7,32 @@ import { useUploadThing } from "~/lib/utils/uploadthing";
 import { UploadFileResponse } from "uploadthing/client";
 import { useAddTimelineData } from "~/hooks/useTimelineData";
 import { useUser } from "@clerk/nextjs";
+import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/router";
+import { determineFileType } from "~/lib/helpers/determine-file-type";
 export default function Page() {
+  const router = useRouter();
   const user = useUser();
-  const { mutate } = useAddTimelineData();
   const [file, setFile] = useState<File[] | null>(null);
   const [caption, setCaption] = useState<string>("");
-  const {
-    startUpload,
-    permittedFileInfo = {
-      config: {
-        video: {
-          maxFileCount: 1,
-          maxFileSize: "4GB",
-        },
-      },
+  const { mutate } = useAddTimelineData(
+    () => {
+      toast.dismiss();
+      toast.success("post created");
+      setTimeout(() => {
+        toast.dismiss();
+        router.push("/");
+      }, 1000);
     },
-  } = useUploadThing("imageUploader", {
-    onClientUploadComplete: (response: UploadFileResponse[] | undefined) => {
-      console.log("upload complete");
-    },
-    onUploadError: () => {
-      alert("error occurred while uploading");
+    () => toast.error("error occurred creating post"),
+  );
+  const { startUpload } = useUploadThing("imageUploader", {
+    onUploadError: (error) => {
+      toast.dismiss();
+      toast.error("error occurred uploading file");
     },
     onUploadBegin: () => {
-      console.log("...uploading");
+      toast.loading("...uploading");
     },
   });
 
@@ -50,26 +52,58 @@ export default function Page() {
   };
 
   async function createPost() {
+    // Check if user exists
     if (!user?.user?.id) {
       return;
     }
 
+    // Check if either a file or a caption exists
     if (!file && caption === "") {
       return;
     }
 
+    // If file exists, try to upload and determine its type
     if (file) {
-      let uploadResponse = await startUpload(file);
-    } else {
-      mutate({
-        userId: user.user.id,
-        caption,
-      });
+      const uploadResponse = await startUpload(file);
+
+      // If upload fails, return early
+      if (!uploadResponse || !uploadResponse[0]) {
+        return;
+      }
+
+      // Determine the file type (the function should now return the type)
+      const fileType = determineFileType(uploadResponse[0].name);
+
+      // Based on the file type, mutate accordingly
+      if (fileType === "video") {
+        mutate({
+          userId: user.user.id,
+          caption,
+          video: uploadResponse[0].url,
+        });
+        return;
+      }
+
+      if (fileType === "image") {
+        mutate({
+          userId: user.user.id,
+          caption,
+          image: uploadResponse[0].url,
+        });
+        return;
+      }
     }
+
+    // If there is no file but a caption exists, proceed with only the caption
+    mutate({
+      userId: user.user.id,
+      caption,
+    });
   }
 
   return (
     <div className="flex flex-col px-5 py-7 md:w-[60%]">
+      <Toaster />
       <div className="flex items-start justify-between ">
         <div className="flex items-center gap-3">
           <UserProfileImage />

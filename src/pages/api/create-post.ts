@@ -18,8 +18,9 @@ export default async function handler(
         video,
       },
     });
-    res.status(200);
+    return res.status(200).json({ message: "Post created successfully" });
   } catch (error: any) {
     logError("create-post", error.message, error);
+    return res.status(500).json({ message: "Something went wrong" });
   }
 }
