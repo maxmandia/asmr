@@ -1,10 +1,16 @@
+import { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import Layout from "~/components/Layout";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { UserButton, SignInButton } from "@clerk/nextjs";
+import { useTimelineData } from "~/hooks/useTimelineData";
 export default function Home() {
   const user = useUser();
-  console.log(user);
+  const { data, error } = useTimelineData();
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   if (!user.isLoaded) {
     return <div>Loading...</div>;

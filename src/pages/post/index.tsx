@@ -5,7 +5,11 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { ImageIcon } from "@radix-ui/react-icons";
 import { useUploadThing } from "~/lib/utils/uploadthing";
 import { UploadFileResponse } from "uploadthing/client";
+import { useAddTimelineData } from "~/hooks/useTimelineData";
+import { useUser } from "@clerk/nextjs";
 export default function Page() {
+  const user = useUser();
+  const { mutate } = useAddTimelineData();
   const [file, setFile] = useState<File[] | null>(null);
   const [caption, setCaption] = useState<string>("");
   const {
@@ -46,7 +50,13 @@ export default function Page() {
   };
 
   async function createPost() {
-    if (!file || caption === "") {
+    if (!user?.user?.id) {
+      console.log("no user id");
+      return;
+    }
+
+    if (!file && caption === "") {
+      console.log("no file or caption");
       return;
     }
 
@@ -54,6 +64,10 @@ export default function Page() {
       let uploadResponse = await startUpload(file);
       console.log(uploadResponse);
     } else {
+      mutate({
+        userId: user.user.id,
+        caption,
+      });
     }
   }
 
