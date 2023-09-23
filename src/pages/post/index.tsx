@@ -51,18 +51,15 @@ export default function Page() {
 
   async function createPost() {
     if (!user?.user?.id) {
-      console.log("no user id");
       return;
     }
 
     if (!file && caption === "") {
-      console.log("no file or caption");
       return;
     }
 
     if (file) {
       let uploadResponse = await startUpload(file);
-      console.log(uploadResponse);
     } else {
       mutate({
         userId: user.user.id,
