@@ -3,11 +3,10 @@ import { useUser } from "@clerk/nextjs";
 import Layout from "~/components/Layout";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { UserButton, SignInButton } from "@clerk/nextjs";
-import { useTimelineData } from "~/hooks/useTimelineData";
-import UserPost from "~/components/UserPost";
+import { api } from "~/lib/utils/api";
 export default function Home() {
   const user = useUser();
-  const { data, isLoading } = useTimelineData();
+  const { data, isLoading } = api.posts.getAll.useQuery();
 
   useEffect(() => {
     console.log(data);
@@ -30,7 +29,7 @@ export default function Home() {
           )}
         </div>
       </div>
-      {data?.data.map((post) => <UserPost key={post.id} {...post} />)}
+      {/* {data?.data.map((post) => <UserPost key={post.id} {...post} />)} */}
     </div>
   );
 }
