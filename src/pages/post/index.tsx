@@ -17,20 +17,22 @@ export default function Page() {
   const [file, setFile] = useState<File[] | null>(null);
   const [caption, setCaption] = useState<string>("");
   const [isPaid, setIsPaid] = useState<boolean>(true);
-  const { mutate } = api.posts.create.useMutation();
-  // const { mutate } = useAddTimelineData(
-  //   () => {
-  //     toast.dismiss();
-  //     toast.success("post created");
-  //     setTimeout(() => {
-  //       toast.dismiss();
-  //       router.push("/").catch((err) => console.log(err));
-  //     }, 1000);
-  //   },
-  //   () => toast.error("error occurred creating post"),
-  // );
+  const { mutate } = api.posts.create.useMutation({
+    onSuccess: () => {
+      toast.dismiss();
+      toast.success("post created");
+      setTimeout(() => {
+        toast.dismiss();
+        router.push("/").catch((err) => console.log(err));
+      }, 1000);
+    },
+    onError: () => {
+      toast.error("error occurred creating post");
+    },
+  });
+
   const { startUpload } = useUploadThing("imageUploader", {
-    onUploadError: (error) => {
+    onUploadError: () => {
       toast.dismiss();
       toast.error("error occurred uploading file");
     },

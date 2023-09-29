@@ -21,8 +21,6 @@ export const postsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      // console.log("CTX", ctx);
-
       const post = await ctx.db.post.create({
         data: {
           userId: ctx.auth.userId,
