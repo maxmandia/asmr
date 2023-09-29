@@ -9,6 +9,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import { determineFileType } from "~/lib/helpers/determine-file-type";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { api } from "~/lib/utils/api";
 
 export default function Page() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function Page() {
   const [file, setFile] = useState<File[] | null>(null);
   const [caption, setCaption] = useState<string>("");
   const [isPaid, setIsPaid] = useState<boolean>(true);
+  const { mutate } = api.posts.create.useMutation();
   // const { mutate } = useAddTimelineData(
   //   () => {
   //     toast.dismiss();
@@ -82,7 +84,6 @@ export default function Page() {
       // Based on the file type, mutate accordingly
       if (fileType === "video") {
         mutate({
-          userId: user.user.id,
           caption,
           video: uploadResponse[0].url,
           fileKey: uploadResponse[0].key,
@@ -93,7 +94,6 @@ export default function Page() {
 
       if (fileType === "image") {
         mutate({
-          userId: user.user.id,
           caption,
           image: uploadResponse[0].url,
           fileKey: uploadResponse[0].key,
@@ -105,7 +105,6 @@ export default function Page() {
 
     // If there is no file but a caption exists, proceed with only the caption
     mutate({
-      userId: user.user.id,
       caption,
       isPaid,
     });
