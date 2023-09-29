@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import {
   createTRPCRouter,
-  privateProcedure,
+  protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
 
@@ -10,7 +10,7 @@ export const postsRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.db.post.findMany();
   }),
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         caption: z.string(),
@@ -25,7 +25,7 @@ export const postsRouter = createTRPCRouter({
 
       const post = await ctx.db.post.create({
         data: {
-          userId: "user_2Vb13cBZ4ZRHtWxjj2A0eCYbtcc",
+          userId: ctx.auth.userId,
           caption: input.caption,
           video: input.video,
           fileKey: input.fileKey,
