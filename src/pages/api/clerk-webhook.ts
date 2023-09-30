@@ -73,6 +73,7 @@ export default async function handler(
             email: email_address,
             first_name: data.first_name as string,
             last_name: data.last_name as string,
+            profile_picture_url: (data.profile_image_url as string) ?? null,
           },
         });
 

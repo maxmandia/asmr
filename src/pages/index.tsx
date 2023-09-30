@@ -2,8 +2,14 @@ import { useUser } from "@clerk/nextjs";
 import Layout from "~/components/Layout";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { UserButton, SignInButton } from "@clerk/nextjs";
+import { api } from "~/lib/utils/api";
+import UserPost from "~/components/UserPost";
+
 export default function Home() {
   const user = useUser();
+  const { data, isLoading } = api.posts.getAll.useQuery();
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="px-5 py-7 md:w-[60%] md:p-0">
@@ -18,7 +24,7 @@ export default function Home() {
           )}
         </div>
       </div>
-      {/* {data?.data.map((post) => <UserPost key={post.id} {...post} />)} */}
+      <div>{data?.map((post) => <UserPost key={post.id} post={post} />)}</div>
     </div>
   );
 }

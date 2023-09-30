@@ -1,14 +1,16 @@
 import React from "react";
-import { Post } from "@prisma/client";
+import { RouterOutputs } from "~/lib/utils/api";
 import Image from "next/image";
-import { api } from "~/lib/utils/api";
 
-function UserPost() {
-  const { data, isLoading } = api.posts.getAll.useQuery();
+type Post = RouterOutputs["posts"]["getAll"][number];
+interface Props {
+  post: Post;
+}
 
-  if (isLoading) return <div>Loading...</div>;
+function UserPost(props: Props) {
+  const { post } = props;
 
-  return <div>{/* <Image src={data.image} /> */}</div>;
+  return <div>{/* <Image src={post.user.} /> */}</div>;
 }
 
 export default UserPost;

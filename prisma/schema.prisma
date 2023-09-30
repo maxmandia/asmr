@@ -11,11 +11,12 @@ generator client {
   provider = "prisma-client-js"
 }
 model User {
-  id             String     @id @unique
-  email          String     @unique
-  first_name     String?
-  last_name      String?
-  posts          Post[]
+  id                      String     @id @unique
+  email                   String     @unique
+  first_name              String?
+  last_name               String?
+  profile_picture_url     String?
+  posts                   Post[]
 }
 
 model Post {
