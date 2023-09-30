@@ -1,22 +1,23 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import MobileNavigation from "./MobileNavigation";
-import type { ReactNode } from "react";
-import useScreenSize from "~/hooks/useScreenSize";
 import DesktopNavigation from "./DesktopNavigation";
 
 type LayoutProps = {
   children: ReactNode;
 };
 
-export default function Layout({
-  children: children,
-}: LayoutProps): JSX.Element {
-  const isMobile = useScreenSize();
-
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="md:flex md:w-screen md:items-start md:gap-10 md:p-[50px]">
-      {isMobile ? <MobileNavigation /> : <DesktopNavigation />}
-      <>{children}</>
+      <div className="md:hidden">
+        <MobileNavigation />
+      </div>
+      <div className="hidden md:block">
+        <DesktopNavigation />
+      </div>
+      {children}
     </div>
   );
-}
+};
+
+export default Layout;

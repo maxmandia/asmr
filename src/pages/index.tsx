@@ -1,20 +1,9 @@
-import { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import Layout from "~/components/Layout";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { UserButton, SignInButton } from "@clerk/nextjs";
-import { api } from "~/lib/utils/api";
 export default function Home() {
   const user = useUser();
-  const { data, isLoading } = api.posts.getAll.useQuery();
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="px-5 py-7 md:w-[60%] md:p-0">
