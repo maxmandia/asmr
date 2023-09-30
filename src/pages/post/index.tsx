@@ -4,12 +4,12 @@ import UserProfileImage from "~/components/UserProfileImage";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { ImageIcon } from "@radix-ui/react-icons";
 import { useUploadThing } from "~/lib/utils/uploadthing";
-import { useAddTimelineData } from "~/hooks/useTimelineData";
 import { useUser } from "@clerk/nextjs";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import { determineFileType } from "~/lib/helpers/determine-file-type";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { api } from "~/lib/utils/api";
 
 export default function Page() {
   const router = useRouter();
@@ -17,8 +17,8 @@ export default function Page() {
   const [file, setFile] = useState<File[] | null>(null);
   const [caption, setCaption] = useState<string>("");
   const [isPaid, setIsPaid] = useState<boolean>(true);
-  const { mutate } = useAddTimelineData(
-    () => {
+  const { mutate } = api.posts.create.useMutation({
+    onSuccess: () => {
       toast.dismiss();
       toast.success("post created");
       setTimeout(() => {
@@ -26,10 +26,13 @@ export default function Page() {
         router.push("/").catch((err) => console.log(err));
       }, 1000);
     },
-    () => toast.error("error occurred creating post"),
-  );
+    onError: () => {
+      toast.error("error occurred creating post");
+    },
+  });
+
   const { startUpload } = useUploadThing("imageUploader", {
-    onUploadError: (error) => {
+    onUploadError: () => {
       toast.dismiss();
       toast.error("error occurred uploading file");
     },
@@ -83,7 +86,6 @@ export default function Page() {
       // Based on the file type, mutate accordingly
       if (fileType === "video") {
         mutate({
-          userId: user.user.id,
           caption,
           video: uploadResponse[0].url,
           fileKey: uploadResponse[0].key,
@@ -94,7 +96,6 @@ export default function Page() {
 
       if (fileType === "image") {
         mutate({
-          userId: user.user.id,
           caption,
           image: uploadResponse[0].url,
           fileKey: uploadResponse[0].key,
@@ -106,7 +107,6 @@ export default function Page() {
 
     // If there is no file but a caption exists, proceed with only the caption
     mutate({
-      userId: user.user.id,
       caption,
       isPaid,
     });
@@ -119,7 +119,7 @@ export default function Page() {
         <div className="flex items-center gap-3">
           <UserProfileImage />
           <DropdownMenu.Root>
-            <DropdownMenu.Trigger className="hover:bg-input_hover flex  w-[155px] items-center justify-between gap-1 rounded-[6px] bg-input px-[10px] py-[5px] text-center">
+            <DropdownMenu.Trigger className="flex w-[155px]  items-center justify-between gap-1 rounded-[6px] bg-input px-[10px] py-[5px] text-center hover:bg-input_hover">
               <span className="text-[14px] font-medium">
                 {isPaid ? "subscribers only" : "free"}
               </span>
@@ -130,7 +130,7 @@ export default function Page() {
                 <DropdownMenu.Group>
                   <DropdownMenu.Item
                     onClick={() => setIsPaid(true)}
-                    className="hover:bg-input_hover rounded-[6px] p-2"
+                    className="rounded-[6px] p-2 hover:bg-input_hover"
                   >
                     <span className="text-[14px] font-medium text-text">
                       subscribers only
@@ -138,7 +138,7 @@ export default function Page() {
                   </DropdownMenu.Item>
                   <DropdownMenu.Item
                     onClick={() => setIsPaid(false)}
-                    className="hover:bg-input_hover rounded-[6px] p-2"
+                    className="rounded-[6px] p-2 hover:bg-input_hover"
                   >
                     <span className="text-[14px] font-medium text-text">
                       free
@@ -151,7 +151,7 @@ export default function Page() {
         </div>
         <button
           onClick={createPost}
-          className="hover:bg-primary_hover rounded-[6px] bg-primary px-[20px] py-[10px] text-[14px] font-medium"
+          className="rounded-[6px] bg-primary px-[20px] py-[10px] text-[14px] font-medium hover:bg-primary_hover"
         >
           create!
         </button>
@@ -167,7 +167,7 @@ export default function Page() {
       <div className="my-4 h-[1px] w-full bg-input" />
       <button
         onClick={openFileDialog}
-        className="hover:bg-input_hover flex w-fit items-center gap-1 rounded-[6px] bg-input px-[15px] py-[5px]"
+        className="flex w-fit items-center gap-1 rounded-[6px] bg-input px-[15px] py-[5px] hover:bg-input_hover"
       >
         <input
           type="file"
