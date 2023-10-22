@@ -4,10 +4,16 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { UserButton, SignInButton } from "@clerk/nextjs";
 import { api } from "~/lib/utils/api";
 import UserPost from "~/components/UserPost";
+import { Post } from "~/types/Post";
+import { useState } from "react";
+import ExpandedMedia from "~/components/ExpandedMedia";
 
 export default function Home() {
   const user = useUser();
   const { data, isLoading } = api.posts.getAll.useQuery();
+  const [expandedMediaContent, setExpandedMediaContent] = useState<Post | null>(
+    null,
+  );
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -24,9 +30,22 @@ export default function Home() {
           )}
         </div>
       </div>
-      <div className="flex flex-col gap-8 py-8 pb-[200px]">
-        {data?.map((post) => <UserPost key={post.id} post={post} />)}
-      </div>
+      {expandedMediaContent ? (
+        <ExpandedMedia
+          setExpandedMediaContent={setExpandedMediaContent}
+          post={expandedMediaContent}
+        />
+      ) : (
+        <div className="flex flex-col gap-8 py-8 pb-[200px]">
+          {data?.map((post) => (
+            <UserPost
+              setExpandedMediaContent={setExpandedMediaContent}
+              key={post.id}
+              post={post}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

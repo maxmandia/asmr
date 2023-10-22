@@ -1,15 +1,14 @@
-import React from "react";
-import { RouterOutputs } from "~/lib/utils/api";
+import React, { useRef } from "react";
 import Image from "next/image";
 import { PlayIcon } from "@radix-ui/react-icons";
-
-type Post = RouterOutputs["posts"]["getAll"][number];
+import type { Post } from "~/types/Post";
 interface Props {
   post: Post;
+  setExpandedMediaContent: React.Dispatch<React.SetStateAction<Post | null>>;
 }
 
 function UserPost(props: Props) {
-  const { post } = props;
+  const { post, setExpandedMediaContent } = props;
 
   return (
     <div>
@@ -18,8 +17,16 @@ function UserPost(props: Props) {
         <div className="flex w-full flex-col">
           <span className="font-medium">{post.user.first_name}</span>
           <p className="text-[14px]">{post.caption}</p>
-          <PostImage {...post} />
-          <PostVideo {...post} />
+          <div
+            onClick={() => {
+              if (post.image) {
+                setExpandedMediaContent(post);
+              }
+            }}
+          >
+            <PostImage {...post} />
+            <PostVideo {...post} />
+          </div>
         </div>
       </div>
     </div>
@@ -60,11 +67,22 @@ function PostImage(post: Post) {
 }
 
 function PostVideo(post: Post) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  function handleFullscreen() {
+    if (videoRef.current) {
+      if (videoRef.current.requestFullscreen) {
+        videoRef.current.requestFullscreen();
+      }
+    }
+  }
+
   if (!post.video) return null;
 
   return (
-    <div className="relative mt-5">
+    <div className="relative mt-5" onClick={handleFullscreen}>
       <video
+        ref={videoRef}
         className=" h-[200px] w-full rounded-[6px] object-cover"
         src={post.video}
         loop
