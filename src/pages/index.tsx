@@ -24,7 +24,9 @@ export default function Home() {
           )}
         </div>
       </div>
-      <div>{data?.map((post) => <UserPost key={post.id} post={post} />)}</div>
+      <div className="flex flex-col gap-8 py-8 pb-[200px]">
+        {data?.map((post) => <UserPost key={post.id} post={post} />)}
+      </div>
     </div>
   );
 }

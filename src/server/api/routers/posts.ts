@@ -29,6 +29,7 @@ export const postsRouter = createTRPCRouter({
         data: {
           userId: ctx.auth.userId,
           caption: input.caption,
+          image: input.image,
           video: input.video,
           fileKey: input.fileKey,
           isPaid: input.isPaid,

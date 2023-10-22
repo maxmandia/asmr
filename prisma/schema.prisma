@@ -24,9 +24,9 @@ model Post {
   userId         String     
   createdAt      DateTime   @default(now())
   isPaid         Boolean    @default(true)
-  image          String?    @unique
-  video          String?    @unique
-  caption        String?
+  image          String?    @unique @db.VarChar(500)
+  video          String?    @unique @db.VarChar(500)
+  caption        String?    @db.VarChar(1000)
   fileKey        String?    @unique    
   user           User       @relation(fields: [userId], references: [id])
   @@index([userId])

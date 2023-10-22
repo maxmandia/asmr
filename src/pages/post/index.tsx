@@ -69,6 +69,13 @@ export default function Page() {
 
     // If file exists, try to upload and determine its type
     if (file) {
+      const fileType = determineFileType(file[0]!.name);
+      if (!fileType) {
+        toast.dismiss();
+        toast.error("bad file type");
+        return;
+      }
+
       const uploadResponse = await startUpload(file);
 
       if (!uploadResponse) {
@@ -79,9 +86,6 @@ export default function Page() {
       if (!uploadResponse || !uploadResponse[0]) {
         return;
       }
-
-      // Determine the file type (the function should now return the type)
-      const fileType = determineFileType(uploadResponse[0].name);
 
       // Based on the file type, mutate accordingly
       if (fileType === "video") {

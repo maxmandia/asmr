@@ -1,5 +1,3 @@
 const { withAxiom } = require("next-axiom");
 
-module.exports = withAxiom({
-  // ... your existing config
-});
+module.exports = withAxiom({});
