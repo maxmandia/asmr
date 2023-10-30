@@ -18,7 +18,7 @@ export default function Home() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="px-5 py-7 md:w-[60%] md:p-0">
+    <div className="px-5 py-7 md:w-[50%] md:p-0">
       <div className="flex w-full items-center justify-between">
         <h2>[ASMR]</h2>
         <div className="flex items-center justify-center gap-2 md:gap-5">
