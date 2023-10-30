@@ -8,7 +8,7 @@ type LayoutProps = {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="md:flex md:w-screen md:items-start md:gap-10 md:p-[50px] lg:px-[200px]">
+    <div className="h-screen md:flex md:w-screen md:items-start md:gap-10 md:p-[50px] lg:px-[200px]">
       <div className="md:hidden">
         <MobileNavigation />
       </div>

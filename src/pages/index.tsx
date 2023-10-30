@@ -18,7 +18,7 @@ export default function Home() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="px-5 py-7 md:w-[50%] md:p-0">
+    <div className="px-5 py-7 md:w-[50%] md:p-0 h-[calc(100vh_-_56px)] overflow-y-scroll">
       <div className="flex w-full items-center justify-between">
         <h2>[ASMR]</h2>
         <div className="flex items-center justify-center gap-2 md:gap-5">
@@ -36,7 +36,7 @@ export default function Home() {
           post={expandedMediaContent}
         />
       ) : (
-        <div className="flex flex-col gap-8 py-8 pb-[200px]">
+        <div className="flex flex-col gap-8 py-8 pb-[50px] md:pb-[0px]">
           {data?.map((post) => (
             <UserPost
               setExpandedMediaContent={setExpandedMediaContent}

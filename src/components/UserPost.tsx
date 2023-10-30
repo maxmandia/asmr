@@ -57,7 +57,7 @@ function PostImage(post: Post) {
 
   return (
     <Image
-      className="mt-5 h-[200px] w-full rounded-[6px] object-cover"
+      className="mt-5 h-[300px] w-full rounded-[18px] object-cover"
       src={post.image}
       alt="post image"
       width={200}
@@ -83,12 +83,12 @@ function PostVideo(post: Post) {
     <div className="relative mt-5" onClick={handleFullscreen}>
       <video
         ref={videoRef}
-        className=" h-[200px] w-full rounded-[6px] object-cover"
+        className="h-[300px] w-full rounded-[18px] object-cover"
         src={post.video}
         loop
         muted
       />
-      <div className="absolute left-0 top-0 flex h-[200px] w-full items-center justify-center">
+      <div className="absolute left-0 top-0 h-[300px] flex w-full items-center justify-center">
         <div className="rounded-[100px] bg-primary p-2">
           <PlayIcon height={35} width={35} color="white" />
         </div>
