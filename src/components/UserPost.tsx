@@ -1,6 +1,10 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
-import { PlayIcon } from "@radix-ui/react-icons";
+import {
+  EnterFullScreenIcon,
+  PauseIcon,
+  PlayIcon,
+} from "@radix-ui/react-icons";
 import type { Post } from "~/types/Post";
 interface Props {
   post: Post;
@@ -56,18 +60,21 @@ function PostImage(post: Post) {
   if (!post.image) return null;
 
   return (
-    <Image
-      className="mt-5 h-[300px] w-full rounded-[18px] object-cover"
-      src={post.image}
-      alt="post image"
-      width={200}
-      height={200}
-    />
+    <div className="relative mt-5 h-[300px] w-full overflow-hidden rounded-[18px]">
+      <Image
+        layout="fill"
+        objectFit="cover"
+        src={post.image}
+        alt="post image"
+      />
+    </div>
   );
 }
 
 function PostVideo(post: Post) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [showVideoToolbar, setShowVideoToolbar] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   function handleFullscreen() {
     if (videoRef.current) {
@@ -77,20 +84,78 @@ function PostVideo(post: Post) {
     }
   }
 
+  function handlePlayback() {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+        setIsVideoPlaying(true);
+      } else {
+        videoRef.current.pause();
+        setIsVideoPlaying(false);
+      }
+    }
+  }
+
   if (!post.video) return null;
 
   return (
-    <div className="relative mt-5" onClick={handleFullscreen}>
+    <div
+      onClick={() => {
+        handlePlayback();
+      }}
+      className="relative mt-5 h-[300px] w-full overflow-hidden rounded-[18px]"
+      onMouseOver={() => setShowVideoToolbar(true)}
+      onMouseLeave={() => setShowVideoToolbar(false)}
+    >
       <video
+        onDoubleClick={handleFullscreen}
         ref={videoRef}
-        className="h-[300px] w-full rounded-[18px] object-cover"
+        className="absolute left-0 top-0 h-full w-full object-contain"
         src={post.video}
         loop
         muted
+        autoPlay
       />
-      <div className="absolute left-0 top-0 h-[300px] flex w-full items-center justify-center">
+      {/* <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center">
         <div className="rounded-[100px] bg-primary p-2">
           <PlayIcon height={35} width={35} color="white" />
+        </div>
+      </div> */}
+      {showVideoToolbar ? (
+        <VideoToolbar
+          setIsVideoPlaying={setIsVideoPlaying}
+          isVideoPlaying={isVideoPlaying}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+interface VideoToolbarProps {
+  setIsVideoPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+  isVideoPlaying: boolean;
+}
+
+function VideoToolbar(props: VideoToolbarProps) {
+  const { setIsVideoPlaying, isVideoPlaying } = props;
+
+  return (
+    <div className="absolute bottom-0 w-full bg-black bg-opacity-5 p-3">
+      <div />
+      <div className="flex items-center justify-between">
+        {isVideoPlaying ? (
+          <div className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5">
+            <PauseIcon height={25} width={25} />
+          </div>
+        ) : (
+          <div className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5">
+            <PlayIcon height={25} width={25} />
+          </div>
+        )}
+        <div>
+          <div className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5">
+            <EnterFullScreenIcon height={25} width={25} />
+          </div>
         </div>
       </div>
     </div>

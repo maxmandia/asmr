@@ -12,6 +12,7 @@ export default {
         text: "white",
         input: "#272727",
         input_hover: "#2F2F2F",
+        grey: "#808080",
       },
       screens: {
         md: "540px",
