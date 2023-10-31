@@ -100,21 +100,19 @@ function PostVideo(post: Post) {
 
   return (
     <div
-      onClick={() => {
-        handlePlayback();
-      }}
       className="relative mt-5 h-[300px] w-full overflow-hidden rounded-[18px]"
       onMouseOver={() => setShowVideoToolbar(true)}
       onMouseLeave={() => setShowVideoToolbar(false)}
     >
       <video
+        onClick={() => {
+          handlePlayback();
+        }}
         onDoubleClick={handleFullscreen}
         ref={videoRef}
         className="absolute left-0 top-0 h-full w-full object-contain"
         src={post.video}
         loop
-        muted
-        autoPlay
       />
       {/* <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center">
         <div className="rounded-[100px] bg-primary p-2">
@@ -123,8 +121,10 @@ function PostVideo(post: Post) {
       </div> */}
       {showVideoToolbar ? (
         <VideoToolbar
+          handleVideoPlayback={handlePlayback}
           setIsVideoPlaying={setIsVideoPlaying}
           isVideoPlaying={isVideoPlaying}
+          handleFullscreen={handleFullscreen}
         />
       ) : null}
     </div>
@@ -134,26 +134,42 @@ function PostVideo(post: Post) {
 interface VideoToolbarProps {
   setIsVideoPlaying: React.Dispatch<React.SetStateAction<boolean>>;
   isVideoPlaying: boolean;
+  handleVideoPlayback: () => void;
+  handleFullscreen: () => void;
 }
 
 function VideoToolbar(props: VideoToolbarProps) {
-  const { setIsVideoPlaying, isVideoPlaying } = props;
+  const {
+    setIsVideoPlaying,
+    isVideoPlaying,
+    handleVideoPlayback,
+    handleFullscreen,
+  } = props;
 
   return (
-    <div className="absolute bottom-0 w-full bg-black bg-opacity-5 p-3">
+    <div className="absolute bottom-0 z-[100] w-full bg-black bg-opacity-5 p-3">
       <div />
       <div className="flex items-center justify-between">
         {isVideoPlaying ? (
-          <div className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5">
+          <div
+            onClick={handleVideoPlayback}
+            className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
+          >
             <PauseIcon height={25} width={25} />
           </div>
         ) : (
-          <div className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5">
+          <div
+            onClick={handleVideoPlayback}
+            className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
+          >
             <PlayIcon height={25} width={25} />
           </div>
         )}
         <div>
-          <div className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5">
+          <div
+            onClick={handleFullscreen}
+            className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
+          >
             <EnterFullScreenIcon height={25} width={25} />
           </div>
         </div>
