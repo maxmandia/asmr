@@ -33,7 +33,7 @@ function MobileNavigation() {
       <Link className="p-4" href={"/messages"}>
         <ChatBubbleIcon height={25} width={25} color="white" />
       </Link>
-      <Link className="p-4" href={"/"}>
+      <Link className="p-4" href={`/user/${user.user.id}`}>
         <HomeIcon height={25} width={25} color="white" />
       </Link>
     </nav>
