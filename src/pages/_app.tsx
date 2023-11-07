@@ -6,6 +6,7 @@ import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { api } from "../lib/utils/api";
+import { Analytics } from "@vercel/analytics/react";
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -25,6 +26,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
       <QueryClientProvider client={queryClient}>
         <div className="h-screen bg-background text-text">
           {getLayout(<Component {...pageProps} />)}
+          <Analytics />
         </div>
       </QueryClientProvider>
     </ClerkProvider>
