@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useRef } from "react";
+import { api } from "~/lib/utils/api";
+import toast, { Toaster } from "react-hot-toast";
 
 function Landing() {
+  const emailRef = useRef<HTMLInputElement>(null);
+  const { mutate } = api.waitlists.addUserToWaitlist.useMutation({
+    onSuccess: () => {
+      toast.success("added to waitlist");
+    },
+    onError: () => {
+      toast.error("error occurred adding to waitlist");
+    },
+  });
   return (
     <div>
+      <Toaster />
       <header className="flex h-screen flex-col items-center justify-center gap-3 px-2">
         <h1 className="text-[33px] font-semibold">Welcome to Hush ASMR</h1>{" "}
         <p className="w-full px-1 text-center text-[15px] text-zinc-400">
@@ -12,12 +24,20 @@ function Landing() {
         </p>
         <div className="flex w-full items-center justify-between gap-2 px-6 py-2">
           <input
+            ref={emailRef}
             type="email"
             placeholder="creator@email.com"
             aria-label="Email for creators"
             className="w-full rounded-md px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-primary" // Focus styles added for better UX
           />
-          <button className="rounded-md bg-primary p-2 text-white">
+          <button
+            onClick={() => {
+              mutate({
+                email: emailRef.current?.value ?? "",
+              });
+            }}
+            className="rounded-md bg-primary p-2 text-white"
+          >
             Waitlist
           </button>{" "}
         </div>
