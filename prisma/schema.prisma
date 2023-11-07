@@ -31,3 +31,9 @@ model Post {
   user           User       @relation(fields: [userId], references: [id])
   @@index([userId])
 }
+
+model Waitlist {
+  id             Int        @id @default(autoincrement())
+  email          String     @unique
+  createdAt      DateTime   @default(now())
+}
