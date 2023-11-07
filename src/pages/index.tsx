@@ -62,7 +62,7 @@ function Landing() {
           <p className="w-full px-1 text-center text-[15px] text-zinc-400 lg:max-w-[700px] lg:text-[20px]">
             Creators should fully own their potential, monetize their content
             effectively, and build genuine connections with their audience.
-            We're here to make that happen.
+            We&apos;re here to make that happen.
           </p>
         </section>
         <section className="flex flex-col items-center justify-center gap-3 bg-gray-800 px-2 py-8 text-center">
@@ -70,9 +70,9 @@ function Landing() {
             A platform tailored for ASMR.
           </h2>
           <p className="w-full px-1 text-center text-[15px] text-zinc-400 lg:max-w-[700px] lg:text-[20px]">
-            From dark mode to high-quality audio and a focus on community, we're
-            crafting an experience that meets the unique needs of the ASMR
-            community.
+            From dark mode to high-quality audio and a focus on community,
+            we&apos;re crafting an experience that meets the unique needs of the
+            ASMR community.
           </p>
         </section>
       </main>
