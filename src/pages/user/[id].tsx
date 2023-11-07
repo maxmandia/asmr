@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
+import { LockClosedIcon, PersonIcon } from "@radix-ui/react-icons";
 
 function User() {
   const router = useRouter();
@@ -20,20 +21,42 @@ function User() {
 
   return (
     <div>
-      <div className="h-[150px] w-full bg-primary" />
-      {data.profile_picture_url ? (
-        <Image
-          src={data.profile_picture_url}
-          alt={`${data.first_name}'s profile picture`}
-          width={80}
-          height={80}
-          priority={true}
-          className="absolute left-6 top-[108px] rounded-[100px] bg-white"
-        />
-      ) : (
-        <div className="absolute left-6 top-[108px] h-20 w-20 rounded-[100px] bg-white" />
-      )}
-      <span>{data.first_name}</span>
+      <div className="h-[125px] w-full bg-primary" />
+      <div className="px-5">
+        <div className="flex items-start gap-4  py-4">
+          {data.profile_picture_url ? (
+            <Image
+              src={data.profile_picture_url}
+              alt={`${data.first_name}'s profile picture`}
+              width={70}
+              height={70}
+              priority={true}
+              className="rounded-[100px] bg-white"
+            />
+          ) : (
+            <div className="h-[70px] w-[70px] rounded-[100px] bg-white" />
+          )}
+          <div className="flex h-[70px] flex-col justify-between leading-none">
+            <span className="text-[26px] font-medium">{data.first_name}</span>
+            <span className="text-[16px] text-grey">@username</span>
+            <span className="text-[14px] text-grey">1.01M subscribers</span>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <button className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-white py-[4px] font-medium text-black">
+            <PersonIcon />
+            Follow
+          </button>
+          <button className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-primary py-[4px] font-medium">
+            <LockClosedIcon />
+            Subscribe
+          </button>
+        </div>
+        <nav className="flex items-center gap-5 border-b-[.5px] border-grey pb-2 pt-4 font-medium">
+          <span className="">Home</span>
+          <span className="">Videos</span>
+        </nav>
+      </div>
     </div>
   );
 }
