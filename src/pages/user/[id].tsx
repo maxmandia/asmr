@@ -1,12 +1,13 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
 import { LockClosedIcon, PersonIcon } from "@radix-ui/react-icons";
 
 function User() {
   const router = useRouter();
+  const [tabSelected, setTabSelected] = useState<"home" | "videos">("home");
   const { data, isLoading, error } = api.users.findUserById.useQuery({
     id: router.query.id as string,
   });
@@ -20,8 +21,8 @@ function User() {
   }
 
   return (
-    <div>
-      <div className="h-[125px] w-full bg-primary" />
+    <div className="md:w-[50%]">
+      <div className="h-[125px] w-full bg-primary md:rounded-[12px]" />
       <div className="px-5">
         <div className="flex items-start gap-4  py-4">
           {data.profile_picture_url ? (
@@ -53,8 +54,20 @@ function User() {
           </button>
         </div>
         <nav className="flex items-center gap-5 border-b-[.5px] border-grey pb-2 pt-4 font-medium">
-          <span className="">Home</span>
-          <span className="">Videos</span>
+          <button
+            onClick={() => setTabSelected("home")}
+            className={`${tabSelected === "home" ? "text-white" : "text-grey"}`}
+          >
+            Home
+          </button>
+          <button
+            onClick={() => setTabSelected("videos")}
+            className={`${
+              tabSelected === "videos" ? "text-white" : "text-grey"
+            }`}
+          >
+            Videos
+          </button>
         </nav>
       </div>
     </div>
