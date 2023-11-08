@@ -26,6 +26,23 @@ export const postsRouter = createTRPCRouter({
         },
       });
     }),
+
+  getOnlyVideoPostsFromUser: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.db.post.findMany({
+        where: {
+          userId: input.userId,
+          video: {
+            not: null,
+          },
+        },
+        include: {
+          user: true,
+        },
+      });
+    }),
+
   create: protectedProcedure
     .input(
       z.object({

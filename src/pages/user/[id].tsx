@@ -15,15 +15,22 @@ function User() {
   } = api.posts.getPostsFromUser.useQuery({
     userId: router.query.id as string,
   });
+  const {
+    data: videoPostsData,
+    isLoading: videoPostsLoading,
+    isError: videoPostError,
+  } = api.posts.getOnlyVideoPostsFromUser.useQuery({
+    userId: router.query.id as string,
+  });
   const { data, isLoading, isError } = api.users.findUserById.useQuery({
     id: router.query.id as string,
   });
 
-  if (isLoading || postsLoading) {
+  if (isLoading || postsLoading || videoPostsLoading) {
     return <span>...loading</span>;
   }
 
-  if (isError || postsError) {
+  if (isError || postsError || videoPostError) {
     return <span>...error</span>;
   }
 
@@ -51,11 +58,11 @@ function User() {
           </div>
         </div>
         <div className="flex gap-2">
-          <button className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-white py-[4px] font-medium text-black">
+          <button className="hover:bg-white_hover flex w-full items-center justify-center gap-2 rounded-[100px] bg-white py-[4px] font-medium text-black">
             <PersonIcon />
             Follow
           </button>
-          <button className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-primary py-[4px] font-medium">
+          <button className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-primary py-[4px] font-medium hover:bg-primary_hover">
             <LockClosedIcon />
             Subscribe
           </button>
@@ -76,7 +83,9 @@ function User() {
             Videos
           </button>
         </nav>
-        <UserPostsContainer data={postsData} />
+        <UserPostsContainer
+          data={tabSelected === "home" ? postsData : videoPostsData}
+        />
       </div>
     </div>
   );
