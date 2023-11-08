@@ -4,8 +4,6 @@ import React, { useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
 import { LockClosedIcon, PersonIcon } from "@radix-ui/react-icons";
-import UserPost from "~/components/UserPost";
-import type { Post } from "~/types/Post";
 import UserPostsContainer from "~/components/UserPostsContainer";
 function User() {
   const router = useRouter();
