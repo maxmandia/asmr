@@ -14,6 +14,18 @@ export const postsRouter = createTRPCRouter({
       },
     });
   }),
+  getPostsFromUser: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.db.post.findMany({
+        where: {
+          userId: input.userId,
+        },
+        include: {
+          user: true,
+        },
+      });
+    }),
   create: protectedProcedure
     .input(
       z.object({
