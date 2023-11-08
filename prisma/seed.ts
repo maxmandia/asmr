@@ -10,6 +10,7 @@ async function main() {
       first_name: "Alice",
       last_name: "Prisma",
       profile_picture_url: "https://i.imgur.com/BdN9y8h.jpeg",
+      handle: "alice",
       posts: {
         create: {
           caption: "My first post!",
@@ -30,6 +31,7 @@ async function main() {
       first_name: "Bob",
       last_name: "Prisma",
       profile_picture_url: "https://i.imgur.com/BdN9y8h.jpeg",
+      handle: "bob",
       posts: {
         create: {
           caption: "YO this is bob!",
@@ -51,6 +53,7 @@ async function main() {
       last_name: "Prisma",
       profile_picture_url:
         "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18yVzV5TTZjRmgxSU1WS0lkWjNIMUM4d2piaEYifQ",
+      handle: "max",
       posts: {
         create: {
           caption: "YO this is max!",

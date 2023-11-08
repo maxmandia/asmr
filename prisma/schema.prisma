@@ -16,6 +16,8 @@ model User {
   first_name              String?
   last_name               String?
   profile_picture_url     String?
+  profile_header_url      String?
+  handle                  String     @unique
   posts                   Post[]
 }
 
