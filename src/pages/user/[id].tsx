@@ -73,16 +73,18 @@ function User() {
             <span className="text-[14px] text-grey">1.01M subscribers</span>
           </div>
         </div>
-        <div className="flex gap-2">
-          <button className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-white py-[4px] font-medium text-black hover:bg-white_hover">
-            <PersonIcon />
-            Follow
-          </button>
-          <button className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-primary py-[4px] font-medium hover:bg-primary_hover">
-            <LockClosedIcon />
-            Subscribe
-          </button>
-        </div>
+        {!profileData.user.isMe && (
+          <div className="flex gap-2">
+            <button className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-white py-[4px] font-medium text-black hover:bg-white_hover">
+              <PersonIcon />
+              Follow
+            </button>
+            <button className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-primary py-[4px] font-medium hover:bg-primary_hover">
+              <LockClosedIcon />
+              Subscribe
+            </button>
+          </div>
+        )}
         <nav className="flex items-center gap-5 border-b-[.5px] border-grey pb-2 pt-4 font-medium">
           <button
             onClick={() => setTabSelected("home")}
