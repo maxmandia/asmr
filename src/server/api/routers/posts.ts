@@ -12,6 +12,9 @@ export const postsRouter = createTRPCRouter({
       include: {
         user: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   }),
   getPostsFromUser: publicProcedure
@@ -20,6 +23,9 @@ export const postsRouter = createTRPCRouter({
       return ctx.db.post.findMany({
         where: {
           userId: input.userId,
+        },
+        orderBy: {
+          createdAt: "desc",
         },
         include: {
           user: true,
@@ -36,6 +42,9 @@ export const postsRouter = createTRPCRouter({
           video: {
             not: null,
           },
+        },
+        orderBy: {
+          createdAt: "desc",
         },
         include: {
           user: true,
