@@ -98,7 +98,9 @@ function User() {
             <span className="text-[16px] text-grey">
               @{profileData.user.handle}
             </span>
-            <span className="text-[14px] text-grey">1.01M subscribers</span>
+            <span className="text-[14px] text-grey">
+              {profileData.user._count.followers} Followers
+            </span>
           </div>
         </div>
         {!profileData.user.isMe && (

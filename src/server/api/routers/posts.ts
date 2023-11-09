@@ -25,6 +25,11 @@ export const postsRouter = createTRPCRouter({
         where: {
           id: input.userId,
         },
+        include: {
+          _count: {
+            select: { followers: true },
+          },
+        },
       });
 
       if (!user) {
