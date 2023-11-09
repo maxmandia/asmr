@@ -53,6 +53,8 @@ async function main() {
       last_name: "Prisma",
       profile_picture_url:
         "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18yVzV5TTZjRmgxSU1WS0lkWjNIMUM4d2piaEYifQ",
+      profile_header_url:
+        "https://utfs.io/f/93e773d4-e1ad-4766-b4b9-2f5349b79040-1x98hn.JPG",
       handle: "max",
       posts: {
         create: {

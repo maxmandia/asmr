@@ -15,8 +15,8 @@ model User {
   email                   String     @unique
   first_name              String?
   last_name               String?
-  profile_picture_url     String?
-  profile_header_url      String?
+  profile_picture_url     String?    @db.VarChar(500)
+  profile_header_url      String?    @db.VarChar(500)
   handle                  String     @unique
   posts                   Post[]
 }

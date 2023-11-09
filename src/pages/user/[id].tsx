@@ -36,7 +36,22 @@ function User() {
 
   return (
     <div className="h-[calc(100vh_-_56px)] overflow-y-scroll md:w-[50%]">
-      <div className="h-[125px] w-full bg-primary md:rounded-[12px]" />
+      <div className="px-5">
+        {data.profile_header_url ? (
+          <div className="relative h-[125px] w-full bg-red-100 md:rounded-[12px]">
+            <Image
+              src={data.profile_header_url}
+              alt={`${data.first_name}'s profile header`}
+              layout="fill"
+              objectFit="cover"
+              priority={true}
+              className="md:rounded-[12px]"
+            />
+          </div>
+        ) : (
+          <div className="h-[125px] w-full bg-primary md:rounded-[12px]" />
+        )}
+      </div>
       <div className="px-5">
         <div className="flex items-start gap-4  py-4">
           {data.profile_picture_url ? (
@@ -53,12 +68,12 @@ function User() {
           )}
           <div className="flex h-[70px] flex-col justify-between leading-none">
             <span className="text-[26px] font-medium">{data.first_name}</span>
-            <span className="text-[16px] text-grey">@username</span>
+            <span className="text-[16px] text-grey">@{data.handle}</span>
             <span className="text-[14px] text-grey">1.01M subscribers</span>
           </div>
         </div>
         <div className="flex gap-2">
-          <button className="hover:bg-white_hover flex w-full items-center justify-center gap-2 rounded-[100px] bg-white py-[4px] font-medium text-black">
+          <button className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-white py-[4px] font-medium text-black hover:bg-white_hover">
             <PersonIcon />
             Follow
           </button>
