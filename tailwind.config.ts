@@ -10,6 +10,7 @@ export default {
         primary_hover: "#B777E1",
         card_hover: "#262626",
         text: "white",
+        white_hover: "#DADADA",
         input: "#272727",
         input_hover: "#2F2F2F",
         grey: "#808080",

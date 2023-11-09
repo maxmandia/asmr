@@ -23,7 +23,7 @@ function DesktopNavigation() {
     <div className="min-w-[200px]">
       <Link
         className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
-        href={"/"}
+        href={"/home"}
       >
         <HomeIcon height={25} width={25} color="white" />
         <span>Home</span>
