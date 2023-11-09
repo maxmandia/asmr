@@ -9,9 +9,9 @@ function User() {
   const router = useRouter();
   const [tabSelected, setTabSelected] = useState<"home" | "videos">("home");
   const {
-    data: postsData,
-    isLoading: postsLoading,
-    isError: postsError,
+    data: profileData,
+    isLoading: profileLoading,
+    isError: profileError,
   } = api.posts.getPostsFromUser.useQuery({
     userId: router.query.id as string,
   });
@@ -22,26 +22,23 @@ function User() {
   } = api.posts.getOnlyVideoPostsFromUser.useQuery({
     userId: router.query.id as string,
   });
-  const { data, isLoading, isError } = api.users.findUserById.useQuery({
-    id: router.query.id as string,
-  });
 
-  if (isLoading || postsLoading || videoPostsLoading) {
+  if (profileLoading || videoPostsLoading) {
     return <span>...loading</span>;
   }
 
-  if (isError || postsError || videoPostError) {
+  if (profileError || videoPostError) {
     return <span>...error</span>;
   }
 
   return (
     <div className="h-[calc(100vh_-_56px)] overflow-y-scroll md:w-[50%]">
-      <div className="px-5">
-        {data.profile_header_url ? (
+      <div className="md:px-5">
+        {profileData.user.profile_header_url ? (
           <div className="relative h-[125px] w-full bg-red-100 md:rounded-[12px]">
             <Image
-              src={data.profile_header_url}
-              alt={`${data.first_name}'s profile header`}
+              src={profileData.user.profile_header_url}
+              alt={`${profileData.user.first_name}'s profile header`}
               layout="fill"
               objectFit="cover"
               priority={true}
@@ -54,10 +51,10 @@ function User() {
       </div>
       <div className="px-5">
         <div className="flex items-start gap-4  py-4">
-          {data.profile_picture_url ? (
+          {profileData.user.profile_picture_url ? (
             <Image
-              src={data.profile_picture_url}
-              alt={`${data.first_name}'s profile picture`}
+              src={profileData.user.profile_picture_url}
+              alt={`${profileData.user.first_name}'s profile picture`}
               width={70}
               height={70}
               priority={true}
@@ -67,8 +64,12 @@ function User() {
             <div className="h-[70px] w-[70px] rounded-[100px] bg-white" />
           )}
           <div className="flex h-[70px] flex-col justify-between leading-none">
-            <span className="text-[26px] font-medium">{data.first_name}</span>
-            <span className="text-[16px] text-grey">@{data.handle}</span>
+            <span className="text-[26px] font-medium">
+              {profileData.user.first_name}
+            </span>
+            <span className="text-[16px] text-grey">
+              @{profileData.user.handle}
+            </span>
             <span className="text-[14px] text-grey">1.01M subscribers</span>
           </div>
         </div>
@@ -99,7 +100,7 @@ function User() {
           </button>
         </nav>
         <UserPostsContainer
-          data={tabSelected === "home" ? postsData : videoPostsData}
+          data={tabSelected === "home" ? profileData.posts : videoPostsData}
         />
       </div>
     </div>

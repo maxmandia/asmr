@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -19,20 +20,44 @@ export const postsRouter = createTRPCRouter({
   }),
   getPostsFromUser: publicProcedure
     .input(z.object({ userId: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.db.post.findMany({
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.db.user.findUnique({
+        where: {
+          id: input.userId,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const posts = await ctx.db.post.findMany({
         where: {
           userId: input.userId,
-        },
-        orderBy: {
-          createdAt: "desc",
         },
         include: {
           user: true,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       });
-    }),
 
+      if (ctx.auth.userId === input.userId) {
+        return {
+          user: { ...user, isMe: true },
+          posts,
+        };
+      } else {
+        return {
+          user: { ...user, isMe: false },
+          posts,
+        };
+      }
+    }),
   getOnlyVideoPostsFromUser: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(({ ctx, input }) => {
