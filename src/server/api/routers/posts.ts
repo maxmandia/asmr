@@ -18,7 +18,7 @@ export const postsRouter = createTRPCRouter({
       },
     });
   }),
-  getPostsFromUser: publicProcedure
+  getPostsFromUser: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const user = await ctx.db.user.findUnique({
@@ -46,37 +46,25 @@ export const postsRouter = createTRPCRouter({
         },
       });
 
+      const isFollowing = await ctx.db.follow.findFirst({
+        where: {
+          followerId: ctx.auth.userId,
+          followingId: input.userId,
+        },
+      });
+
       if (ctx.auth.userId === input.userId) {
         return {
-          user: { ...user, isMe: true },
+          user: { ...user, isMe: true, isFollowing: false },
           posts,
         };
       } else {
         return {
-          user: { ...user, isMe: false },
+          user: { ...user, isMe: false, isFollowing: isFollowing ?? false },
           posts,
         };
       }
     }),
-  getOnlyVideoPostsFromUser: publicProcedure
-    .input(z.object({ userId: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.db.post.findMany({
-        where: {
-          userId: input.userId,
-          video: {
-            not: null,
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        include: {
-          user: true,
-        },
-      });
-    }),
-
   create: protectedProcedure
     .input(
       z.object({

@@ -1,5 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
   provider     = "mysql"
@@ -17,7 +15,9 @@ model User {
   last_name               String?
   profile_picture_url     String?    @db.VarChar(500)
   profile_header_url      String?    @db.VarChar(500)
-  handle                  String?     @unique
+  handle                  String?    @unique
+  following               Follow[]   @relation("UserFollows") 
+  followers               Follow[]   @relation("UserFollowedBy") 
   posts                   Post[]
 }
 
@@ -34,8 +34,22 @@ model Post {
   @@index([userId])
 }
 
+model Follow {
+  id                      Int        @id @default(autoincrement())
+  followerId              String     
+  followingId             String     
+  createdAt               DateTime   @default(now())
+  follower                User       @relation("UserFollowedBy", fields: [followerId], references: [id])
+  following               User       @relation("UserFollows", fields: [followingId], references: [id])
+
+  @@index([followerId])
+  @@index([followingId])
+  @@unique([followerId, followingId]) 
+}
+
 model Waitlist {
   id             Int        @id @default(autoincrement())
   email          String     @unique
   createdAt      DateTime   @default(now())
 }
+

@@ -5,7 +5,7 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { ImageIcon } from "@radix-ui/react-icons";
 import { useUploadThing } from "~/lib/utils/uploadthing";
 import { useUser } from "@clerk/nextjs";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { determineFileType } from "~/lib/helpers/determine-file-type";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -118,7 +118,6 @@ export default function Page() {
 
   return (
     <div className="flex flex-col px-5 py-7 md:w-[60%]">
-      <Toaster />
       <div className="flex items-start justify-between ">
         <div className="flex items-center gap-3">
           <UserProfileImage />

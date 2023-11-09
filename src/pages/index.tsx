@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { api } from "~/lib/utils/api";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 function Landing() {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -14,7 +14,6 @@ function Landing() {
   });
   return (
     <div>
-      <Toaster />
       <header className="flex h-screen flex-col items-center justify-center gap-3 px-2">
         <h1 className="text-[33px] font-semibold md:text-[50px] lg:text-[65px]">
           Welcome to Hush ASMR

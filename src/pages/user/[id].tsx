@@ -5,8 +5,11 @@ import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
 import { LockClosedIcon, PersonIcon } from "@radix-ui/react-icons";
 import UserPostsContainer from "~/components/UserPostsContainer";
+import toast from "react-hot-toast";
+
 function User() {
   const router = useRouter();
+  const utils = api.useContext();
   const [tabSelected, setTabSelected] = useState<"home" | "videos">("home");
   const {
     data: profileData,
@@ -15,19 +18,44 @@ function User() {
   } = api.posts.getPostsFromUser.useQuery({
     userId: router.query.id as string,
   });
-  const {
-    data: videoPostsData,
-    isLoading: videoPostsLoading,
-    isError: videoPostError,
-  } = api.posts.getOnlyVideoPostsFromUser.useQuery({
-    userId: router.query.id as string,
+  const { mutate: followMutation } = api.follows.followUser.useMutation({
+    onSuccess: () => {
+      toast.success("successfully followed user ✨");
+      utils.posts.invalidate();
+    },
+    onError: () => {
+      toast.error("error occurred following user");
+    },
+  });
+  const { mutate: unfollowMutation } = api.follows.unfollowUser.useMutation({
+    onSuccess: () => {
+      toast.success("successfully unfollowed user 👋");
+      utils.posts.invalidate();
+    },
+    onError: () => {
+      toast.error("error occurred unfollowing user");
+    },
   });
 
-  if (profileLoading || videoPostsLoading) {
+  function followHandler() {
+    if (!profileData) return;
+
+    if (profileData.user.isFollowing) {
+      unfollowMutation({
+        userId: router.query.id as string,
+      });
+    } else {
+      followMutation({
+        userId: router.query.id as string,
+      });
+    }
+  }
+
+  if (profileLoading) {
     return <span>...loading</span>;
   }
 
-  if (profileError || videoPostError) {
+  if (profileError) {
     return <span>...error</span>;
   }
 
@@ -75,9 +103,12 @@ function User() {
         </div>
         {!profileData.user.isMe && (
           <div className="flex gap-2">
-            <button className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-white py-[4px] font-medium text-black hover:bg-white_hover">
+            <button
+              onClick={followHandler}
+              className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-white py-[4px] font-medium text-black hover:bg-white_hover"
+            >
               <PersonIcon />
-              Follow
+              {profileData.user.isFollowing ? "Unfollow" : "Follow"}
             </button>
             <button className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-primary py-[4px] font-medium hover:bg-primary_hover">
               <LockClosedIcon />
@@ -102,7 +133,11 @@ function User() {
           </button>
         </nav>
         <UserPostsContainer
-          data={tabSelected === "home" ? profileData.posts : videoPostsData}
+          data={
+            tabSelected === "home"
+              ? profileData.posts
+              : profileData.posts.filter((post) => post.video)
+          }
         />
       </div>
     </div>
