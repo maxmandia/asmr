@@ -6,6 +6,7 @@ import {
   PlayIcon,
 } from "@radix-ui/react-icons";
 import type { Post } from "~/types/Post";
+import Link from "next/link";
 interface Props {
   post: Post;
   setExpandedMediaContent: React.Dispatch<React.SetStateAction<Post | null>>;
@@ -17,9 +18,15 @@ function UserPost(props: Props) {
   return (
     <div>
       <div className="flex items-start gap-3">
-        <UserPFP {...post} />
+        <Link href={`/user/${post.user.id}`} prefetch={false}>
+          <UserPFP {...post} />
+        </Link>
         <div className="flex w-full flex-col">
-          <span className="font-medium">{post.user.first_name}</span>
+          <Link href={`/user/${post.user.id}`} prefetch={false}>
+            <span className="font-medium hover:underline">
+              {post.user.first_name}
+            </span>
+          </Link>
           <p className="text-[14px]">{post.caption}</p>
           <div
             onClick={() => {
