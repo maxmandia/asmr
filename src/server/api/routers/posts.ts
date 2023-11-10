@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -17,41 +18,58 @@ export const postsRouter = createTRPCRouter({
       },
     });
   }),
-  getPostsFromUser: publicProcedure
+  getPostsFromUser: protectedProcedure
     .input(z.object({ userId: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.db.post.findMany({
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.db.user.findUnique({
         where: {
-          userId: input.userId,
-        },
-        orderBy: {
-          createdAt: "desc",
+          id: input.userId,
         },
         include: {
-          user: true,
-        },
-      });
-    }),
-
-  getOnlyVideoPostsFromUser: publicProcedure
-    .input(z.object({ userId: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.db.post.findMany({
-        where: {
-          userId: input.userId,
-          video: {
-            not: null,
+          _count: {
+            select: { followers: true },
           },
         },
-        orderBy: {
-          createdAt: "desc",
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const posts = await ctx.db.post.findMany({
+        where: {
+          userId: input.userId,
         },
         include: {
           user: true,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       });
-    }),
 
+      const isFollowing = await ctx.db.follow.findFirst({
+        where: {
+          followerId: ctx.auth.userId,
+          followingId: input.userId,
+        },
+      });
+
+      if (ctx.auth.userId === input.userId) {
+        return {
+          user: { ...user, isMe: true, isFollowing: false },
+          posts,
+        };
+      } else {
+        return {
+          user: { ...user, isMe: false, isFollowing: isFollowing ?? false },
+          posts,
+        };
+      }
+    }),
   create: protectedProcedure
     .input(
       z.object({

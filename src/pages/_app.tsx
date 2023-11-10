@@ -7,6 +7,7 @@ import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { api } from "../lib/utils/api";
 import { Analytics } from "@vercel/analytics/react";
+import { Toaster } from "react-hot-toast";
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -24,6 +25,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
   return (
     <ClerkProvider {...pageProps}>
       <QueryClientProvider client={queryClient}>
+        <Toaster />
         <div className="h-screen bg-background text-text">
           {getLayout(<Component {...pageProps} />)}
           <Analytics />
