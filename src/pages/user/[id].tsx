@@ -86,7 +86,7 @@ function User() {
               width={70}
               height={70}
               priority={true}
-              className="rounded-[100px] bg-white"
+              className="h-[70px] w-[70px] rounded-[100px] bg-white object-cover"
             />
           ) : (
             <div className="h-[70px] w-[70px] rounded-[100px] bg-white" />
