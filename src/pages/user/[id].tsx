@@ -78,30 +78,35 @@ function User() {
         )}
       </div>
       <div className="px-5">
-        <div className="flex items-start gap-4  py-4">
-          {profileData.user.profile_picture_url ? (
-            <Image
-              src={profileData.user.profile_picture_url}
-              alt={`${profileData.user.first_name}'s profile picture`}
-              width={70}
-              height={70}
-              priority={true}
-              className="h-[70px] w-[70px] rounded-[100px] bg-white object-cover"
-            />
-          ) : (
-            <div className="h-[70px] w-[70px] rounded-[100px] bg-white" />
-          )}
-          <div className="flex h-[70px] flex-col justify-between leading-none">
-            <span className="text-[26px] font-medium">
-              {profileData.user.first_name}
-            </span>
-            <span className="text-[16px] text-grey">
-              @{profileData.user.handle}
-            </span>
-            <span className="text-[14px] text-grey">
-              {profileData.user._count.followers} Followers
-            </span>
+        <div className="flex items-start justify-between">
+          <div className="flex items-start gap-4  py-4">
+            {profileData.user.profile_picture_url ? (
+              <Image
+                src={profileData.user.profile_picture_url}
+                alt={`${profileData.user.first_name}'s profile picture`}
+                width={70}
+                height={70}
+                priority={true}
+                className="h-[70px] w-[70px] rounded-[100px] bg-white object-cover"
+              />
+            ) : (
+              <div className="h-[70px] w-[70px] rounded-[100px] bg-white" />
+            )}
+            <div className="flex h-[70px] flex-col justify-between leading-none">
+              <span className="text-[26px] font-medium">
+                {profileData.user.first_name}
+              </span>
+              <span className="text-[16px] text-grey">
+                @{profileData.user.handle}
+              </span>
+              <span className="text-[14px] text-grey">
+                {profileData.user._count.followers} Followers
+              </span>
+            </div>
           </div>
+          <button className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover">
+            activate subscriptions
+          </button>
         </div>
         {!profileData.user.isMe && (
           <div className="flex gap-2">
