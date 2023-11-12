@@ -12,6 +12,7 @@ function User() {
   const router = useRouter();
   const utils = api.useContext();
   const [tabSelected, setTabSelected] = useState<"home" | "videos">("home");
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const {
     data: profileData,
     isLoading: profileLoading,
@@ -52,6 +53,25 @@ function User() {
     }
   }
 
+  function SubscriptionModal() {
+    return (
+      <div className="absolute bottom-0 left-0 right-0 top-0 z-[100] flex items-center justify-center bg-black bg-opacity-50">
+        <div className="flex flex-col justify-center rounded-lg bg-input p-6">
+          <span className="text-center text-2xl">
+            Subscribe to {profileData?.user.first_name} ✨
+          </span>
+          <p className="text-grey">
+            The subscription cost is $
+            {profileData?.user.subscriptionSetting?.price}/month.
+          </p>
+          <button className="mt-5 rounded-[4px] bg-primary py-1 hover:bg-primary_hover">
+            Subscribe
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (profileLoading) {
     return <span>...loading</span>;
   }
@@ -62,6 +82,9 @@ function User() {
 
   return (
     <div className="h-[calc(100vh_-_56px)] overflow-y-scroll md:w-[50%]">
+      {showSubscriptionModal && profileData.user.subscriptionSetting && (
+        <SubscriptionModal />
+      )}
       <div className="md:px-5">
         {profileData.user.profile_header_url ? (
           <div className="relative h-[125px] w-full bg-red-100 md:rounded-[12px]">
@@ -105,12 +128,14 @@ function User() {
               </span>
             </div>
           </div>
-          <Link
-            href={"/settings"}
-            className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
-          >
-            activate subscriptions
-          </Link>
+          {profileData.user.isMe && !profileData.user.subscriptionSetting ? (
+            <Link
+              href={"/settings/monetization"}
+              className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
+            >
+              activate subscriptions
+            </Link>
+          ) : null}
         </div>
         {!profileData.user.isMe && (
           <div className="flex gap-2">
@@ -121,13 +146,18 @@ function User() {
               <PersonIcon />
               {profileData.user.isFollowing ? "Unfollow" : "Follow"}
             </button>
-            <button className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-primary py-[4px] font-medium hover:bg-primary_hover">
-              <LockClosedIcon />
-              Subscribe
-            </button>
+            {profileData.user.subscriptionSetting ? (
+              <button
+                onClick={() => setShowSubscriptionModal(true)}
+                className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-primary py-[4px] font-medium hover:bg-primary_hover"
+              >
+                <LockClosedIcon />
+                Subscribe
+              </button>
+            ) : null}
           </div>
         )}
-        <nav className="flex items-center gap-5 border-b-[.5px] border-grey pb-2  font-medium">
+        <nav className="flex items-center gap-5 border-b-[.5px] border-grey py-2 font-medium">
           <button
             onClick={() => setTabSelected("home")}
             className={`${tabSelected === "home" ? "text-white" : "text-grey"}`}

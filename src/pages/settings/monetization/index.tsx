@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import Layout from "~/components/Layout";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { api } from "~/lib/utils/api";
 import toast from "react-hot-toast";

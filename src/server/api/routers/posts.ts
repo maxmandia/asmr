@@ -29,6 +29,7 @@ export const postsRouter = createTRPCRouter({
           _count: {
             select: { followers: true },
           },
+          subscriptionSetting: true,
         },
       });
 
