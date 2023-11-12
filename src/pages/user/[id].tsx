@@ -6,6 +6,7 @@ import { api } from "~/lib/utils/api";
 import { LockClosedIcon, PersonIcon } from "@radix-ui/react-icons";
 import UserPostsContainer from "~/components/UserPostsContainer";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 function User() {
   const router = useRouter();
@@ -104,9 +105,12 @@ function User() {
               </span>
             </div>
           </div>
-          <button className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover">
+          <Link
+            href={"/settings"}
+            className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
+          >
             activate subscriptions
-          </button>
+          </Link>
         </div>
         {!profileData.user.isMe && (
           <div className="flex gap-2">
@@ -123,7 +127,7 @@ function User() {
             </button>
           </div>
         )}
-        <nav className="flex items-center gap-5 border-b-[.5px] border-grey pb-2 pt-4 font-medium">
+        <nav className="flex items-center gap-5 border-b-[.5px] border-grey pb-2  font-medium">
           <button
             onClick={() => setTabSelected("home")}
             className={`${tabSelected === "home" ? "text-white" : "text-grey"}`}
