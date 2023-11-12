@@ -3,10 +3,33 @@ import Layout from "~/components/Layout";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
-
+import { api } from "~/lib/utils/api";
+import toast from "react-hot-toast";
 function Monetization() {
   const router = useRouter();
   const priceRef = useRef<HTMLInputElement>(null);
+  const { mutate } =
+    api.subscriptionSettings.updateSubscriptionSettings.useMutation({
+      onSuccess: () => {
+        toast.dismiss();
+        toast.success("Subscription settings updated successfully!");
+      },
+      onError: () => {
+        toast.dismiss();
+        toast.error("Something went wrong");
+      },
+    });
+
+  function updateSubscriptionSettings() {
+    if (!priceRef.current) {
+      return;
+    }
+    toast.loading("Updating");
+    mutate({
+      price: Number(priceRef.current.value),
+    });
+  }
+
   return (
     <div className="p-5 md:w-[50%]">
       <div className="flex items-center justify-between">
@@ -16,7 +39,7 @@ function Monetization() {
           </button>
           <span className="text-xl font-medium">Monetization</span>
         </div>
-        <button>Save</button>
+        <button onClick={updateSubscriptionSettings}>Save</button>
       </div>
       <div className="py-10">
         <span className="text-xl font-medium">Subscription Settings</span>

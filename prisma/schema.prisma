@@ -16,9 +16,10 @@ model User {
   profile_picture_url     String?    @db.VarChar(500)
   profile_header_url      String?    @db.VarChar(500)
   handle                  String?    @unique
-   following              Follow[]   @relation("UserFollows")
+  following               Follow[]   @relation("UserFollows")
   followers               Follow[]   @relation("UserFollowedBy")
   posts                   Post[]
+  subscriptionSetting     SubscriptionSetting?
 }
 
 model Post {
@@ -45,6 +46,15 @@ model Follow {
   @@index([followerId])
   @@index([followingId])
   @@unique([followerId, followingId]) 
+}
+
+model SubscriptionSetting {
+  id                      Int        @id @default(autoincrement())
+  userId                  String     @unique
+  createdAt               DateTime   @default(now())
+  price                   Int       
+  user                    User       @relation(fields: [userId], references: [id])
+  @@index([userId])
 }
 
 model Waitlist {
