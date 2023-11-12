@@ -53,6 +53,8 @@ model SubscriptionSetting {
   userId                  String     @unique
   createdAt               DateTime   @default(now())
   price                   Int       
+  priceId                 String     
+  productId               String
   user                    User       @relation(fields: [userId], references: [id])
   @@index([userId])
 }
