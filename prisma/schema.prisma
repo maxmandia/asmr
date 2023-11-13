@@ -15,7 +15,7 @@ model User {
   last_name               String?
   profile_picture_url     String?    @db.VarChar(500)
   profile_header_url      String?    @db.VarChar(500)
-  handle                  String?    @unique
+  handle                  String     @unique
   following               Follow[]   @relation("UserFollows")
   followers               Follow[]   @relation("UserFollowedBy")
   posts                   Post[]
@@ -53,6 +53,8 @@ model SubscriptionSetting {
   userId                  String     @unique
   createdAt               DateTime   @default(now())
   price                   Int       
+  priceId                 String     
+  productId               String
   user                    User       @relation(fields: [userId], references: [id])
   @@index([userId])
 }

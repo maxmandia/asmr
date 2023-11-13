@@ -32,11 +32,6 @@ async function main() {
       last_name: "Prisma",
       profile_picture_url: "https://i.imgur.com/BdN9y8h.jpeg",
       handle: "bob",
-      subscriptionSetting: {
-        create: {
-          price: 50,
-        },
-      },
       posts: {
         create: {
           caption: "YO this is bob!",
@@ -44,6 +39,13 @@ async function main() {
           video: null,
           fileKey: null,
           isPaid: false,
+        },
+      },
+      subscriptionSetting: {
+        create: {
+          price: 20,
+          priceId: "price_1OBmXmIN7xQGjCuLOBGhebg9",
+          productId: "bob",
         },
       },
     },

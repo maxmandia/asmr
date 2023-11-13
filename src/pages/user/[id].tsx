@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
 import { LockClosedIcon, PersonIcon } from "@radix-ui/react-icons";
@@ -54,9 +54,30 @@ function User() {
   }
 
   function SubscriptionModal() {
+    const modalRef = useRef<HTMLDivElement>(null);
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setShowSubscriptionModal(false);
+      }
+    };
+
+    useEffect(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+
     return (
       <div className="absolute bottom-0 left-0 right-0 top-0 z-[100] flex items-center justify-center bg-black bg-opacity-50">
-        <div className="flex flex-col justify-center rounded-lg bg-input p-6">
+        <div
+          ref={modalRef}
+          className="flex flex-col justify-center rounded-lg bg-input p-6"
+        >
           <span className="text-center text-2xl">
             Subscribe to {profileData?.user.first_name} ✨
           </span>
@@ -64,7 +85,15 @@ function User() {
             The subscription cost is $
             {profileData?.user.subscriptionSetting?.price}/month.
           </p>
-          <button className="mt-5 rounded-[4px] bg-primary py-1 hover:bg-primary_hover">
+          <button
+            onClick={() => {
+              setShowSubscriptionModal(false);
+              router.push(
+                `/checkout?priceId=${profileData?.user.subscriptionSetting?.priceId}&userId=${profileData?.user.id}`,
+              );
+            }}
+            className="mt-5 rounded-[4px] bg-primary py-1 hover:bg-primary_hover"
+          >
             Subscribe
           </button>
         </div>

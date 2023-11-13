@@ -1,7 +1,11 @@
-import { TRPCClientError } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", {
+  apiVersion: "2023-10-16",
+});
 
 export const subscriptionSettingsRouter = createTRPCRouter({
   updateSubscriptionSettings: protectedProcedure
@@ -12,20 +16,74 @@ export const subscriptionSettingsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        const subscriptionSettings = await ctx.db.subscriptionSetting.upsert({
+        const userData = await ctx.db.user.findUnique({
           where: {
-            userId: ctx.auth.userId,
+            id: ctx.auth.userId,
           },
-          update: {
-            price: input.price,
-          },
-          create: {
-            userId: ctx.auth.userId,
-            price: input.price,
+          select: {
+            handle: true,
+            subscriptionSetting: true,
           },
         });
 
-        return subscriptionSettings;
+        if (!userData) {
+          return new TRPCError({
+            code: "NOT_FOUND",
+            message: "User not found",
+          });
+        }
+
+        if (userData?.subscriptionSetting) {
+          const product = await stripe.products.retrieve(
+            userData.subscriptionSetting.productId,
+          );
+
+          const newPrice = await stripe.prices.create({
+            product: product.id,
+            unit_amount: Number(`${input.price}00`),
+            currency: "usd",
+            recurring: { interval: "month" },
+          });
+
+          await stripe.products.update(product.id, {
+            default_price: newPrice.id,
+          });
+
+          const subscriptionSettings = await ctx.db.subscriptionSetting.update({
+            where: {
+              userId: ctx.auth.userId,
+            },
+            data: {
+              price: input.price,
+              priceId: newPrice.id,
+              productId: product.id,
+            },
+          });
+
+          return subscriptionSettings;
+        } else {
+          const product = await stripe.products.create({
+            name: userData.handle,
+            default_price_data: {
+              currency: "usd",
+              unit_amount: Number(`${input.price}00`),
+              recurring: {
+                interval: "month",
+              },
+            },
+          });
+
+          const subscriptionSettings = await ctx.db.subscriptionSetting.create({
+            data: {
+              userId: ctx.auth.userId,
+              price: input.price,
+              priceId: product.default_price as string,
+              productId: product.id,
+            },
+          });
+
+          return subscriptionSettings;
+        }
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

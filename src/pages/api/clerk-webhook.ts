@@ -74,6 +74,8 @@ export default async function handler(
             first_name: data.first_name as string,
             last_name: data.last_name as string,
             profile_picture_url: (data.profile_image_url as string) ?? null,
+            // TODO: Update this to be a real value
+            handle: data.first_name as string,
           },
         });
 
