@@ -16,6 +16,7 @@ model User {
   profile_picture_url     String?    @db.VarChar(500)
   profile_header_url      String?    @db.VarChar(500)
   handle                  String     @unique
+  stripe_customer_id      String     @unique
   following               Follow[]   @relation("UserFollows")
   followers               Follow[]   @relation("UserFollowedBy")
   posts                   Post[]

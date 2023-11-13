@@ -17,16 +17,16 @@ const stripePromise = loadStripe(
 export default function StripeCheckout() {
   const [clientSecret, setClientSecret] = useState("");
   const router = useRouter();
-  const { priceId, userId } = router.query;
+  const { priceId, userId, stripeCustomerId } = router.query;
 
   useEffect(() => {
     if (!priceId) {
       return;
     }
-    console.log;
+
     fetch("/api/checkout_sessions", {
       method: "POST",
-      body: JSON.stringify({ priceId, userId: userId }),
+      body: JSON.stringify({ priceId, userId: userId, stripeCustomerId }),
       headers: {
         "Content-Type": "application/json",
       },

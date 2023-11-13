@@ -4,7 +4,7 @@ import { stripe } from "~/config/stripe";
 export default async function handler(
   req: {
     method: any;
-    body: { priceId: any; userId: any };
+    body: { priceId: any; userId: any; stripeCustomerId: string };
     headers: { origin: any };
     query: { session_id: string };
   },
@@ -26,7 +26,9 @@ export default async function handler(
   switch (req.method) {
     case "POST":
       try {
-        const { priceId, userId } = req.body;
+        const { priceId, userId, stripeCustomerId } = req.body;
+
+        console.log(stripeCustomerId);
 
         if (!priceId) {
           return res.status(400).json({ error: "Price ID is required" });
@@ -43,6 +45,7 @@ export default async function handler(
           ],
           mode: "subscription",
           return_url: `${req.headers.origin}/user/${userId}`,
+          customer: stripeCustomerId,
         });
 
         res.send({ clientSecret: session.client_secret });
