@@ -66,9 +66,7 @@ function User() {
     };
 
     useEffect(() => {
-      // Add when mounted
       document.addEventListener("mousedown", handleClickOutside);
-      // Return function to be called when unmounted
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
@@ -87,7 +85,15 @@ function User() {
             The subscription cost is $
             {profileData?.user.subscriptionSetting?.price}/month.
           </p>
-          <button className="mt-5 rounded-[4px] bg-primary py-1 hover:bg-primary_hover">
+          <button
+            onClick={() => {
+              setShowSubscriptionModal(false);
+              router.push(
+                `/checkout?priceId=${profileData?.user.subscriptionSetting?.priceId}&userId=${profileData?.user.id}`,
+              );
+            }}
+            className="mt-5 rounded-[4px] bg-primary py-1 hover:bg-primary_hover"
+          >
             Subscribe
           </button>
         </div>

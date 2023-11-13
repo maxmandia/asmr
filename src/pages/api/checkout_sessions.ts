@@ -4,18 +4,23 @@ export default async function handler(req, res) {
   switch (req.method) {
     case "POST":
       try {
+        let { priceId, userId } = req.body;
+
+        if (!priceId) {
+          return res.status(400).json({ error: "Price ID is required" });
+        }
         // Create Checkout Sessions from body params.
         const session = await stripe.checkout.sessions.create({
           ui_mode: "embedded",
           line_items: [
             {
               // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-              price: "pr_1234",
+              price: priceId,
               quantity: 1,
             },
           ],
-          mode: "payment",
-          return_url: `${req.headers.origin}/return?session_id={CHECKOUT_SESSION_ID}`,
+          mode: "subscription",
+          return_url: `${req.headers.origin}/user/${userId}`,
         });
 
         res.send({ clientSecret: session.client_secret });

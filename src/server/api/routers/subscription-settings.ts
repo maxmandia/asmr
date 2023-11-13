@@ -17,15 +17,26 @@ export const subscriptionSettingsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        const existingSetting = await ctx.db.subscriptionSetting.findUnique({
+        const userData = await ctx.db.user.findUnique({
           where: {
-            userId: ctx.auth.userId,
+            id: ctx.auth.userId,
+          },
+          select: {
+            handle: true,
+            subscriptionSetting: true,
           },
         });
 
-        if (existingSetting) {
+        if (!userData) {
+          return new TRPCError({
+            code: "NOT_FOUND",
+            message: "User not found",
+          });
+        }
+
+        if (userData?.subscriptionSetting) {
           const product = await stripe.products.retrieve(
-            existingSetting.productId,
+            userData.subscriptionSetting.productId,
           );
 
           const newPrice = await stripe.prices.create({
@@ -41,7 +52,7 @@ export const subscriptionSettingsRouter = createTRPCRouter({
 
           const subscriptionSettings = await ctx.db.subscriptionSetting.update({
             where: {
-              id: existingSetting.id,
+              userId: ctx.auth.userId,
             },
             data: {
               price: input.price,
@@ -53,7 +64,7 @@ export const subscriptionSettingsRouter = createTRPCRouter({
           return subscriptionSettings;
         } else {
           const product = await stripe.products.create({
-            name: ctx.auth.userId,
+            name: userData.handle,
             default_price_data: {
               currency: "usd",
               unit_amount: Number(`${input.price}00`),

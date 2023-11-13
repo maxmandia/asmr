@@ -41,6 +41,13 @@ async function main() {
           isPaid: false,
         },
       },
+      subscriptionSetting: {
+        create: {
+          price: 20,
+          priceId: "price_1OBmXmIN7xQGjCuLOBGhebg9",
+          productId: "bob",
+        },
+      },
     },
   });
   await prisma.user.upsert({
