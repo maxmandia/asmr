@@ -20,6 +20,8 @@ model User {
   following               Follow[]   @relation("UserFollows")
   followers               Follow[]   @relation("UserFollowedBy")
   posts                   Post[]
+  subsriber               Subscription[] @relation("TheUserSubscribing")
+  subsribedTo             Subscription[] @relation("TheUserBeingSubscribedTo")
   subscriptionSetting     SubscriptionSetting?
 }
 
@@ -47,6 +49,19 @@ model Follow {
   @@index([followerId])
   @@index([followingId])
   @@unique([followerId, followingId]) 
+}
+
+model Subscription {
+  id                      Int        @id @default(autoincrement())
+  subscriberId            String     
+  subscribedToId          String     
+  createdAt               DateTime   @default(now())
+  subscriber              User       @relation("TheUserSubscribing", fields: [subscriberId], references: [id])
+  subsribedTo             User       @relation("TheUserBeingSubscribedTo", fields: [subscribedToId], references: [id])
+
+  @@index([subscriberId])
+  @@index([subscribedToId])
+  @@unique([subscriberId, subscribedToId]) 
 }
 
 model SubscriptionSetting {
