@@ -1,10 +1,32 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+import Stripe from "stripe";
+import { stripe } from "~/config/stripe";
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: {
+    method: any;
+    body: { priceId: any; userId: any };
+    headers: { origin: any };
+    query: { session_id: string };
+  },
+  res: {
+    status: (arg0: number) => {
+      (): any;
+      new (): any;
+      json: { (arg0: { error: string }): void; new (): any };
+      end: { (arg0: string): void; new (): any };
+    };
+    send: (arg0: {
+      clientSecret?: string | null;
+      status?: Stripe.Checkout.Session.Status | null;
+      customer_email?: string | null;
+    }) => void;
+    setHeader: (arg0: string, arg1: any) => void;
+  },
+) {
   switch (req.method) {
     case "POST":
       try {
-        let { priceId, userId } = req.body;
+        const { priceId, userId } = req.body;
 
         if (!priceId) {
           return res.status(400).json({ error: "Price ID is required" });
@@ -24,7 +46,7 @@ export default async function handler(req, res) {
         });
 
         res.send({ clientSecret: session.client_secret });
-      } catch (err) {
+      } catch (err: any) {
         res.status(err.statusCode || 500).json(err.message);
       }
     case "GET":
@@ -35,9 +57,9 @@ export default async function handler(req, res) {
 
         res.send({
           status: session.status,
-          customer_email: session.customer_details.email,
+          customer_email: session?.customer_details?.email,
         });
-      } catch (err) {
+      } catch (err: any) {
         res.status(err.statusCode || 500).json(err.message);
       }
     default:
