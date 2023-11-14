@@ -20,6 +20,7 @@ function User() {
   } = api.posts.getPostsFromUser.useQuery({
     userId: router.query.id as string,
   });
+
   const { mutate: followMutation } = api.follows.followUser.useMutation({
     onSuccess: () => {
       toast.success("successfully followed user ✨");
@@ -177,11 +178,15 @@ function User() {
             </button>
             {profileData.user.subscriptionSetting ? (
               <button
-                onClick={() => setShowSubscriptionModal(true)}
+                onClick={() => {
+                  if (!profileData.user.subscriber) {
+                    setShowSubscriptionModal(true);
+                  }
+                }}
                 className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-primary py-[4px] font-medium hover:bg-primary_hover"
               >
-                <LockClosedIcon />
-                Subscribe
+                {profileData.user.subscriber ? "✨" : <LockClosedIcon />}
+                {profileData.user.subscriber ? "Subscribed" : "Subscribe"}
               </button>
             ) : null}
           </div>
