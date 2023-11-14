@@ -9,6 +9,7 @@ export default authMiddleware({
     "/api/clerk-webhook",
     "/api/trpc/waitlists.addUserToWaitlist",
     "/",
+    "/api/capture-payment-success",
   ],
 });
 

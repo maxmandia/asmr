@@ -7,6 +7,7 @@ async function main() {
     create: {
       id: "ASJDLSADSJALDJASLKJD",
       email: "alice@prisma.io",
+      stripe_customer_id: "cus_OzobuISR25yCn6",
       first_name: "Alice",
       last_name: "Prisma",
       profile_picture_url: "https://i.imgur.com/BdN9y8h.jpeg",
@@ -28,6 +29,7 @@ async function main() {
     create: {
       id: "LKJDSFLSAKDJFASLAL",
       email: "bob@prisma.io",
+      stripe_customer_id: "cus_OzoaHUCkkabXcF",
       first_name: "Bob",
       last_name: "Prisma",
       profile_picture_url: "https://i.imgur.com/BdN9y8h.jpeg",
@@ -41,6 +43,13 @@ async function main() {
           isPaid: false,
         },
       },
+      subscriptionSetting: {
+        create: {
+          price: 20,
+          priceId: "price_1OBmXmIN7xQGjCuLOBGhebg9",
+          productId: "bob",
+        },
+      },
     },
   });
   await prisma.user.upsert({
@@ -49,6 +58,7 @@ async function main() {
     create: {
       id: "user_2W5yMCDxXqt6qvZZzOJ9LKNmHca",
       email: "max@prisma.io",
+      stripe_customer_id: "cus_Ozocd5CWheamgv",
       first_name: "Max",
       last_name: "Prisma",
       profile_picture_url:

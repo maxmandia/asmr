@@ -29,6 +29,12 @@ export const postsRouter = createTRPCRouter({
           _count: {
             select: { followers: true },
           },
+          subscriptionSetting: true,
+          subscriber: {
+            where: {
+              subscriberId: ctx.auth.userId,
+            },
+          },
         },
       });
 
@@ -61,11 +67,13 @@ export const postsRouter = createTRPCRouter({
       if (ctx.auth.userId === input.userId) {
         return {
           user: { ...user, isMe: true, isFollowing: false },
+          currentUser: ctx.auth.userId,
           posts,
         };
       } else {
         return {
           user: { ...user, isMe: false, isFollowing: isFollowing ?? false },
+          currentUser: ctx.auth.userId,
           posts,
         };
       }

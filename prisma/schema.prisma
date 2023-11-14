@@ -15,10 +15,14 @@ model User {
   last_name               String?
   profile_picture_url     String?    @db.VarChar(500)
   profile_header_url      String?    @db.VarChar(500)
-  handle                  String?    @unique
-   following              Follow[]   @relation("UserFollows")
+  handle                  String     @unique
+  stripe_customer_id      String     @unique
+  following               Follow[]   @relation("UserFollows")
   followers               Follow[]   @relation("UserFollowedBy")
   posts                   Post[]
+  subscriber              Subscription[] @relation("TheUserSubscribing")
+  subsrcibedTo            Subscription[] @relation("TheUserBeingSubscribedTo")
+  subscriptionSetting     SubscriptionSetting?
 }
 
 model Post {
@@ -45,6 +49,30 @@ model Follow {
   @@index([followerId])
   @@index([followingId])
   @@unique([followerId, followingId]) 
+}
+
+model Subscription {
+  id                      Int        @id @default(autoincrement())
+  subscriberId            String     
+  subscribedToId          String     
+  createdAt               DateTime   @default(now())
+  subscriber              User       @relation("TheUserSubscribing", fields: [subscriberId], references: [id])
+  subsribedTo             User       @relation("TheUserBeingSubscribedTo", fields: [subscribedToId], references: [id])
+
+  @@index([subscriberId])
+  @@index([subscribedToId])
+  @@unique([subscriberId, subscribedToId]) 
+}
+
+model SubscriptionSetting {
+  id                      Int        @id @default(autoincrement())
+  userId                  String     @unique
+  createdAt               DateTime   @default(now())
+  price                   Int       
+  priceId                 String     
+  productId               String
+  user                    User       @relation(fields: [userId], references: [id])
+  @@index([userId])
 }
 
 model Waitlist {
