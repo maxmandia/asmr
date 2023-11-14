@@ -89,7 +89,7 @@ function User() {
             onClick={() => {
               setShowSubscriptionModal(false);
               router.push(
-                `/checkout?priceId=${profileData?.user.subscriptionSetting?.priceId}&userId=${profileData?.user.id}&stripeCustomerId=${profileData?.user.stripe_customer_id}`,
+                `/checkout?priceId=${profileData?.user.subscriptionSetting?.priceId}&subscriberId=${profileData?.currentUser}&subscribedToId=${profileData?.user.id}&stripeCustomerId=${profileData?.user.stripe_customer_id}`,
               );
             }}
             className="mt-5 rounded-[4px] bg-primary py-1 hover:bg-primary_hover"

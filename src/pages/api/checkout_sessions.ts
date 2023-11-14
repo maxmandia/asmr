@@ -4,7 +4,13 @@ import { stripe } from "~/config/stripe";
 export default async function handler(
   req: {
     method: any;
-    body: { priceId: any; userId: any; stripeCustomerId: string };
+    body: {
+      priceId: any;
+      userId: any;
+      stripeCustomerId: string;
+      subscriberId: string;
+      subscribedToId: string;
+    };
     headers: { origin: any };
     query: { session_id: string };
   },
@@ -26,26 +32,30 @@ export default async function handler(
   switch (req.method) {
     case "POST":
       try {
-        const { priceId, userId, stripeCustomerId } = req.body;
+        const { priceId, subscriberId, subscribedToId, stripeCustomerId } =
+          req.body;
 
-        console.log(stripeCustomerId);
-
-        if (!priceId) {
-          return res.status(400).json({ error: "Price ID is required" });
+        if (!priceId || !subscriberId || !subscribedToId || !stripeCustomerId) {
+          return res.status(400).json({ error: "Missing a body value" });
         }
         // Create Checkout Sessions from body params.
         const session = await stripe.checkout.sessions.create({
           ui_mode: "embedded",
           line_items: [
             {
-              // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
               price: priceId,
               quantity: 1,
             },
           ],
           mode: "subscription",
-          return_url: `${req.headers.origin}/user/${userId}`,
+          return_url: `${req.headers.origin}/user/${subscribedToId}`,
           customer: stripeCustomerId,
+          subscription_data: {
+            metadata: {
+              subscriberId,
+              subscribedToId,
+            },
+          },
         });
 
         res.send({ clientSecret: session.client_secret });
