@@ -20,7 +20,7 @@ function MobileNavigation() {
   }
 
   return (
-    <nav className="fixed bottom-0 z-50 flex w-screen items-center justify-around border-t-[.5px] border-solid bg-[#161617] py-4">
+    <nav className="fixed bottom-0 z-50 flex w-screen items-center justify-around border-t-[.5px] border-solid bg-[#161617] py-1">
       <Link className="p-4" href={"/home"}>
         <HomeIcon height={25} width={25} color="white" />
       </Link>
