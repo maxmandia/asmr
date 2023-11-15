@@ -132,8 +132,8 @@ function User() {
         )}
       </div>
       <div className="px-5">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start gap-4  py-4">
+        <div className="flex items-start justify-between py-4">
+          <div className="flex items-start gap-4">
             {profileData.user.profile_picture_url ? (
               <Image
                 src={profileData.user.profile_picture_url}
@@ -158,14 +158,24 @@ function User() {
               </span>
             </div>
           </div>
-          {profileData.user.isMe && !profileData.user.subscriptionSetting ? (
-            <Link
-              href={"/settings/monetization"}
-              className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
-            >
-              activate subscriptions
-            </Link>
-          ) : null}
+          <div className="flex flex-col gap-[10px]">
+            {profileData.user.isMe ? (
+              <Link
+                href={"/settings"}
+                className="rounded-xl bg-input px-3 py-1 text-center text-[12px] text-white hover:bg-input_hover"
+              >
+                settings
+              </Link>
+            ) : null}
+            {profileData.user.isMe && !profileData.user.subscriptionSetting ? (
+              <Link
+                href={"/settings/monetization"}
+                className="rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
+              >
+                ✨ subscriptions
+              </Link>
+            ) : null}
+          </div>
         </div>
         {!profileData.user.isMe && (
           <div className="flex gap-2">
