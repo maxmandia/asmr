@@ -39,6 +39,12 @@ function User() {
       toast.error("error occurred unfollowing user");
     },
   });
+  const { mutate: expressAccountMutation } =
+    api.stripe.createExpressAccount.useMutation({
+      onSuccess: (resp) => {
+        router.replace(resp.url);
+      },
+    });
 
   function followHandler() {
     if (!profileData) return;
@@ -158,13 +164,14 @@ function User() {
               </span>
             </div>
           </div>
-          {profileData.user.isMe && !profileData.user.subscriptionSetting ? (
-            <Link
-              href={"/settings/monetization"}
+          {profileData.user.isMe &&
+          !profileData.user.subscriptionSetting?.isComplete ? (
+            <button
+              onClick={() => expressAccountMutation()}
               className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
             >
               activate subscriptions
-            </Link>
+            </button>
           ) : null}
         </div>
         {!profileData.user.isMe && (

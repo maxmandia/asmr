@@ -68,9 +68,8 @@ model SubscriptionSetting {
   id                      Int        @id @default(autoincrement())
   userId                  String     @unique
   createdAt               DateTime   @default(now())
-  price                   Int       
-  priceId                 String     
-  productId               String
+  connectAccountId        String
+  isComplete              Boolean    @default(false)
   user                    User       @relation(fields: [userId], references: [id])
   @@index([userId])
 }
