@@ -69,7 +69,10 @@ model SubscriptionSetting {
   userId                  String     @unique
   createdAt               DateTime   @default(now())
   connectAccountId        String
-  isComplete              Boolean    @default(false)
+  isComplete              Boolean    @default(false) // if the connectAccount is completed
+  productId               String?  
+  priceId                 String?
+  price                   Int?
   user                    User       @relation(fields: [userId], references: [id])
   @@index([userId])
 }

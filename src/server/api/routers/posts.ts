@@ -72,7 +72,12 @@ export const postsRouter = createTRPCRouter({
         };
       } else {
         return {
-          user: { ...user, isMe: false, isFollowing: isFollowing ?? false },
+          user: {
+            ...user,
+            isMe: false,
+            isFollowing: isFollowing ?? false,
+            subscriber: user.subscriber.length > 0 ? user.subscriber[0] : null,
+          },
           currentUser: ctx.auth.userId,
           posts,
         };

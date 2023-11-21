@@ -43,6 +43,15 @@ async function main() {
           isPaid: false,
         },
       },
+      subscriptionSetting: {
+        create: {
+          connectAccountId: "acct_1OEiR4RDu4b9PueH",
+          isComplete: true,
+          price: 20,
+          productId: "prod_Ozm59u0jgWnPpu",
+          priceId: "price_1OBmXmIN7xQGjCuLOBGhebg9",
+        },
+      },
     },
   });
   await prisma.user.upsert({
@@ -67,6 +76,14 @@ async function main() {
           video: null,
           fileKey: null,
           isPaid: false,
+        },
+      },
+      subscriptionSetting: {
+        create: {
+          connectAccountId: "acct_1ODr6GIyNR7z2wEf",
+          isComplete: true,
+          productId: "prod_P2nG5XcGhHI0cG",
+          priceId: "price_1OEhfpIN7xQGjCuLmCCq0xMF",
         },
       },
     },

@@ -8,6 +8,7 @@
   "scripts": {
     "build": "next build",
     "stu": "npx prisma studio",
+    "db:seed": "npx prisma db seed",
     "db:reset": "npx prisma db push --force-reset && npx prisma db seed",
     "db:push": "prisma db push",
     "dev": "next dev",

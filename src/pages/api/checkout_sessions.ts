@@ -10,6 +10,7 @@ export default async function handler(
       stripeCustomerId: string;
       subscriberId: string;
       subscribedToId: string;
+      connectAccountId: string;
     };
     headers: { origin: any };
     query: { session_id: string };
@@ -32,10 +33,21 @@ export default async function handler(
   switch (req.method) {
     case "POST":
       try {
-        const { priceId, subscriberId, subscribedToId, stripeCustomerId } =
-          req.body;
+        const {
+          priceId,
+          subscriberId,
+          subscribedToId,
+          stripeCustomerId,
+          connectAccountId,
+        } = req.body;
 
-        if (!priceId || !subscriberId || !subscribedToId || !stripeCustomerId) {
+        if (
+          !priceId ||
+          !subscriberId ||
+          !subscribedToId ||
+          !stripeCustomerId ||
+          !connectAccountId
+        ) {
           return res.status(400).json({ error: "Missing a body value" });
         }
         // Create Checkout Sessions from body params.
@@ -51,6 +63,10 @@ export default async function handler(
           return_url: `${req.headers.origin}/user/${subscribedToId}`,
           customer: stripeCustomerId,
           subscription_data: {
+            application_fee_percent: 19,
+            transfer_data: {
+              destination: connectAccountId,
+            },
             metadata: {
               subscriberId,
               subscribedToId,

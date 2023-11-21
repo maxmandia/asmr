@@ -1,11 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", {
-  apiVersion: "2023-10-16",
-});
+import { stripe } from "~/config/stripe";
 
 export const subscriptionSettingsRouter = createTRPCRouter({
   updateSubscriptionSettings: protectedProcedure
@@ -33,7 +29,8 @@ export const subscriptionSettingsRouter = createTRPCRouter({
           });
         }
 
-        if (userData?.subscriptionSetting) {
+        if (userData.subscriptionSetting?.productId) {
+          // if the user has a product id, update the price
           const product = await stripe.products.retrieve(
             userData.subscriptionSetting.productId,
           );
@@ -54,14 +51,16 @@ export const subscriptionSettingsRouter = createTRPCRouter({
               userId: ctx.auth.userId,
             },
             data: {
+              userId: ctx.auth.userId,
               price: input.price,
-              priceId: newPrice.id,
+              priceId: product.default_price as string,
               productId: product.id,
             },
           });
 
           return subscriptionSettings;
         } else {
+          // if the user does not have a product id, create a product and price
           const product = await stripe.products.create({
             name: userData.handle,
             default_price_data: {
@@ -73,7 +72,21 @@ export const subscriptionSettingsRouter = createTRPCRouter({
             },
           });
 
-          const subscriptionSettings = await ctx.db.subscriptionSetting.create({
+          const newPrice = await stripe.prices.create({
+            product: product.id,
+            unit_amount: Number(`${input.price}00`),
+            currency: "usd",
+            recurring: { interval: "month" },
+          });
+
+          await stripe.products.update(product.id, {
+            default_price: newPrice.id,
+          });
+
+          const subscriptionSettings = await ctx.db.subscriptionSetting.update({
+            where: {
+              userId: ctx.auth.userId,
+            },
             data: {
               userId: ctx.auth.userId,
               price: input.price,
