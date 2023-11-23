@@ -117,7 +117,7 @@ function PostVideo(post: Post) {
         }}
         onDoubleClick={handleFullscreen}
         ref={videoRef}
-        className="absolute left-0 top-0 h-full w-full object-contain"
+        className="absolute left-0 top-0 h-full w-full object-cover"
         src={post.video}
         loop
       />
