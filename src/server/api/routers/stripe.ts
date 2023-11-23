@@ -7,6 +7,8 @@ import {
 import { stripe } from "~/config/stripe";
 import { TRPCError } from "@trpc/server";
 
+const URL = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+
 export const stripeRouter = createTRPCRouter({
   createExpressAccount: protectedProcedure.mutation(async ({ ctx }) => {
     // get the user's information
@@ -31,8 +33,8 @@ export const stripeRouter = createTRPCRouter({
     if (user.subscriptionSetting && user.subscriptionSetting.connectAccountId) {
       const accountLink = await stripe.accountLinks.create({
         account: user.subscriptionSetting.connectAccountId,
-        refresh_url: "https://hushasmr.com/sign-in",
-        return_url: "https://hushasmr.com/home",
+        refresh_url: `${URL}/sign-in`,
+        return_url: `${URL}/home`,
         type: "account_onboarding",
       });
       return { url: accountLink.url };
@@ -71,8 +73,8 @@ export const stripeRouter = createTRPCRouter({
 
       const accountLink = await stripe.accountLinks.create({
         account: account.id,
-        refresh_url: "https://hushasmr.com/sign-in",
-        return_url: "https://hushasmr.com/home",
+        refresh_url: `${URL}/sign-in`,
+        return_url: `${URL}/home`,
         type: "account_onboarding",
       });
 
