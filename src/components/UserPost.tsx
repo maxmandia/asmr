@@ -144,6 +144,7 @@ function PostVideo(post: Post) {
         ref={videoRef}
         className="absolute left-0 top-0 h-full w-full object-cover"
         src={post.video}
+        playsInline
         loop
       />
       {/* <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center">
