@@ -17,8 +17,13 @@ const stripePromise = loadStripe(
 export default function StripeCheckout() {
   const [clientSecret, setClientSecret] = useState("");
   const router = useRouter();
-  const { priceId, subscriberId, subscribedToId, stripeCustomerId } =
-    router.query;
+  const {
+    priceId,
+    subscriberId,
+    subscribedToId,
+    stripeCustomerId,
+    connectAccountId,
+  } = router.query;
 
   useEffect(() => {
     if (!priceId) {
@@ -32,6 +37,7 @@ export default function StripeCheckout() {
         subscriberId,
         subscribedToId,
         stripeCustomerId,
+        connectAccountId,
       }),
       headers: {
         "Content-Type": "application/json",

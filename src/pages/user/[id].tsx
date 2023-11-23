@@ -39,6 +39,12 @@ function User() {
       toast.error("error occurred unfollowing user");
     },
   });
+  const { mutate: expressAccountMutation } =
+    api.stripe.createExpressAccount.useMutation({
+      onSuccess: (resp) => {
+        router.replace(resp.url);
+      },
+    });
 
   function followHandler() {
     if (!profileData) return;
@@ -90,7 +96,7 @@ function User() {
             onClick={() => {
               setShowSubscriptionModal(false);
               router.push(
-                `/checkout?priceId=${profileData?.user.subscriptionSetting?.priceId}&subscriberId=${profileData?.currentUser}&subscribedToId=${profileData?.user.id}&stripeCustomerId=${profileData?.user.stripe_customer_id}`,
+                `/checkout?priceId=${profileData?.user.subscriptionSetting?.priceId}&subscriberId=${profileData?.currentUser}&subscribedToId=${profileData?.user.id}&stripeCustomerId=${profileData?.user.stripe_customer_id}&connectAccountId=${profileData?.user.subscriptionSetting?.connectAccountId}`,
               );
             }}
             className="mt-5 rounded-[4px] bg-primary py-1 hover:bg-primary_hover"
@@ -158,12 +164,23 @@ function User() {
               </span>
             </div>
           </div>
-          {profileData.user.isMe && !profileData.user.subscriptionSetting ? (
+          {profileData.user.isMe &&
+          !profileData.user.subscriptionSetting?.isComplete ? (
+            <button
+              onClick={() => expressAccountMutation()}
+              className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
+            >
+              activate subscriptions
+            </button>
+          ) : null}
+          {profileData.user.isMe &&
+          profileData.user.subscriptionSetting?.isComplete &&
+          !profileData.user.subscriptionSetting.priceId ? (
             <Link
               href={"/settings/monetization"}
               className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
             >
-              activate subscriptions
+              finish setup
             </Link>
           ) : null}
         </div>

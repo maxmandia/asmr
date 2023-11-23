@@ -10,6 +10,7 @@ export default authMiddleware({
     "/api/trpc/waitlists.addUserToWaitlist",
     "/",
     "/api/capture-payment-success",
+    "/api/capture-account-updated",
   ],
 });
 
