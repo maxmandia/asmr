@@ -103,25 +103,25 @@ function PostVideo(post: Post) {
     }
   }
 
-  useEffect(() => {
-    if (videoRef.current) {
-      const hiddenVideo = document.createElement("video");
-      hiddenVideo.crossOrigin = "anonymous";
-      hiddenVideo.src = post.video ?? "";
-      hiddenVideo.currentTime = 0;
-      hiddenVideo.onseeked = () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = hiddenVideo.videoWidth;
-        canvas.height = hiddenVideo.videoHeight;
-        const ctx = canvas.getContext("2d");
-        ctx?.drawImage(hiddenVideo, 0, 0, canvas.width, canvas.height);
-        const posterUrl = canvas.toDataURL();
-        if (videoRef.current) {
-          videoRef.current.poster = posterUrl;
-        }
-      };
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (videoRef.current) {
+  //     const hiddenVideo = document.createElement("video");
+  //     hiddenVideo.crossOrigin = "anonymous";
+  //     hiddenVideo.src = post.video ?? "";
+  //     hiddenVideo.currentTime = 0;
+  //     hiddenVideo.onseeked = () => {
+  //       const canvas = document.createElement("canvas");
+  //       canvas.width = hiddenVideo.videoWidth;
+  //       canvas.height = hiddenVideo.videoHeight;
+  //       const ctx = canvas.getContext("2d");
+  //       ctx?.drawImage(hiddenVideo, 0, 0, canvas.width, canvas.height);
+  //       const posterUrl = canvas.toDataURL();
+  //       if (videoRef.current) {
+  //         videoRef.current.poster = posterUrl;
+  //       }
+  //     };
+  //   }
+  // }, []);
 
   if (!post.video) return null;
 
@@ -132,6 +132,11 @@ function PostVideo(post: Post) {
       onMouseLeave={() => setShowVideoToolbar(false)}
     >
       <video
+        onDoubleClickCapture={(e) => {
+          e.stopPropagation();
+        }}
+        autoPlay
+        muted
         onClick={() => {
           handlePlayback();
         }}
