@@ -87,6 +87,7 @@ function PostVideo(post: Post) {
     if (videoRef.current) {
       if (videoRef.current.requestFullscreen) {
         videoRef.current.requestFullscreen();
+        videoRef.current.webkitRequestFullscreen();
       }
     }
   }
