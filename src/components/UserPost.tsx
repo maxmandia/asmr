@@ -132,9 +132,6 @@ function PostVideo(post: Post) {
       onMouseLeave={() => setShowVideoToolbar(false)}
     >
       <video
-        onDoubleClickCapture={(e) => {
-          e.stopPropagation();
-        }}
         autoPlay
         muted
         onClick={() => {
