@@ -52,14 +52,16 @@ function UserPFP(post: Post) {
   }
 
   return (
-    <Image
-      priority={true}
-      className="rounded-[30px]"
-      width={30}
-      height={30}
-      src={post.user.profile_picture_url}
-      alt={`${post.user.first_name}'s pfp`}
-    />
+    <div className="relative h-[30px] w-[30px]">
+      <Image
+        priority={true}
+        className="rounded-[200px]"
+        layout="fill"
+        objectFit="cover"
+        src={post.user.profile_picture_url}
+        alt={`${post.user.first_name}'s pfp`}
+      />
+    </div>
   );
 }
 
