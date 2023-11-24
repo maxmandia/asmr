@@ -40,16 +40,38 @@ export const usersRouter = createTRPCRouter({
     }
     return user;
   }),
-  getTopCreators: protectedProcedure.query(async ({ ctx }) => {
-    const users = await ctx.db.user.findMany({
-      orderBy: {
-        followers: {
-          _count: "desc",
-        },
-      },
-      take: 10,
-    });
+  searchUsers: protectedProcedure
+    .input(z.object({ query: z.string() }))
+    .query(async ({ ctx, input }) => {
+      if (input.query === "") {
+        const users = await ctx.db.user.findMany({
+          where: {
+            id: {
+              not: ctx.auth.userId,
+            },
+          },
+          orderBy: {
+            followers: {
+              _count: "desc",
+            },
+          },
+          take: 10,
+        });
 
-    return users;
-  }),
+        return users;
+      } else {
+        const users = await ctx.db.user.findMany({
+          where: {
+            first_name: {
+              contains: input.query,
+            },
+            id: {
+              not: ctx.auth.userId,
+            },
+          },
+        });
+
+        return users;
+      }
+    }),
 });

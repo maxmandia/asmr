@@ -1,9 +1,9 @@
-import { DialogClose } from "@radix-ui/react-dialog";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import React, { useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
 import Image from "next/image";
+import debounce from "lodash.debounce";
 
 function Messages() {
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
@@ -33,7 +33,19 @@ function NewMessageModal({
 }: {
   setShowNewMessageModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { data: topCreators } = api.users.getTopCreators.useQuery();
+  const [searchTerm, setSearchTerm] = useState("");
+  const { data: searchResults } = api.users.searchUsers.useQuery({
+    query: searchTerm,
+  });
+
+  const debouncedSearch = debounce((query) => {
+    setSearchTerm(query);
+  }, 300);
+
+  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    const query = e.target.value;
+    debouncedSearch(query);
+  }
 
   return (
     <div className="absolute bottom-0 left-0 right-0 top-0 z-[100] flex items-center justify-center bg-black bg-opacity-50">
@@ -45,12 +57,13 @@ function NewMessageModal({
           <span className="text-[20px] font-medium">New message</span>
         </div>
         <input
+          onChange={handleSearch}
           className="my-4 w-full rounded-[6px] bg-input py-2 pl-2 focus:outline-none"
           type="text"
           placeholder="Search creators"
         />
-        <div className="flex flex-col">
-          {topCreators?.map((creator, index) => (
+        <div className="flex min-h-[300px] flex-col overflow-scroll">
+          {searchResults?.map((creator, index) => (
             <div
               className="flex items-center gap-5 rounded-[6px] py-2 pl-1 hover:cursor-pointer hover:bg-card_hover"
               key={index}
