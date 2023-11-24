@@ -5,6 +5,7 @@ import { waitlistsRouter } from "./routers/waitlists";
 import { followsRouter } from "./routers/follows";
 import { subscriptionSettingsRouter } from "./routers/subscription-settings";
 import { stripeRouter } from "./routers/stripe";
+import { messagesRouter } from "./routers/messages";
 /**
  * This is the primary router for your server.
  *
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   follows: followsRouter,
   subscriptionSettings: subscriptionSettingsRouter,
   stripe: stripeRouter,
+  messages: messagesRouter,
 });
 
 // export type definition of API

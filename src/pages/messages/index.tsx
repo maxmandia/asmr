@@ -10,13 +10,26 @@ function Messages() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const { mutate } = api.messages.sendMessage.useMutation();
 
   async function sendHandler() {
-    //
+    if (
+      inputRef === null ||
+      inputRef.current === null ||
+      selectedUser === null ||
+      inputRef.current.value === ""
+    ) {
+      return;
+    }
+
+    mutate({
+      recipientId: selectedUser.id,
+      message: inputRef.current.value,
+    });
   }
 
   return (
-    <div className="fixed h-[92%] w-full p-5 md:flex md:items-center md:justify-between md:gap-5 ">
+    <div className="fixed h-[92%] w-full p-5 md:static md:flex md:items-center md:justify-between md:gap-5 ">
       {showNewMessageModal && (
         <NewMessageModal
           setSelectedUser={setSelectedUser}
@@ -39,7 +52,7 @@ function Messages() {
       </div>
       {/* <p className="text-grey">Message contents will show up here...</p> */}
       {selectedUser && (
-        <>
+        <div>
           <div className="flex items-center gap-3">
             <button className="md:hidden">
               <ArrowLeftIcon height={24} width={24} />
@@ -71,7 +84,7 @@ function Messages() {
             type="text"
             placeholder="Say hello (indoor voice please)"
           />
-        </>
+        </div>
       )}
     </div>
   );
