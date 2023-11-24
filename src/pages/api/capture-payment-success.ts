@@ -30,6 +30,14 @@ export default async function handler(
         subscriberId: invoice.subscription_details.metadata.subscriberId,
       },
     });
+
+    await prisma.follow.create({
+      data: {
+        followerId: invoice.subscription_details.metadata.subscriberId,
+        followingId: invoice.subscription_details.metadata.subscribedToId,
+      },
+    });
+
     return resp.status(200).json({ status: "ok" });
   } catch (error) {
     console.log(error);
