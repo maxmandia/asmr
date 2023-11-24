@@ -97,6 +97,7 @@ function PostVideo(post: Post) {
         }}
         controls={showControls}
         autoPlay
+        controlsList="nodownload"
         muted
         ref={videoRef}
         className="absolute left-0 top-0 h-full w-full object-cover"
@@ -107,50 +108,3 @@ function PostVideo(post: Post) {
     </div>
   );
 }
-
-// interface VideoToolbarProps {
-//   setIsVideoPlaying: React.Dispatch<React.SetStateAction<boolean>>;
-//   isVideoPlaying: boolean;
-//   handleVideoPlayback: () => void;
-//   handleFullscreen: () => void;
-// }
-
-// function VideoToolbar(props: VideoToolbarProps) {
-//   const {
-//     setIsVideoPlaying,
-//     isVideoPlaying,
-//     handleVideoPlayback,
-//     handleFullscreen,
-//   } = props;
-
-//   return (
-//     <div className="absolute bottom-0 z-[100] w-full bg-black bg-opacity-5 p-3">
-//       <div />
-//       <div className="flex items-center justify-between">
-//         {isVideoPlaying ? (
-//           <div
-//             onClick={handleVideoPlayback}
-//             className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
-//           >
-//             <PauseIcon height={25} width={25} />
-//           </div>
-//         ) : (
-//           <div
-//             onClick={handleVideoPlayback}
-//             className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
-//           >
-//             <PlayIcon height={25} width={25} />
-//           </div>
-//         )}
-//         <div>
-//           <div
-//             onClick={handleFullscreen}
-//             className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
-//           >
-//             <EnterFullScreenIcon height={25} width={25} />
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
