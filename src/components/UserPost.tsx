@@ -80,132 +80,77 @@ function PostImage(post: Post) {
 
 function PostVideo(post: Post) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [showVideoToolbar, setShowVideoToolbar] = useState(false);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-
-  function handleFullscreen() {
-    if (videoRef.current) {
-      if (videoRef.current.requestFullscreen) {
-        videoRef.current.requestFullscreen();
-        // @ts-ignore
-        videoRef.current.webkitRequestFullscreen();
-      }
-    }
-  }
-
-  function handlePlayback() {
-    if (videoRef.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play();
-        setIsVideoPlaying(true);
-      } else {
-        videoRef.current.pause();
-        setIsVideoPlaying(false);
-      }
-    }
-  }
-
-  // useEffect(() => {
-  //   if (videoRef.current) {
-  //     const hiddenVideo = document.createElement("video");
-  //     hiddenVideo.crossOrigin = "anonymous";
-  //     hiddenVideo.src = post.video ?? "";
-  //     hiddenVideo.currentTime = 0;
-  //     hiddenVideo.onseeked = () => {
-  //       const canvas = document.createElement("canvas");
-  //       canvas.width = hiddenVideo.videoWidth;
-  //       canvas.height = hiddenVideo.videoHeight;
-  //       const ctx = canvas.getContext("2d");
-  //       ctx?.drawImage(hiddenVideo, 0, 0, canvas.width, canvas.height);
-  //       const posterUrl = canvas.toDataURL();
-  //       if (videoRef.current) {
-  //         videoRef.current.poster = posterUrl;
-  //       }
-  //     };
-  //   }
-  // }, []);
+  const [showControls, setShowControls] = useState(false);
 
   if (!post.video) return null;
 
   return (
     <div
       className="relative mt-5 h-[300px] w-full overflow-hidden rounded-[18px]"
-      onMouseOver={() => setShowVideoToolbar(true)}
-      onMouseLeave={() => setShowVideoToolbar(false)}
+      onMouseOver={() => setShowControls(true)}
     >
       <video
+        onClick={() => {
+          if (!showControls) {
+            setShowControls(true);
+          }
+        }}
+        controls={showControls}
         autoPlay
         muted
-        onClick={() => {
-          handlePlayback();
-        }}
-        onDoubleClick={handleFullscreen}
         ref={videoRef}
         className="absolute left-0 top-0 h-full w-full object-cover"
         src={post.video}
         playsInline
         loop
       />
-      {/* <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center">
-        <div className="rounded-[100px] bg-primary p-2">
-          <PlayIcon height={35} width={35} color="white" />
-        </div>
-      </div> */}
-      {showVideoToolbar ? (
-        <VideoToolbar
-          handleVideoPlayback={handlePlayback}
-          setIsVideoPlaying={setIsVideoPlaying}
-          isVideoPlaying={isVideoPlaying}
-          handleFullscreen={handleFullscreen}
-        />
-      ) : null}
     </div>
   );
 }
 
-interface VideoToolbarProps {
-  setIsVideoPlaying: React.Dispatch<React.SetStateAction<boolean>>;
-  isVideoPlaying: boolean;
-  handleVideoPlayback: () => void;
-  handleFullscreen: () => void;
-}
+// interface VideoToolbarProps {
+//   setIsVideoPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+//   isVideoPlaying: boolean;
+//   handleVideoPlayback: () => void;
+//   handleFullscreen: () => void;
+// }
 
-function VideoToolbar(props: VideoToolbarProps) {
-  const {
-    setIsVideoPlaying,
-    isVideoPlaying,
-    handleVideoPlayback,
-    handleFullscreen,
-  } = props;
+// function VideoToolbar(props: VideoToolbarProps) {
+//   const {
+//     setIsVideoPlaying,
+//     isVideoPlaying,
+//     handleVideoPlayback,
+//     handleFullscreen,
+//   } = props;
 
-  return (
-    <div className="absolute bottom-0 z-[100] w-full bg-black bg-opacity-5 p-3">
-      <div />
-      <div className="flex items-center justify-between">
-        {isVideoPlaying ? (
-          <div
-            onClick={handleVideoPlayback}
-            className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
-          >
-            <PauseIcon height={25} width={25} />
-          </div>
-        ) : (
-          <div
-            onClick={handleVideoPlayback}
-            className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
-          >
-            <PlayIcon height={25} width={25} />
-          </div>
-        )}
-        <div>
-          <div
-            onClick={handleFullscreen}
-            className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
-          >
-            <EnterFullScreenIcon height={25} width={25} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+//   return (
+//     <div className="absolute bottom-0 z-[100] w-full bg-black bg-opacity-5 p-3">
+//       <div />
+//       <div className="flex items-center justify-between">
+//         {isVideoPlaying ? (
+//           <div
+//             onClick={handleVideoPlayback}
+//             className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
+//           >
+//             <PauseIcon height={25} width={25} />
+//           </div>
+//         ) : (
+//           <div
+//             onClick={handleVideoPlayback}
+//             className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
+//           >
+//             <PlayIcon height={25} width={25} />
+//           </div>
+//         )}
+//         <div>
+//           <div
+//             onClick={handleFullscreen}
+//             className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
+//           >
+//             <EnterFullScreenIcon height={25} width={25} />
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
