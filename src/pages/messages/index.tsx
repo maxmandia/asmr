@@ -29,7 +29,7 @@ function Messages() {
   }
 
   return (
-    <div className="fixed h-[92%] w-full p-5 md:static md:flex md:items-center md:justify-between md:gap-5 ">
+    <div className="fixed h-[92%] w-full p-5 md:static md:flex md:h-full md:items-center md:justify-between md:gap-5">
       {showNewMessageModal && (
         <NewMessageModal
           setSelectedUser={setSelectedUser}
@@ -52,7 +52,7 @@ function Messages() {
       </div>
       {/* <p className="text-grey">Message contents will show up here...</p> */}
       {selectedUser && (
-        <div>
+        <div className="md:relative md:h-full md:w-full">
           <div className="flex items-center gap-3">
             <button className="md:hidden">
               <ArrowLeftIcon height={24} width={24} />
@@ -80,7 +80,7 @@ function Messages() {
           {/* <div className="relative flex h-[88%] items-center justify-center bg-red-200"> */}
           <input
             ref={inputRef}
-            className="absolute bottom-5 left-0 right-0 mx-3 rounded-[6px] bg-input py-2 pl-2 focus:outline-none"
+            className="absolute bottom-5 left-0 right-0 mx-3 rounded-[6px] bg-input py-2 pl-2 focus:outline-none md:bottom-0 md:w-full"
             type="text"
             placeholder="Say hello (indoor voice please)"
           />
