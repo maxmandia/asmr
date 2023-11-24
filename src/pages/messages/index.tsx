@@ -4,21 +4,27 @@ import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
 import Image from "next/image";
 import debounce from "lodash.debounce";
+import { User } from "~/types/User";
 
 function Messages() {
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   return (
     <div className="h-full w-full p-5 md:flex md:items-center md:justify-between">
       {showNewMessageModal && (
-        <NewMessageModal setShowNewMessageModal={setShowNewMessageModal} />
+        <NewMessageModal
+          setSelectedUser={setSelectedUser}
+          setShowNewMessageModal={setShowNewMessageModal}
+        />
       )}
-      <div className="h-full md:w-2/3">
+      <div className="h-full md:w-2/3 lg:w-1/3">
         <div className="flex items-center justify-between">
           <span>Messages</span>
           <button onClick={() => setShowNewMessageModal(true)}>New</button>
         </div>
-        <div className="flex h-full items-center justify-center">
-          <span className="text-grey">No messages yet...</span>
+        <div className="flex h-full items-start justify-center py-5">
+          {selectedUser && <UserMessageCard user={selectedUser} />}
+          {/* <span className="text-grey">No messages yet...</span> */}
         </div>
       </div>
       <div className="hidden md:block">
@@ -30,8 +36,10 @@ function Messages() {
 
 function NewMessageModal({
   setShowNewMessageModal,
+  setSelectedUser,
 }: {
   setShowNewMessageModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedUser: React.Dispatch<React.SetStateAction<any>>;
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const { data: searchResults } = api.users.searchUsers.useQuery({
@@ -54,7 +62,7 @@ function NewMessageModal({
           <button onClick={() => setShowNewMessageModal(false)}>
             <Cross1Icon height={18} width={18} />
           </button>
-          <span className="text-[20px] font-medium">New message</span>
+          <span className="text-[20px] font-medium">New Message</span>
         </div>
         <input
           onChange={handleSearch}
@@ -64,32 +72,62 @@ function NewMessageModal({
         />
         <div className="flex min-h-[300px] flex-col overflow-scroll">
           {searchResults?.map((creator, index) => (
-            <div
-              className="flex items-center gap-5 rounded-[6px] py-2 pl-1 hover:cursor-pointer hover:bg-card_hover"
+            <UserMessageCard
+              setShowNewMessageModal={setShowNewMessageModal}
+              setSelectedUser={setSelectedUser}
               key={index}
-            >
-              {creator.profile_picture_url ? (
-                <div className="relative h-[45px] w-[45px] rounded-[100px] bg-red-100">
-                  <Image
-                    src={creator.profile_picture_url}
-                    alt={`${creator.first_name}'s profile header`}
-                    layout="fill"
-                    objectFit="cover"
-                    priority={true}
-                    className="rounded-[100px]"
-                  />
-                </div>
-              ) : (
-                <div className="h-[45px] w-[45px] rounded-[45px] bg-primary" />
-              )}
-              <div className="flex flex-col">
-                <span className="text-[18px] font-semibold">
-                  {creator.first_name}
-                </span>
-                <span className="text-[14px] text-grey">@{creator.handle}</span>
-              </div>
-            </div>
+              user={creator}
+            />
           ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function UserMessageCard({
+  user,
+  setSelectedUser,
+  setShowNewMessageModal,
+}: {
+  user: User;
+  setSelectedUser?: React.Dispatch<React.SetStateAction<User>>;
+  setShowNewMessageModal?: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  if (!user) {
+    return null;
+  }
+
+  return (
+    <div
+      onClick={() => {
+        if (setShowNewMessageModal) {
+          setShowNewMessageModal(false);
+        }
+        if (setSelectedUser) {
+          setSelectedUser(user);
+        }
+      }}
+      className="w-full"
+    >
+      <div className="flex items-center gap-5 rounded-[6px] py-2 pl-1 hover:cursor-pointer hover:bg-card_hover">
+        {user.profile_picture_url ? (
+          <div className="relative h-[45px] w-[45px] rounded-[100px] bg-red-100">
+            <Image
+              src={user.profile_picture_url}
+              alt={`${user.first_name}'s profile header`}
+              layout="fill"
+              objectFit="cover"
+              priority={true}
+              className="rounded-[100px]"
+            />
+          </div>
+        ) : (
+          <div className="h-[45px] w-[45px] rounded-[45px] bg-primary" />
+        )}
+        <div className="flex flex-col">
+          <span className="text-[18px] font-semibold">{user.first_name}</span>
+          <span className="text-[14px] text-grey">@{user.handle}</span>
         </div>
       </div>
     </div>
