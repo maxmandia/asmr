@@ -5,6 +5,7 @@ import {
   EmbeddedCheckout,
 } from "@stripe/react-stripe-js";
 import { useRouter } from "next/router";
+import Layout from "~/components/Layout";
 
 if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
   throw new Error("Missing Stripe publishable key");
@@ -48,15 +49,17 @@ export default function StripeCheckout() {
   }, [priceId]);
 
   return (
-    <div id="checkout">
-      {clientSecret && (
-        <EmbeddedCheckoutProvider
-          stripe={stripePromise}
-          options={{ clientSecret }}
-        >
-          <EmbeddedCheckout />
-        </EmbeddedCheckoutProvider>
-      )}
+    <div className="flex h-screen items-center justify-center">
+      <div id="checkout" className="w-[1000px]">
+        {clientSecret && (
+          <EmbeddedCheckoutProvider
+            stripe={stripePromise}
+            options={{ clientSecret }}
+          >
+            <EmbeddedCheckout />
+          </EmbeddedCheckoutProvider>
+        )}
+      </div>
     </div>
   );
 }
