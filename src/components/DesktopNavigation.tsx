@@ -6,16 +6,16 @@ import {
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import { api } from "~/lib/utils/api";
 
 function DesktopNavigation() {
-  const user = useUser();
+  const { data: user, isError, isLoading } = api.users.getUser.useQuery();
 
-  if (!user.isLoaded) {
+  if (isLoading) {
     return null;
   }
 
-  if (!user.isSignedIn) {
+  if (isError) {
     return null;
   }
 
@@ -44,7 +44,7 @@ function DesktopNavigation() {
       </Link>
       <Link
         className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
-        href={`/user/${user.user.id}`}
+        href={`/${user.handle}`}
       >
         <HomeIcon height={25} width={25} color="white" />
         <span>Profile</span>

@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
-import { LockClosedIcon, PersonIcon } from "@radix-ui/react-icons";
+import { LockClosedIcon, PersonIcon, Share2Icon } from "@radix-ui/react-icons";
 import UserPostsContainer from "~/components/UserPostsContainer";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -18,7 +18,7 @@ function User() {
     isLoading: profileLoading,
     isError: profileError,
   } = api.posts.getPostsFromUser.useQuery({
-    userId: router.query.id as string,
+    handle: router.query.handle as string,
   });
 
   const { mutate: followMutation } = api.follows.followUser.useMutation({
@@ -164,6 +164,17 @@ function User() {
               </span>
             </div>
           </div>
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(
+                `${process.env.NEXT_PUBLIC_BASE_URL}/${profileData.user.handle}`,
+              );
+              toast.success("copied to clipboard");
+            }}
+            className="mt-5 rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white"
+          >
+            <Share2Icon height={20} width={20} />
+          </button>
           {profileData.user.isMe &&
           !profileData.user.subscriptionSetting?.isComplete ? (
             <button

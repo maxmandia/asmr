@@ -6,16 +6,16 @@ import {
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import { api } from "~/lib/utils/api";
 
 function MobileNavigation() {
-  const user = useUser();
+  const { data: user, isError, isLoading } = api.users.getUser.useQuery();
 
-  if (!user.isLoaded) {
+  if (isLoading) {
     return null;
   }
 
-  if (!user.isSignedIn) {
+  if (isError) {
     return null;
   }
 
@@ -33,7 +33,7 @@ function MobileNavigation() {
       <Link className="p-4" href={"/messages"}>
         <ChatBubbleIcon height={25} width={25} color="white" />
       </Link>
-      <Link className="p-4" href={`/user/${user.user.id}`}>
+      <Link className="p-4" href={`/${user.handle}`}>
         <HomeIcon height={25} width={25} color="white" />
       </Link>
     </nav>

@@ -18,11 +18,11 @@ function UserPost(props: Props) {
   return (
     <div>
       <div className="flex items-start gap-3">
-        <Link href={`/user/${post.user.id}`} prefetch={false}>
+        <Link href={`/${post.user.handle}`} prefetch={false}>
           <UserPFP {...post} />
         </Link>
         <div className="flex w-full flex-col">
-          <Link href={`/user/${post.user.id}`} prefetch={false}>
+          <Link href={`/${post.user.handle}`} prefetch={false}>
             <span className="font-medium hover:underline">
               {post.user.first_name}
             </span>

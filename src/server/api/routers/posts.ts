@@ -19,11 +19,11 @@ export const postsRouter = createTRPCRouter({
     });
   }),
   getPostsFromUser: protectedProcedure
-    .input(z.object({ userId: z.string() }))
+    .input(z.object({ handle: z.string() }))
     .query(async ({ ctx, input }) => {
       const user = await ctx.db.user.findUnique({
         where: {
-          id: input.userId,
+          handle: input.handle,
         },
         include: {
           _count: {
@@ -47,7 +47,7 @@ export const postsRouter = createTRPCRouter({
 
       const posts = await ctx.db.post.findMany({
         where: {
-          userId: input.userId,
+          userId: user.id,
         },
         include: {
           user: true,
@@ -60,11 +60,11 @@ export const postsRouter = createTRPCRouter({
       const isFollowing = await ctx.db.follow.findFirst({
         where: {
           followerId: ctx.auth.userId,
-          followingId: input.userId,
+          followingId: user.id,
         },
       });
 
-      if (ctx.auth.userId === input.userId) {
+      if (ctx.auth.userId === user.id) {
         return {
           user: { ...user, isMe: true, isFollowing: false },
           currentUser: ctx.auth.userId,
