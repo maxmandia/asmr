@@ -22,6 +22,8 @@ model User {
   posts                   Post[]
   subscriber              Subscription[] @relation("TheUserSubscribing")
   subsrcibedTo            Subscription[] @relation("TheUserBeingSubscribedTo")
+  messagesSent            Message[]  @relation("UserSendsMessage")
+  messagesReceived        Message[]  @relation("UserReceivesMessage")
   subscriptionSetting     SubscriptionSetting?
 }
 
@@ -75,6 +77,20 @@ model SubscriptionSetting {
   price                   Int?
   user                    User       @relation(fields: [userId], references: [id])
   @@index([userId])
+}
+
+model Message {
+  id                      Int        @id @default(autoincrement())
+  senderId                String     
+  receiverId              String     
+  createdAt               DateTime   @default(now())
+  message                 String
+  sender                  User       @relation("UserSendsMessage", fields: [senderId], references: [id])
+  receiver                User       @relation("UserReceivesMessage", fields: [receiverId], references: [id])
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@unique([senderId, receiverId]) 
 }
 
 model Waitlist {
