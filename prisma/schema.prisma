@@ -90,7 +90,6 @@ model Message {
 
   @@index([senderId])
   @@index([receiverId])
-  @@unique([senderId, receiverId]) 
 }
 
 model Waitlist {

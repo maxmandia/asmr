@@ -34,4 +34,63 @@ export const messagesRouter = createTRPCRouter({
 
       return message;
     }),
+  getMessages: protectedProcedure
+    .input(
+      z.object({
+        recipientId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const messages = await ctx.db.message.findMany({
+        where: {
+          OR: [
+            {
+              receiverId: input.recipientId,
+              senderId: ctx.auth.userId,
+            },
+            {
+              receiverId: ctx.auth.userId,
+              senderId: input.recipientId,
+            },
+          ],
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      });
+
+      return messages;
+    }),
+
+  getMessagedUserIds: protectedProcedure.query(async ({ ctx }) => {
+    // Query to fetch distinct user IDs
+    const userIds = await ctx.db.message.findMany({
+      where: {
+        OR: [{ senderId: ctx.auth.userId }, { receiverId: ctx.auth.userId }],
+      },
+      distinct: ["senderId", "receiverId"],
+      select: {
+        senderId: true,
+        receiverId: true,
+      },
+    });
+
+    // Extract and filter unique user IDs
+    const uniqueUserIds = new Set(
+      userIds.flatMap((message) =>
+        [message.senderId, message.receiverId].filter(
+          (id) => id !== ctx.auth.userId,
+        ),
+      ),
+    );
+
+    // Fetch user details in a paginated manner if needed
+    const users = await ctx.db.user.findMany({
+      where: {
+        id: { in: Array.from(uniqueUserIds) },
+      },
+    });
+
+    return users;
+  }),
 });

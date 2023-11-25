@@ -1,16 +1,40 @@
-import { ArrowLeftIcon, Cross1Icon } from "@radix-ui/react-icons";
-import React, { useRef, useState } from "react";
+import {
+  ArrowLeftIcon,
+  Cross1Icon,
+  PlusCircledIcon,
+} from "@radix-ui/react-icons";
+import React, { useEffect, useRef, useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
 import Image from "next/image";
 import debounce from "lodash.debounce";
 import { User } from "~/types/User";
+import { useUser } from "@clerk/nextjs";
+import moment from "moment";
 
 function Messages() {
+  const { user } = useUser();
+  const utils = api.useContext();
   const inputRef = useRef<HTMLInputElement>(null);
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const { mutate } = api.messages.sendMessage.useMutation();
+  const { mutate } = api.messages.sendMessage.useMutation({
+    onSuccess: () => {
+      utils.messages.invalidate();
+      if (inputRef?.current && inputRef.current.value) {
+        inputRef.current.value = "";
+      }
+    },
+  });
+  const { data: conversations } = api.messages.getMessagedUserIds.useQuery();
+  const { data: messages } = api.messages.getMessages.useQuery(
+    {
+      recipientId: selectedUser?.id ?? "",
+    },
+    {
+      enabled: selectedUser !== null,
+    },
+  );
 
   async function sendHandler() {
     if (
@@ -28,6 +52,18 @@ function Messages() {
     });
   }
 
+  useEffect(() => {
+    if (selectedUser && conversations) {
+      console.log(
+        !conversations?.some((convo) => selectedUser.id !== convo.id),
+      );
+    }
+  }, [selectedUser, conversations]);
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="fixed h-[92%] w-full p-5 md:static md:flex md:h-full md:items-center md:justify-between md:gap-5">
       {showNewMessageModal && (
@@ -43,10 +79,27 @@ function Messages() {
       >
         <div className="flex items-center justify-between">
           <span>Messages</span>
-          <button onClick={() => setShowNewMessageModal(true)}>New</button>
+          <button
+            className="rounded-md p-2 hover:bg-input_hover"
+            onClick={() => setShowNewMessageModal(true)}
+          >
+            <PlusCircledIcon />
+          </button>
         </div>
-        <div className="flex h-full items-start justify-center py-5">
-          {selectedUser && <UserMessageCard user={selectedUser} />}
+        <div className="flex h-full flex-col items-start justify-center py-3">
+          {selectedUser &&
+            !conversations?.some((convo) => selectedUser.id === convo.id) && (
+              <UserMessageCard user={selectedUser} />
+            )}
+          <div className="flex h-full w-full flex-col items-start justify-start py-3">
+            {conversations?.map((conversation) => (
+              <UserMessageCard
+                key={conversation.id}
+                user={conversation}
+                setSelectedUser={setSelectedUser}
+              />
+            ))}
+          </div>
           {/* <span className="text-grey">No messages yet...</span> */}
         </div>
       </div>
@@ -54,7 +107,7 @@ function Messages() {
       {selectedUser && (
         <div className="md:relative md:h-full md:w-full">
           <div className="flex items-center gap-3">
-            <button className="md:hidden">
+            <button onClick={() => setSelectedUser(null)} className="md:hidden">
               <ArrowLeftIcon height={24} width={24} />
             </button>
             <div className="flex items-center gap-2">
@@ -77,13 +130,50 @@ function Messages() {
               </span>
             </div>
           </div>
-          {/* <div className="relative flex h-[88%] items-center justify-center bg-red-200"> */}
-          <input
-            ref={inputRef}
-            className="absolute bottom-5 left-0 right-0 mx-3 rounded-[6px] bg-input py-2 pl-2 focus:outline-none md:bottom-0 md:w-full"
-            type="text"
-            placeholder="Say hello (indoor voice please)"
-          />
+          <div className="flex flex-col gap-1 py-5">
+            {messages?.map((message) => {
+              if (message.senderId !== user.id) {
+                return (
+                  <div className="flex w-full flex-col" key={message.id}>
+                    <span className="w-fit rounded-t-full rounded-br-full bg-input px-4 py-1">
+                      {message.message}
+                    </span>
+                    <span className="text-[12px] text-grey">
+                      {moment(message.createdAt).fromNow()}
+                    </span>
+                  </div>
+                );
+              } else {
+                return (
+                  <div
+                    className="flex w-full flex-col items-end"
+                    key={message.id}
+                  >
+                    <span className="w-fit rounded-t-full rounded-bl-full bg-primary px-4 py-1">
+                      {message.message}
+                    </span>
+                    <span className="text-[12px] text-grey">
+                      {moment(message.createdAt).fromNow()}
+                    </span>
+                  </div>
+                );
+              }
+            })}
+          </div>
+          <div className="absolute bottom-5 left-0 right-0 mx-3 flex items-center gap-2 md:bottom-0">
+            <input
+              ref={inputRef}
+              className="w-full rounded-[6px] bg-input py-2 pl-2 focus:outline-none"
+              type="text"
+              placeholder="Say hello (but not too loud)"
+            />
+            <button
+              onClick={sendHandler}
+              className="rounded-[6px] bg-primary p-2 px-4 hover:bg-primary_hover"
+            >
+              Send
+            </button>
+          </div>
         </div>
       )}
     </div>
