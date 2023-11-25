@@ -52,14 +52,6 @@ function Messages() {
     });
   }
 
-  useEffect(() => {
-    if (selectedUser && conversations) {
-      console.log(
-        !conversations?.some((convo) => selectedUser.id !== convo.id),
-      );
-    }
-  }, [selectedUser, conversations]);
-
   if (!user) {
     return null;
   }
