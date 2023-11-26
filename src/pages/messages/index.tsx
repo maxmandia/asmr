@@ -1,6 +1,8 @@
 import {
   ArrowLeftIcon,
   Cross1Icon,
+  ImageIcon,
+  PaperPlaneIcon,
   PersonIcon,
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
@@ -12,6 +14,7 @@ import debounce from "lodash.debounce";
 import { User } from "~/types/User";
 import { useUser } from "@clerk/nextjs";
 import moment from "moment";
+import { tipPrices } from "~/lib/data/tip-options";
 
 function Messages() {
   const { user } = useUser();
@@ -19,6 +22,7 @@ function Messages() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [showTipMenu, setShowTipMenu] = useState(false);
   const { mutate } = api.messages.sendMessage.useMutation({
     onSuccess: () => {
       utils.messages.invalidate();
@@ -166,19 +170,53 @@ function Messages() {
               }
             })}
           </div>
-          <div className="absolute bottom-5 left-0 right-0 mx-3 flex items-center gap-2 md:bottom-0">
-            <input
-              ref={inputRef}
-              className="w-full rounded-[6px] bg-input py-2 pl-2 focus:outline-none"
-              type="text"
-              placeholder="Say hello (but not too loud)"
-            />
-            <button
-              onClick={sendHandler}
-              className="rounded-[6px] bg-primary p-2 px-4 hover:bg-primary_hover"
-            >
-              Send
-            </button>
+          <div className="absolute bottom-5 left-0 right-0 mx-3 flex flex-col items-start gap-2 md:bottom-0">
+            {showTipMenu && (
+              <div className="flex items-center gap-2">
+                {tipPrices.map((price) => {
+                  return (
+                    <button
+                      key={price}
+                      className="rounded-lg bg-input px-4 py-1 hover:bg-input_hover"
+                    >
+                      <span className="text-[15px] font-semibold">
+                        ${price}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            <div className="flex w-full items-center justify-between rounded-[6px] bg-input p-3">
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="flex items-center gap-[6px] md:gap-2">
+                  <button title="upload an image">
+                    <ImageIcon className="h-[18px] w-[18px] md:h-[22px] md:w-[22px]" />
+                  </button>
+                  <button
+                    onClick={() => setShowTipMenu((prev) => !prev)}
+                    title="select tip amount"
+                  >
+                    <Image
+                      width={16}
+                      height={16}
+                      className="h-[20px] w-[20px] md:h-[22px] md:w-[22px]"
+                      src={"/coins.svg"}
+                      alt="coins"
+                    />
+                  </button>
+                </div>
+                <input
+                  ref={inputRef}
+                  className="bg-input text-[18px] placeholder:text-[18px] focus:outline-none"
+                  type="text"
+                  placeholder="say hello!"
+                />
+              </div>
+              <button title="send message" onClick={sendHandler}>
+                <PaperPlaneIcon className="h-[18px] w-[18px] md:h-[22px] md:w-[22px]" />
+              </button>
+            </div>
           </div>
         </div>
       )}
