@@ -170,9 +170,9 @@ function Messages() {
               }
             })}
           </div>
-          <div className="absolute bottom-5 left-0 right-0 mx-3 flex flex-col items-start gap-2 md:bottom-0">
+          <div className="absolute bottom-5 left-0 right-0 mx-3 flex flex-col items-start gap-[6px] md:bottom-0">
             {showTipMenu && (
-              <div className="flex items-center gap-2">
+              <div className="flex w-full items-center gap-2 overflow-auto py-2">
                 {tipPrices.map((price) => {
                   return (
                     <button
