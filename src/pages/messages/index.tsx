@@ -1,6 +1,7 @@
 import {
   ArrowLeftIcon,
   Cross1Icon,
+  PersonIcon,
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
 import React, { useEffect, useRef, useState } from "react";
@@ -51,6 +52,7 @@ function Messages() {
       message: inputRef.current.value,
     });
   }
+  console.log(conversations);
 
   if (!user) {
     return null;
@@ -78,24 +80,36 @@ function Messages() {
             <PlusCircledIcon />
           </button>
         </div>
-        <div className="flex h-full flex-col items-start justify-center py-3">
+        <div className="flex h-full w-full flex-col items-start justify-start py-3">
           {selectedUser &&
             !conversations?.some((convo) => selectedUser.id === convo.id) && (
               <UserMessageCard user={selectedUser} />
             )}
-          <div className="flex h-full w-full flex-col items-start justify-start py-3">
-            {conversations?.map((conversation) => (
-              <UserMessageCard
-                key={conversation.id}
-                user={conversation}
-                setSelectedUser={setSelectedUser}
-              />
-            ))}
-          </div>
-          {/* <span className="text-grey">No messages yet...</span> */}
+          {conversations && conversations.length > 0
+            ? conversations?.map((conversation) => (
+                <UserMessageCard
+                  key={conversation.id}
+                  user={conversation}
+                  setSelectedUser={setSelectedUser}
+                />
+              ))
+            : !selectedUser && (
+                <div className="flex h-full flex-col items-center justify-center md:gap-1">
+                  <div className="flex items-center">
+                    <PersonIcon className="h-[25px] w-[25px] md:h-[30px] md:w-[30px]" />
+                    <PersonIcon className="ml-[-12px] h-[25px] w-[25px] md:h-[30px] md:w-[30px]" />
+                  </div>
+                  <span className="text-medium text-[22px] md:text-[26px]">
+                    No conversations yet
+                  </span>
+                  <p className="w-3/4 text-center text-[14px] text-grey md:text-[16px]">
+                    Start a conversation with your favorite creator to get
+                    started.
+                  </p>
+                </div>
+              )}
         </div>
       </div>
-      {/* <p className="text-grey">Message contents will show up here...</p> */}
       {selectedUser && (
         <div className="md:relative md:h-full md:w-full">
           <div className="flex items-center gap-3">
@@ -177,7 +191,7 @@ function NewMessageModal({
   setSelectedUser,
 }: {
   setShowNewMessageModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedUser: React.Dispatch<React.SetStateAction<any>>;
+  setSelectedUser: React.Dispatch<React.SetStateAction<User | null>>;
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const { data: searchResults } = api.users.searchUsers.useQuery({
@@ -229,7 +243,7 @@ function UserMessageCard({
   setShowNewMessageModal,
 }: {
   user: User;
-  setSelectedUser?: React.Dispatch<React.SetStateAction<User>>;
+  setSelectedUser?: React.Dispatch<React.SetStateAction<User | null>>;
   setShowNewMessageModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   if (!user) {
