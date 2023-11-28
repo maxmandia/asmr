@@ -7,6 +7,7 @@ import { LockClosedIcon, PersonIcon, Share2Icon } from "@radix-ui/react-icons";
 import UserPostsContainer from "~/components/UserPostsContainer";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import Overlay from "~/components/Overlay";
 
 function User() {
   const router = useRouter();
@@ -80,7 +81,7 @@ function User() {
     }, []);
 
     return (
-      <div className="absolute bottom-0 left-0 right-0 top-0 z-[100] flex items-center justify-center bg-black bg-opacity-50">
+      <Overlay>
         <div
           ref={modalRef}
           className="flex flex-col justify-center rounded-lg bg-input p-6"
@@ -104,7 +105,7 @@ function User() {
             Subscribe
           </button>
         </div>
-      </div>
+      </Overlay>
     );
   }
 
