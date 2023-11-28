@@ -26,6 +26,7 @@ export const messagesRouter = createTRPCRouter({
 
       const message = await ctx.db.message.create({
         data: {
+          isTip: false,
           message: input.message,
           receiverId: input.recipientId,
           senderId: ctx.auth.userId,
@@ -34,6 +35,39 @@ export const messagesRouter = createTRPCRouter({
 
       return message;
     }),
+  sendTip: protectedProcedure
+    .input(
+      z.object({
+        amount: z.string(),
+        recipientId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const recipient = await ctx.db.user.findUnique({
+        where: {
+          id: input.recipientId,
+        },
+      });
+
+      if (!recipient) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const tip = await ctx.db.message.create({
+        data: {
+          isTip: true,
+          tipPrice: input.amount,
+          receiverId: input.recipientId,
+          senderId: ctx.auth.userId,
+        },
+      });
+
+      return tip;
+    }),
+
   getMessages: protectedProcedure
     .input(
       z.object({

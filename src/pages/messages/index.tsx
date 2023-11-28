@@ -15,6 +15,8 @@ import { User } from "~/types/User";
 import { useUser } from "@clerk/nextjs";
 import moment from "moment";
 import { tipPrices } from "~/lib/data/tip-options";
+import toast from "react-hot-toast";
+import { Message } from "~/types/Message";
 
 function Messages() {
   const { user } = useUser();
@@ -40,6 +42,11 @@ function Messages() {
       enabled: selectedUser !== null,
     },
   );
+  const { mutate: sendTip } = api.messages.sendTip.useMutation({
+    onSuccess: () => {
+      utils.messages.invalidate();
+    },
+  });
 
   async function sendHandler() {
     if (
@@ -56,7 +63,16 @@ function Messages() {
       message: inputRef.current.value,
     });
   }
-  console.log(conversations);
+
+  async function tipHandler(tipAmount: string) {
+    if (selectedUser === null) {
+      return toast.error("Please select a user to tip");
+    }
+    sendTip({
+      recipientId: selectedUser.id,
+      amount: tipAmount,
+    });
+  }
 
   if (!user) {
     return null;
@@ -140,33 +156,58 @@ function Messages() {
               </span>
             </div>
           </div>
-          <div className="flex flex-col gap-1 py-5">
-            {messages?.map((message) => {
+          <div className="flex h-[80vh] flex-col gap-2 overflow-auto py-5 pb-10 md:pb-20">
+            {messages?.map((message, index) => {
               if (message.senderId !== user.id) {
-                return (
-                  <div className="flex w-full flex-col" key={message.id}>
-                    <span className="w-fit rounded-t-full rounded-br-full bg-input px-4 py-1">
-                      {message.message}
-                    </span>
-                    <span className="text-[12px] text-grey">
-                      {moment(message.createdAt).fromNow()}
-                    </span>
-                  </div>
-                );
+                if (message.isTip) {
+                  return (
+                    <UserTip
+                      key={message.id}
+                      message={message}
+                      selectedUser={selectedUser}
+                      fromCurrentUser={message.senderId === user.id}
+                    />
+                  );
+                } else
+                  return (
+                    <div
+                      className="flex w-full flex-col"
+                      key={message.id}
+                      title={moment(message.createdAt).calendar().toString()}
+                    >
+                      <span className="w-fit rounded-t-full rounded-br-full bg-input px-4 py-1">
+                        {message.message}
+                      </span>
+                      <span className="text-[12px] text-grey">
+                        {moment(message.createdAt).fromNow()}
+                      </span>
+                    </div>
+                  );
               } else {
-                return (
-                  <div
-                    className="flex w-full flex-col items-end"
-                    key={message.id}
-                  >
-                    <span className="w-fit rounded-t-full rounded-bl-full bg-primary px-4 py-1">
-                      {message.message}
-                    </span>
-                    <span className="text-[12px] text-grey">
-                      {moment(message.createdAt).fromNow()}
-                    </span>
-                  </div>
-                );
+                if (message.isTip) {
+                  return (
+                    <UserTip
+                      key={message.id}
+                      message={message}
+                      selectedUser={selectedUser}
+                      fromCurrentUser={message.senderId === user.id}
+                    />
+                  );
+                } else
+                  return (
+                    <div
+                      className="flex w-full flex-col items-end"
+                      key={message.id}
+                      title={moment(message.createdAt).calendar().toString()}
+                    >
+                      <span className="w-fit rounded-t-full rounded-bl-full bg-primary px-4 py-1">
+                        {message.message}
+                      </span>
+                      <span className="text-[12px] text-grey">
+                        {moment(message.createdAt).fromNow()}
+                      </span>
+                    </div>
+                  );
               }
             })}
           </div>
@@ -176,6 +217,7 @@ function Messages() {
                 {tipPrices.map((price) => {
                   return (
                     <button
+                      onClick={() => tipHandler(price)}
                       key={price}
                       className="rounded-lg bg-input px-4 py-1 hover:bg-input_hover"
                     >
@@ -220,6 +262,29 @@ function Messages() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function UserTip({
+  message,
+  selectedUser,
+  fromCurrentUser,
+}: {
+  message: Message;
+  selectedUser: User;
+  fromCurrentUser: boolean;
+}) {
+  return (
+    <div className="my-1 flex w-full flex-col items-end">
+      <div className="flex flex-col items-center rounded-lg bg-input px-5 py-3">
+        <span className="text-[20px] font-semibold">${message.tipPrice}</span>
+        <span className="w-[100px] text-center text-[12px] text-grey">
+          {fromCurrentUser
+            ? `You sent @${selectedUser.handle} a tip!`
+            : `@${selectedUser.handle} sent you a tip!`}
+        </span>
+      </div>
     </div>
   );
 }
