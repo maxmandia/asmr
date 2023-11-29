@@ -64,10 +64,16 @@ export const postsRouter = createTRPCRouter({
         },
       });
 
+      const currentUser = await ctx.db.user.findUnique({
+        where: {
+          id: ctx.auth.userId,
+        },
+      });
+
       if (ctx.auth.userId === user.id) {
         return {
           user: { ...user, isMe: true, isFollowing: false },
-          currentUser: ctx.auth.userId,
+          currentUser,
           posts,
         };
       } else {
@@ -78,7 +84,7 @@ export const postsRouter = createTRPCRouter({
             isFollowing: isFollowing ?? false,
             subscriber: user.subscriber.length > 0 ? user.subscriber[0] : null,
           },
-          currentUser: ctx.auth.userId,
+          currentUser,
           posts,
         };
       }

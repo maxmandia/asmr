@@ -6,10 +6,74 @@ import {
 
 import { stripe } from "~/config/stripe";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 const URL = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
 export const stripeRouter = createTRPCRouter({
+  getClientSecret: protectedProcedure
+    .input(
+      z.object({
+        priceId: z.string(),
+        customerId: z.string(),
+        connectAccountId: z.string(),
+        subscriberId: z.string(),
+        subscribedToId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const {
+          priceId,
+          customerId,
+          connectAccountId,
+          subscriberId,
+          subscribedToId,
+        } = input;
+
+        const subscription = await stripe.subscriptions.create({
+          customer: customerId,
+          application_fee_percent: 19,
+          items: [
+            {
+              price: priceId,
+            },
+          ],
+          payment_settings: {
+            save_default_payment_method: "on_subscription",
+            payment_method_types: ["card"],
+          },
+          payment_behavior: "default_incomplete",
+          expand: ["latest_invoice.payment_intent"],
+          transfer_data: {
+            destination: connectAccountId,
+          },
+
+          metadata: {
+            subscriberId,
+            subscribedToId,
+          },
+        });
+
+        if (!subscription.latest_invoice) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Latest invoice is not available",
+          });
+        }
+        return {
+          clientSecret:
+            //@ts-ignore
+            subscription.latest_invoice.payment_intent.client_secret,
+        };
+      } catch (error: any) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error,
+        });
+      }
+    }),
+
   createExpressAccount: protectedProcedure.mutation(async ({ ctx }) => {
     // get the user's information
     const user = await ctx.db.user.findUnique({

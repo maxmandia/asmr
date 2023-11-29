@@ -8,12 +8,14 @@ import UserPostsContainer from "~/components/UserPostsContainer";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import Overlay from "~/components/Overlay";
+import PaymentModal from "~/components/PaymentModal";
 
 function User() {
   const router = useRouter();
   const utils = api.useContext();
   const [tabSelected, setTabSelected] = useState<"home" | "videos">("home");
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [showPaymentElement, setShowPaymentElement] = useState(false);
   const {
     data: profileData,
     isLoading: profileLoading,
@@ -96,9 +98,7 @@ function User() {
           <button
             onClick={() => {
               setShowSubscriptionModal(false);
-              router.push(
-                `/checkout?priceId=${profileData?.user.subscriptionSetting?.priceId}&subscriberId=${profileData?.currentUser}&subscribedToId=${profileData?.user.id}&stripeCustomerId=${profileData?.user.stripe_customer_id}&connectAccountId=${profileData?.user.subscriptionSetting?.connectAccountId}`,
-              );
+              setShowPaymentElement(true);
             }}
             className="mt-5 rounded-[4px] bg-primary py-1 hover:bg-primary_hover"
           >
@@ -122,6 +122,20 @@ function User() {
       {showSubscriptionModal && profileData.user.subscriptionSetting && (
         <SubscriptionModal />
       )}
+      {showPaymentElement &&
+        profileData.user.subscriptionSetting?.priceId &&
+        profileData.currentUser?.stripe_customer_id &&
+        profileData.user.subscriptionSetting.connectAccountId && (
+          <PaymentModal
+            priceId={profileData.user.subscriptionSetting.priceId}
+            customerId={profileData.currentUser.stripe_customer_id}
+            connectAccountId={
+              profileData.user.subscriptionSetting.connectAccountId
+            }
+            subscriberId={profileData.currentUser.id}
+            subscribedToId={profileData.user.id}
+          />
+        )}
       <div className="md:px-5">
         {profileData.user.profile_header_url ? (
           <div className="relative h-[125px] w-full bg-red-100 md:rounded-[12px]">
