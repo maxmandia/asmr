@@ -50,6 +50,9 @@ export const usersRouter = createTRPCRouter({
               not: ctx.auth.userId,
             },
           },
+          include: {
+            subscriptionSetting: true,
+          },
           orderBy: {
             followers: {
               _count: "desc",
@@ -57,7 +60,6 @@ export const usersRouter = createTRPCRouter({
           },
           take: 10,
         });
-
         return users;
       } else {
         const users = await ctx.db.user.findMany({
@@ -68,6 +70,9 @@ export const usersRouter = createTRPCRouter({
             id: {
               not: ctx.auth.userId,
             },
+          },
+          include: {
+            subscriptionSetting: true,
           },
         });
 

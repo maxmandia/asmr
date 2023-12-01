@@ -132,6 +132,7 @@ function User() {
             connectAccountId={
               profileData.user.subscriptionSetting.connectAccountId
             }
+            setShowPaymentModal={setShowPaymentElement}
             subscriberId={profileData.currentUser.id}
             subscribedToId={profileData.user.id}
           />

@@ -6,25 +6,31 @@ import {
   PersonIcon,
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
 import Image from "next/image";
 import debounce from "lodash.debounce";
 import { User } from "~/types/User";
-import { useUser } from "@clerk/nextjs";
 import moment from "moment";
 import { tipPrices } from "~/lib/data/tip-options";
 import toast from "react-hot-toast";
 import { Message } from "~/types/Message";
+import PaymentModal from "~/components/PaymentModal";
+import useCurrentUser from "~/hooks/useCurrentUser";
 
 function Messages() {
-  const { user } = useUser();
+  const {
+    data: currentUser,
+    isLoading: isCurrentUserLoading,
+    isError: isErrorGettingCurrentUser,
+  } = useCurrentUser();
   const utils = api.useContext();
   const inputRef = useRef<HTMLInputElement>(null);
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showTipMenu, setShowTipMenu] = useState(false);
+  const [showPaymentElement, setShowPaymentElement] = useState(false);
   const { mutate } = api.messages.sendMessage.useMutation({
     onSuccess: () => {
       utils.messages.invalidate();
@@ -68,13 +74,16 @@ function Messages() {
     if (selectedUser === null) {
       return toast.error("Please select a user to tip");
     }
-    sendTip({
-      recipientId: selectedUser.id,
-      amount: tipAmount,
-    });
+
+    if (!selectedUser?.subscriptionSetting?.connectAccountId) {
+      console.log(selectedUser);
+      return toast.error("This user has not set up their Stripe account yet");
+    }
+
+    setShowPaymentElement(true);
   }
 
-  if (!user) {
+  if (isCurrentUserLoading || isErrorGettingCurrentUser) {
     return null;
   }
 
@@ -86,6 +95,21 @@ function Messages() {
           setShowNewMessageModal={setShowNewMessageModal}
         />
       )}
+      {showPaymentElement &&
+        selectedUser?.subscriptionSetting?.connectAccountId &&
+        selectedUser?.subscriptionSetting?.priceId &&
+        currentUser && (
+          <PaymentModal
+            setShowPaymentModal={setShowPaymentElement}
+            connectAccountId={
+              selectedUser?.subscriptionSetting?.connectAccountId
+            }
+            customerId={currentUser?.stripe_customer_id}
+            priceId={selectedUser?.subscriptionSetting?.priceId}
+            subscriberId={currentUser?.id}
+            subscribedToId={selectedUser?.id}
+          />
+        )}
       <div
         className={`h-full md:w-2/3 lg:w-[50%] ${
           selectedUser && "hidden md:block"
@@ -157,15 +181,15 @@ function Messages() {
             </div>
           </div>
           <div className="flex h-[80vh] flex-col gap-2 overflow-auto py-5 pb-10 md:pb-20">
-            {messages?.map((message, index) => {
-              if (message.senderId !== user.id) {
+            {messages?.map((message) => {
+              if (message.senderId !== currentUser.id) {
                 if (message.isTip) {
                   return (
                     <UserTip
                       key={message.id}
                       message={message}
                       selectedUser={selectedUser}
-                      fromCurrentUser={message.senderId === user.id}
+                      fromCurrentUser={message.senderId === currentUser.id}
                     />
                   );
                 } else
@@ -190,7 +214,7 @@ function Messages() {
                       key={message.id}
                       message={message}
                       selectedUser={selectedUser}
-                      fromCurrentUser={message.senderId === user.id}
+                      fromCurrentUser={message.senderId === currentUser.id}
                     />
                   );
                 } else

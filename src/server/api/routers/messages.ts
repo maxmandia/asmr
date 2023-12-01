@@ -123,6 +123,9 @@ export const messagesRouter = createTRPCRouter({
       where: {
         id: { in: Array.from(uniqueUserIds) },
       },
+      include: {
+        subscriptionSetting: true,
+      },
     });
 
     return users;

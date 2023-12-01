@@ -9,6 +9,7 @@ import {
 import { StripeElementsOptions, loadStripe } from "@stripe/stripe-js";
 import { api } from "~/lib/utils/api";
 import toast from "react-hot-toast";
+import { Cross1Icon } from "@radix-ui/react-icons";
 
 const URL = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
@@ -22,14 +23,16 @@ function PaymentModal({
   connectAccountId,
   subscriberId,
   subscribedToId,
+  setShowPaymentModal,
 }: {
   customerId: string;
   priceId: string;
   connectAccountId: string;
   subscriberId: string;
   subscribedToId: string;
+  setShowPaymentModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { data } = api.stripe.getClientSecret.useQuery({
+  const { data, isLoading, isError } = api.stripe.getClientSecret.useQuery({
     priceId,
     customerId,
     connectAccountId,
@@ -52,7 +55,6 @@ function PaymentModal({
         }
 
         await stripe.confirmPayment({
-          //`Elements` instance that was used to create the Payment Element
           elements,
           confirmParams: {
             return_url: `${URL}/home`,
@@ -67,7 +69,18 @@ function PaymentModal({
     }
 
     return (
-      <form onSubmit={paymentHandler} className="rounded-lg bg-white p-5">
+      <form onSubmit={paymentHandler} className="rounded-lg bg-input p-5">
+        <div className="flex w-full items-end justify-end">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setShowPaymentModal(false);
+            }}
+            className="rounded-md p-2 hover:bg-input_hover"
+          >
+            <Cross1Icon />
+          </button>
+        </div>
         <PaymentElement />
         <button className="my-4 w-full rounded-lg bg-primary py-2 hover:bg-primary_hover">
           Confirm
@@ -78,11 +91,22 @@ function PaymentModal({
 
   const options: StripeElementsOptions = {
     clientSecret: data.clientSecret,
+    appearance: {
+      theme: "night",
+    },
   };
+
+  if (isError || isLoading) {
+    return <p>ee</p>;
+  }
 
   return (
     <Overlay>
-      <Elements stripe={stripePromise} options={options}>
+      <Elements
+        key={data.clientSecret}
+        stripe={stripePromise}
+        options={options}
+      >
         <StripeForm />
       </Elements>
     </Overlay>
