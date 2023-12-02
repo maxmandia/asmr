@@ -20,8 +20,8 @@ model User {
   following               Follow[]   @relation("UserFollows")
   followers               Follow[]   @relation("UserFollowedBy")
   posts                   Post[]
-  subscriber              Subscription[] @relation("TheUserSubscribing")
-  subsrcibedTo            Subscription[] @relation("TheUserBeingSubscribedTo")
+  subscriber              Subscription[] @relation("TheUserBeingSubscribedTo")
+  subscribedTo            Subscription[] @relation("TheUserSubscribing")
   messagesSent            Message[]  @relation("UserSendsMessage")
   messagesReceived        Message[]  @relation("UserReceivesMessage")
   subscriptionSetting     SubscriptionSetting?
@@ -59,7 +59,7 @@ model Subscription {
   subscribedToId          String     
   createdAt               DateTime   @default(now())
   subscriber              User       @relation("TheUserSubscribing", fields: [subscriberId], references: [id])
-  subsribedTo             User       @relation("TheUserBeingSubscribedTo", fields: [subscribedToId], references: [id])
+  subscribedTo            User       @relation("TheUserBeingSubscribedTo", fields: [subscribedToId], references: [id])
 
   @@index([subscriberId])
   @@index([subscribedToId])

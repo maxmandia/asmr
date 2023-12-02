@@ -30,11 +30,7 @@ export const postsRouter = createTRPCRouter({
             select: { followers: true },
           },
           subscriptionSetting: true,
-          subscriber: {
-            where: {
-              subscriberId: ctx.auth.userId,
-            },
-          },
+          subscriber: true,
         },
       });
 

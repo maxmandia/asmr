@@ -30,7 +30,7 @@ async function main() {
       id: "user_2YeB8LEE6uRSP0ekBTK6TvWzxCu",
       email: "maxtesting1999@gmail.com",
       stripe_customer_id: "cus_OzoaHUCkkabXcF",
-      first_name: "Max",
+      first_name: "Bob",
       last_name: "Testing",
       profile_picture_url: "https://i.imgur.com/BdN9y8h.jpeg",
       handle: "bob",

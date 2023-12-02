@@ -20,9 +20,14 @@ function User() {
     data: profileData,
     isLoading: profileLoading,
     isError: profileError,
-  } = api.posts.getPostsFromUser.useQuery({
-    handle: router.query.handle as string,
-  });
+  } = api.posts.getPostsFromUser.useQuery(
+    {
+      handle: router.query.handle as string,
+    },
+    {
+      enabled: !!router.query.handle,
+    },
+  );
 
   const { mutate: followMutation } = api.follows.followUser.useMutation({
     onSuccess: () => {

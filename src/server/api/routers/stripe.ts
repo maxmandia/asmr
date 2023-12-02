@@ -10,6 +10,11 @@ import { z } from "zod";
 
 const URL = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
+enum PaymentType {
+  SUBSCRIPTION = "subscription",
+  TIP = "tip",
+}
+
 export const stripeRouter = createTRPCRouter({
   getSubscriptionClientSecret: protectedProcedure
     .input(
@@ -50,6 +55,7 @@ export const stripeRouter = createTRPCRouter({
           },
 
           metadata: {
+            paymentType: PaymentType.SUBSCRIPTION,
             subscriberId,
             subscribedToId,
           },
@@ -95,52 +101,16 @@ export const stripeRouter = createTRPCRouter({
           transfer_data: {
             destination: connectAccountId,
           },
-          // metadata: {
-          //   creatorId,
-          // },
+          metadata: {
+            paymentType: PaymentType.TIP,
+            senderId: ctx.auth.userId,
+            recieverId: creatorId,
+          },
         });
-
-        console.log(paymentIntent);
 
         return {
           clientSecret: paymentIntent.client_secret,
         };
-
-        // const subscription = await stripe.subscriptions.create({
-        //   customer: customerId,
-        //   application_fee_percent: 19,
-        //   items: [
-        //     {
-        //       price: priceId,
-        //     },
-        //   ],
-        //   payment_settings: {
-        //     save_default_payment_method: "on_subscription",
-        //     payment_method_types: ["card"],
-        //   },
-        //   payment_behavior: "default_incomplete",
-        //   expand: ["latest_invoice.payment_intent"],
-        //   transfer_data: {
-        //     destination: connectAccountId,
-        //   },
-
-        //   metadata: {
-        //     subscriberId,
-        //     subscribedToId,
-        //   },
-        // });
-
-        // if (!subscription.latest_invoice) {
-        //   throw new TRPCError({
-        //     code: "INTERNAL_SERVER_ERROR",
-        //     message: "Latest invoice is not available",
-        //   });
-        // }
-        // return {
-        //   clientSecret:
-        //     //@ts-ignore
-        //     subscription.latest_invoice.payment_intent.client_secret,
-        // };
       } catch (error: any) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
