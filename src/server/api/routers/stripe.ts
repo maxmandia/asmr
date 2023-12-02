@@ -97,7 +97,7 @@ export const stripeRouter = createTRPCRouter({
           amount: price * 100,
           currency: "usd",
           payment_method_types: ["card"],
-          application_fee_amount: 19,
+          application_fee_amount: Math.round(price * 100 * 0.19),
           transfer_data: {
             destination: connectAccountId,
           },
