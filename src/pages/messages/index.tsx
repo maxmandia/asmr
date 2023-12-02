@@ -16,8 +16,9 @@ import moment from "moment";
 import { tipPrices } from "~/lib/data/tip-options";
 import toast from "react-hot-toast";
 import { Message } from "~/types/Message";
-import PaymentModal from "~/components/PaymentModal";
+import PaymentModal from "~/components/SubscriptionPaymentModal";
 import useCurrentUser from "~/hooks/useCurrentUser";
+import TipPaymentModal from "~/components/TipPaymentModal";
 
 function Messages() {
   const {
@@ -30,6 +31,7 @@ function Messages() {
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showTipMenu, setShowTipMenu] = useState(false);
+  const [selectedTipPrice, setSelectedTipPrice] = useState<string>("");
   const [showPaymentElement, setShowPaymentElement] = useState(false);
   const { mutate } = api.messages.sendMessage.useMutation({
     onSuccess: () => {
@@ -76,10 +78,10 @@ function Messages() {
     }
 
     if (!selectedUser?.subscriptionSetting?.connectAccountId) {
-      console.log(selectedUser);
       return toast.error("This user has not set up their Stripe account yet");
     }
 
+    setSelectedTipPrice(tipAmount);
     setShowPaymentElement(true);
   }
 
@@ -96,20 +98,22 @@ function Messages() {
         />
       )}
       {showPaymentElement &&
-        selectedUser?.subscriptionSetting?.connectAccountId &&
-        selectedUser?.subscriptionSetting?.priceId &&
-        currentUser && (
-          <PaymentModal
+      selectedTipPrice &&
+      selectedUser?.subscriptionSetting?.connectAccountId &&
+      selectedUser?.subscriptionSetting?.priceId &&
+      currentUser ? (
+        <>
+          <TipPaymentModal
             setShowPaymentModal={setShowPaymentElement}
             connectAccountId={
               selectedUser?.subscriptionSetting?.connectAccountId
             }
             customerId={currentUser?.stripe_customer_id}
-            priceId={selectedUser?.subscriptionSetting?.priceId}
-            subscriberId={currentUser?.id}
+            price={Number(selectedTipPrice)}
             subscribedToId={selectedUser?.id}
           />
-        )}
+        </>
+      ) : null}
       <div
         className={`h-full md:w-2/3 lg:w-[50%] ${
           selectedUser && "hidden md:block"

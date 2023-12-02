@@ -8,7 +8,7 @@ import UserPostsContainer from "~/components/UserPostsContainer";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import Overlay from "~/components/Overlay";
-import PaymentModal from "~/components/PaymentModal";
+import SubscriptionPaymentModal from "~/components/SubscriptionPaymentModal";
 
 function User() {
   const router = useRouter();
@@ -126,7 +126,7 @@ function User() {
         profileData.user.subscriptionSetting?.priceId &&
         profileData.currentUser?.stripe_customer_id &&
         profileData.user.subscriptionSetting.connectAccountId && (
-          <PaymentModal
+          <SubscriptionPaymentModal
             priceId={profileData.user.subscriptionSetting.priceId}
             customerId={profileData.currentUser.stripe_customer_id}
             connectAccountId={
