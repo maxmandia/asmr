@@ -260,9 +260,9 @@ function Messages() {
             <div className="flex w-full items-center justify-between rounded-[6px] bg-input p-3">
               <div className="flex items-center gap-2 md:gap-3">
                 <div className="flex items-center gap-[6px] md:gap-2">
-                  <button title="upload an image">
+                  {/* <button title="upload an image">
                     <ImageIcon className="h-[18px] w-[18px] md:h-[22px] md:w-[22px]" />
-                  </button>
+                  </button> */}
                   <button
                     onClick={() => setShowTipMenu((prev) => !prev)}
                     title="select tip amount"
