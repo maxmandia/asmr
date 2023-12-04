@@ -1,15 +1,10 @@
 import React from "react";
-import {
-  HomeIcon,
-  ChatBubbleIcon,
-  BellIcon,
-  PlusCircledIcon,
-} from "@radix-ui/react-icons";
+import { HomeIcon, ChatBubbleIcon, BellIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { api } from "~/lib/utils/api";
+import useCurrentUser from "~/hooks/useCurrentUser";
 
 function DesktopNavigation() {
-  const { data: user, isError, isLoading } = api.users.getUser.useQuery();
+  const { data: user, isError, isLoading } = useCurrentUser();
 
   if (isLoading) {
     return null;

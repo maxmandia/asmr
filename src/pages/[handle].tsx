@@ -7,19 +7,27 @@ import { LockClosedIcon, PersonIcon, Share2Icon } from "@radix-ui/react-icons";
 import UserPostsContainer from "~/components/UserPostsContainer";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import Overlay from "~/components/Overlay";
+import SubscriptionPaymentModal from "~/components/SubscriptionPaymentModal";
 
 function User() {
   const router = useRouter();
   const utils = api.useContext();
   const [tabSelected, setTabSelected] = useState<"home" | "videos">("home");
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [showPaymentElement, setShowPaymentElement] = useState(false);
   const {
     data: profileData,
     isLoading: profileLoading,
     isError: profileError,
-  } = api.posts.getPostsFromUser.useQuery({
-    handle: router.query.handle as string,
-  });
+  } = api.posts.getPostsFromUser.useQuery(
+    {
+      handle: router.query.handle as string,
+    },
+    {
+      enabled: !!router.query.handle,
+    },
+  );
 
   const { mutate: followMutation } = api.follows.followUser.useMutation({
     onSuccess: () => {
@@ -80,7 +88,7 @@ function User() {
     }, []);
 
     return (
-      <div className="absolute bottom-0 left-0 right-0 top-0 z-[100] flex items-center justify-center bg-black bg-opacity-50">
+      <Overlay>
         <div
           ref={modalRef}
           className="flex flex-col justify-center rounded-lg bg-input p-6"
@@ -95,16 +103,14 @@ function User() {
           <button
             onClick={() => {
               setShowSubscriptionModal(false);
-              router.push(
-                `/checkout?priceId=${profileData?.user.subscriptionSetting?.priceId}&subscriberId=${profileData?.currentUser}&subscribedToId=${profileData?.user.id}&stripeCustomerId=${profileData?.user.stripe_customer_id}&connectAccountId=${profileData?.user.subscriptionSetting?.connectAccountId}`,
-              );
+              setShowPaymentElement(true);
             }}
             className="mt-5 rounded-[4px] bg-primary py-1 hover:bg-primary_hover"
           >
             Subscribe
           </button>
         </div>
-      </div>
+      </Overlay>
     );
   }
 
@@ -121,6 +127,21 @@ function User() {
       {showSubscriptionModal && profileData.user.subscriptionSetting && (
         <SubscriptionModal />
       )}
+      {showPaymentElement &&
+        profileData.user.subscriptionSetting?.priceId &&
+        profileData.currentUser?.stripe_customer_id &&
+        profileData.user.subscriptionSetting.connectAccountId && (
+          <SubscriptionPaymentModal
+            priceId={profileData.user.subscriptionSetting.priceId}
+            customerId={profileData.currentUser.stripe_customer_id}
+            connectAccountId={
+              profileData.user.subscriptionSetting.connectAccountId
+            }
+            setShowPaymentModal={setShowPaymentElement}
+            subscriberId={profileData.currentUser.id}
+            subscribedToId={profileData.user.id}
+          />
+        )}
       <div className="md:px-5">
         {profileData.user.profile_header_url ? (
           <div className="relative h-[125px] w-full bg-red-100 md:rounded-[12px]">
