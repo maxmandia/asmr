@@ -3,6 +3,7 @@ import type { IncomingHttpHeaders } from "http";
 import { Webhook, WebhookRequiredHeaders } from "svix";
 import { prisma } from "~/config/prisma";
 import { logError } from "~/lib/helpers/log-error";
+import { stripe } from "~/config/stripe";
 
 type ResponseData = {
   message: string;
@@ -67,6 +68,13 @@ export default async function handler(
         //@ts-ignore
         const email_address = data.email_addresses[0].email_address;
 
+        // create a stripe customer
+        const stripeCustomer = await stripe.customers.create({
+          metadata: {
+            userId: data.id as string,
+          },
+        });
+
         await prisma.user.create({
           data: {
             id: data.id as string,
@@ -74,6 +82,9 @@ export default async function handler(
             first_name: data.first_name as string,
             last_name: data.last_name as string,
             profile_picture_url: (data.profile_image_url as string) ?? null,
+            stripe_customer_id: stripeCustomer.id,
+            // TODO: Update this to be a real value
+            handle: data.first_name as string,
           },
         });
 

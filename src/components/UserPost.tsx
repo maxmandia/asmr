@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
   EnterFullScreenIcon,
@@ -6,6 +6,7 @@ import {
   PlayIcon,
 } from "@radix-ui/react-icons";
 import type { Post } from "~/types/Post";
+import Link from "next/link";
 interface Props {
   post: Post;
   setExpandedMediaContent: React.Dispatch<React.SetStateAction<Post | null>>;
@@ -17,9 +18,15 @@ function UserPost(props: Props) {
   return (
     <div>
       <div className="flex items-start gap-3">
-        <UserPFP {...post} />
+        <Link href={`/${post.user.handle}`} prefetch={false}>
+          <UserPFP {...post} />
+        </Link>
         <div className="flex w-full flex-col">
-          <span className="font-medium">{post.user.first_name}</span>
+          <Link href={`/${post.user.handle}`} prefetch={false}>
+            <span className="font-medium hover:underline">
+              {post.user.first_name}
+            </span>
+          </Link>
           <p className="text-[14px]">{post.caption}</p>
           <div
             onClick={() => {
@@ -45,14 +52,16 @@ function UserPFP(post: Post) {
   }
 
   return (
-    <Image
-      priority={true}
-      className="rounded-[30px]"
-      width={30}
-      height={30}
-      src={post.user.profile_picture_url}
-      alt={`${post.user.first_name}'s pfp`}
-    />
+    <div className="relative h-[30px] w-[30px]">
+      <Image
+        priority={true}
+        className="rounded-[200px]"
+        layout="fill"
+        objectFit="cover"
+        src={post.user.profile_picture_url}
+        alt={`${post.user.first_name}'s pfp`}
+      />
+    </div>
   );
 }
 
@@ -73,107 +82,31 @@ function PostImage(post: Post) {
 
 function PostVideo(post: Post) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [showVideoToolbar, setShowVideoToolbar] = useState(false);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-
-  function handleFullscreen() {
-    if (videoRef.current) {
-      if (videoRef.current.requestFullscreen) {
-        videoRef.current.requestFullscreen();
-      }
-    }
-  }
-
-  function handlePlayback() {
-    if (videoRef.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play();
-        setIsVideoPlaying(true);
-      } else {
-        videoRef.current.pause();
-        setIsVideoPlaying(false);
-      }
-    }
-  }
+  const [showControls, setShowControls] = useState(false);
 
   if (!post.video) return null;
 
   return (
     <div
       className="relative mt-5 h-[300px] w-full overflow-hidden rounded-[18px]"
-      onMouseOver={() => setShowVideoToolbar(true)}
-      onMouseLeave={() => setShowVideoToolbar(false)}
+      onMouseOver={() => setShowControls(true)}
     >
       <video
         onClick={() => {
-          handlePlayback();
+          if (!showControls) {
+            setShowControls(true);
+          }
         }}
-        onDoubleClick={handleFullscreen}
+        controls={showControls}
+        autoPlay
+        controlsList="nodownload"
+        muted
         ref={videoRef}
-        className="absolute left-0 top-0 h-full w-full object-contain"
+        className="absolute left-0 top-0 h-full w-full object-cover"
         src={post.video}
+        playsInline
         loop
       />
-      {/* <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center">
-        <div className="rounded-[100px] bg-primary p-2">
-          <PlayIcon height={35} width={35} color="white" />
-        </div>
-      </div> */}
-      {showVideoToolbar ? (
-        <VideoToolbar
-          handleVideoPlayback={handlePlayback}
-          setIsVideoPlaying={setIsVideoPlaying}
-          isVideoPlaying={isVideoPlaying}
-          handleFullscreen={handleFullscreen}
-        />
-      ) : null}
-    </div>
-  );
-}
-
-interface VideoToolbarProps {
-  setIsVideoPlaying: React.Dispatch<React.SetStateAction<boolean>>;
-  isVideoPlaying: boolean;
-  handleVideoPlayback: () => void;
-  handleFullscreen: () => void;
-}
-
-function VideoToolbar(props: VideoToolbarProps) {
-  const {
-    setIsVideoPlaying,
-    isVideoPlaying,
-    handleVideoPlayback,
-    handleFullscreen,
-  } = props;
-
-  return (
-    <div className="absolute bottom-0 z-[100] w-full bg-black bg-opacity-5 p-3">
-      <div />
-      <div className="flex items-center justify-between">
-        {isVideoPlaying ? (
-          <div
-            onClick={handleVideoPlayback}
-            className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
-          >
-            <PauseIcon height={25} width={25} />
-          </div>
-        ) : (
-          <div
-            onClick={handleVideoPlayback}
-            className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
-          >
-            <PlayIcon height={25} width={25} />
-          </div>
-        )}
-        <div>
-          <div
-            onClick={handleFullscreen}
-            className="rounded-[6px] p-2 hover:bg-white hover:bg-opacity-5"
-          >
-            <EnterFullScreenIcon height={25} width={25} />
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

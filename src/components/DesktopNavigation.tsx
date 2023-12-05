@@ -1,21 +1,16 @@
 import React from "react";
-import {
-  HomeIcon,
-  ChatBubbleIcon,
-  BellIcon,
-  PlusCircledIcon,
-} from "@radix-ui/react-icons";
+import { HomeIcon, ChatBubbleIcon, BellIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import useCurrentUser from "~/hooks/useCurrentUser";
 
 function DesktopNavigation() {
-  const user = useUser();
+  const { data: user, isError, isLoading } = useCurrentUser();
 
-  if (!user.isLoaded) {
+  if (isLoading) {
     return null;
   }
 
-  if (!user.isSignedIn) {
+  if (isError) {
     return null;
   }
 
@@ -23,7 +18,7 @@ function DesktopNavigation() {
     <div className="min-w-[200px]">
       <Link
         className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
-        href={"/"}
+        href={"/home"}
       >
         <HomeIcon height={25} width={25} color="white" />
         <span>Home</span>
@@ -44,7 +39,7 @@ function DesktopNavigation() {
       </Link>
       <Link
         className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
-        href={`/user/${user.user.id}`}
+        href={`/${user.handle}`}
       >
         <HomeIcon height={25} width={25} color="white" />
         <span>Profile</span>

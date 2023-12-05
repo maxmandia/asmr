@@ -1,7 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  protectedProcedure,
+} from "~/server/api/trpc";
 
 export const usersRouter = createTRPCRouter({
   findUserById: publicProcedure
@@ -20,5 +24,59 @@ export const usersRouter = createTRPCRouter({
         });
       }
       return user;
+    }),
+  getUser: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: {
+        id: ctx.auth.userId,
+      },
+    });
+
+    if (!user) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
+    }
+    return user;
+  }),
+  searchUsers: protectedProcedure
+    .input(z.object({ query: z.string() }))
+    .query(async ({ ctx, input }) => {
+      if (input.query === "") {
+        const users = await ctx.db.user.findMany({
+          where: {
+            id: {
+              not: ctx.auth.userId,
+            },
+          },
+          include: {
+            subscriptionSetting: true,
+          },
+          orderBy: {
+            followers: {
+              _count: "desc",
+            },
+          },
+          take: 10,
+        });
+        return users;
+      } else {
+        const users = await ctx.db.user.findMany({
+          where: {
+            first_name: {
+              contains: input.query,
+            },
+            id: {
+              not: ctx.auth.userId,
+            },
+          },
+          include: {
+            subscriptionSetting: true,
+          },
+        });
+
+        return users;
+      }
     }),
 });
