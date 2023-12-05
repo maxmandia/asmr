@@ -46,7 +46,6 @@ export const stripeRouter = createTRPCRouter({
           ],
           payment_settings: {
             save_default_payment_method: "on_subscription",
-            payment_method_types: ["card"],
           },
           payment_behavior: "default_incomplete",
           expand: ["latest_invoice.payment_intent"],
@@ -97,7 +96,9 @@ export const stripeRouter = createTRPCRouter({
           setup_future_usage: "off_session",
           amount: price * 100,
           currency: "usd",
-          payment_method_types: ["automatic_payment_methods"],
+          automatic_payment_methods: {
+            enabled: true,
+          },
           application_fee_amount: Math.round(price * 100 * 0.19),
           transfer_data: {
             destination: connectAccountId,
