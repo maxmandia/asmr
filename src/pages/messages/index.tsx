@@ -49,11 +49,6 @@ function Messages() {
       enabled: selectedUser !== null,
     },
   );
-  const { mutate: sendTip } = api.messages.sendTip.useMutation({
-    onSuccess: () => {
-      utils.messages.invalidate();
-    },
-  });
 
   async function sendHandler() {
     if (
