@@ -55,7 +55,7 @@ function TipPaymentModal({
         stripe={stripePromise}
         options={options}
       >
-        <StripeForm setShowPaymentModal={setShowPaymentModal} />
+        <StripeForm isTip={true} setShowPaymentModal={setShowPaymentModal} />
       </Elements>
     </Overlay>
   );

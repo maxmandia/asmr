@@ -1,7 +1,6 @@
 import {
   ArrowLeftIcon,
   Cross1Icon,
-  ImageIcon,
   PaperPlaneIcon,
   PersonIcon,
   PlusCircledIcon,
