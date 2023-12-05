@@ -68,6 +68,8 @@ function Messages() {
       recipientId: selectedUser.id,
       message: inputRef.current.value,
     });
+
+    inputRef.current.value = "";
   }
 
   async function tipHandler(tipAmount: string) {
@@ -88,7 +90,7 @@ function Messages() {
   }
 
   return (
-    <div className="fixed h-[92%] w-full p-5 md:static md:flex md:h-full md:items-center md:justify-between md:gap-5">
+    <div className="fixed h-[92%] w-full py-5 md:static md:flex md:h-full md:items-center md:justify-between md:gap-5">
       {showNewMessageModal && (
         <NewMessageModal
           setSelectedUser={setSelectedUser}
@@ -113,7 +115,7 @@ function Messages() {
         </>
       ) : null}
       <div
-        className={`h-full md:w-2/3 lg:w-[50%] ${
+        className={`h-full px-5 md:w-2/3 lg:w-[50%] ${
           selectedUser && "hidden md:block"
         }`}
       >
@@ -158,7 +160,7 @@ function Messages() {
       </div>
       {selectedUser && (
         <div className="md:relative md:h-full md:w-full">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 px-5">
             <button onClick={() => setSelectedUser(null)} className="md:hidden">
               <ArrowLeftIcon height={24} width={24} />
             </button>
@@ -182,8 +184,8 @@ function Messages() {
               </span>
             </div>
           </div>
-          <div className="flex h-[80vh] flex-col gap-2 overflow-auto py-5 pb-10 md:pb-20">
-            {messages?.map((message) => {
+          <div className="flex h-[80vh] flex-col gap-2 overflow-auto px-5 py-5 pb-10 md:pb-[50px]">
+            {messages?.map((message, index) => {
               if (message.senderId !== currentUser.id) {
                 if (message.isTip) {
                   return (
@@ -204,9 +206,11 @@ function Messages() {
                       <span className="w-fit rounded-t-full rounded-br-full bg-input px-4 py-1">
                         {message.message}
                       </span>
-                      <span className="text-[12px] text-grey">
-                        {moment(message.createdAt).fromNow()}
-                      </span>
+                      {index === messages.length - 1 && (
+                        <span className="text-[12px] text-grey">
+                          {moment(message.createdAt).fromNow()}
+                        </span>
+                      )}
                     </div>
                   );
               } else {
@@ -229,9 +233,11 @@ function Messages() {
                       <span className="w-fit rounded-t-full rounded-bl-full bg-primary px-4 py-1">
                         {message.message}
                       </span>
-                      <span className="text-[12px] text-grey">
-                        {moment(message.createdAt).fromNow()}
-                      </span>
+                      {index === messages.length - 1 && (
+                        <span className="text-[12px] text-grey">
+                          {moment(message.createdAt).fromNow()}
+                        </span>
+                      )}
                     </div>
                   );
               }
@@ -255,13 +261,20 @@ function Messages() {
                 })}
               </div>
             )}
-            <div className="flex w-full items-center justify-between rounded-[6px] bg-input p-3">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                sendHandler();
+              }}
+              className="flex w-full items-center justify-between rounded-[6px] bg-input p-3"
+            >
               <div className="flex items-center gap-2 md:gap-3">
                 <div className="flex items-center gap-[6px] md:gap-2">
                   {/* <button title="upload an image">
                     <ImageIcon className="h-[18px] w-[18px] md:h-[22px] md:w-[22px]" />
                   </button> */}
                   <button
+                    type="button"
                     onClick={() => setShowTipMenu((prev) => !prev)}
                     title="select tip amount"
                   >
@@ -281,10 +294,10 @@ function Messages() {
                   placeholder="say hello!"
                 />
               </div>
-              <button title="send message" onClick={sendHandler}>
+              <button type="submit" title="send message">
                 <PaperPlaneIcon className="h-[18px] w-[18px] md:h-[22px] md:w-[22px]" />
               </button>
-            </div>
+            </form>
           </div>
         </div>
       )}
