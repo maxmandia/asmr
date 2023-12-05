@@ -94,9 +94,10 @@ export const stripeRouter = createTRPCRouter({
 
         const paymentIntent = await stripe.paymentIntents.create({
           customer: customerId,
+          setup_future_usage: "off_session",
           amount: price * 100,
           currency: "usd",
-          payment_method_types: ["card"],
+          payment_method_types: ["automatic_payment_methods"],
           application_fee_amount: Math.round(price * 100 * 0.19),
           transfer_data: {
             destination: connectAccountId,

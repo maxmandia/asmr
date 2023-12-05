@@ -16,7 +16,6 @@ import moment from "moment";
 import { tipPrices } from "~/lib/data/tip-options";
 import toast from "react-hot-toast";
 import { Message } from "~/types/Message";
-import PaymentModal from "~/components/SubscriptionPaymentModal";
 import useCurrentUser from "~/hooks/useCurrentUser";
 import TipPaymentModal from "~/components/TipPaymentModal";
 
