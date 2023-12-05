@@ -87,9 +87,10 @@ model Message {
   message                 String?
   sender                  User       @relation("UserSendsMessage", fields: [senderId], references: [id])
   receiver                User       @relation("UserReceivesMessage", fields: [receiverId], references: [id])
-
   isTip                   Boolean
   tipPrice                String?
+  wasRead                 Boolean    @default(false)
+  wasNotified             Boolean    @default(false)
   
   @@index([senderId])
   @@index([receiverId])
