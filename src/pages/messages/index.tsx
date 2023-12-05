@@ -5,7 +5,7 @@ import {
   PersonIcon,
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
 import Image from "next/image";
@@ -25,6 +25,7 @@ function Messages() {
     isError: isErrorGettingCurrentUser,
   } = useCurrentUser();
   const utils = api.useContext();
+  const lastMessageRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -84,6 +85,11 @@ function Messages() {
     setSelectedTipPrice(tipAmount);
     setShowPaymentElement(true);
   }
+
+  useEffect(() => {
+    // when a new messages is recieved or sent, bring it into view
+    lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
+  }, [messages]);
 
   if (isCurrentUserLoading || isErrorGettingCurrentUser) {
     return null;
@@ -242,6 +248,7 @@ function Messages() {
                   );
               }
             })}
+            <div ref={lastMessageRef} />
           </div>
           <div className="absolute bottom-5 left-0 right-0 mx-3 flex flex-col items-start gap-[6px] md:bottom-0">
             {showTipMenu && (
