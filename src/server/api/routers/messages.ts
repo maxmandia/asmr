@@ -61,6 +61,17 @@ export const messagesRouter = createTRPCRouter({
         },
       });
 
+      await ctx.db.message.updateMany({
+        where: {
+          receiverId: ctx.auth.userId,
+          senderId: input.recipientId,
+          wasRead: false,
+        },
+        data: {
+          wasRead: true,
+        },
+      });
+
       return messages;
     }),
 
