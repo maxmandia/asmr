@@ -94,6 +94,7 @@ model Message {
   
   @@index([senderId])
   @@index([receiverId])
+  @@index([wasRead])
 }
 
 model Waitlist {
