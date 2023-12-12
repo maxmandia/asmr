@@ -6,6 +6,7 @@ import { followsRouter } from "./routers/follows";
 import { subscriptionSettingsRouter } from "./routers/subscription-settings";
 import { stripeRouter } from "./routers/stripe";
 import { messagesRouter } from "./routers/messages";
+import { notificationsRouter } from "./routers/notifications";
 /**
  * This is the primary router for your server.
  *
@@ -19,6 +20,7 @@ export const appRouter = createTRPCRouter({
   subscriptionSettings: subscriptionSettingsRouter,
   stripe: stripeRouter,
   messages: messagesRouter,
+  notifications: notificationsRouter,
 });
 
 // export type definition of API

@@ -25,17 +25,17 @@ function DesktopNavigation() {
       </Link>
       <Link
         className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
-        href={"/notifications"}
-      >
-        <BellIcon height={25} width={25} color="white" />
-        <span>Notifications</span>
-      </Link>
-      <Link
-        className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
         href={"/messages"}
       >
         <ChatBubbleIcon height={25} width={25} color="white" />
         <span>Messages</span>
+      </Link>
+      <Link
+        className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
+        href={"/notifications"}
+      >
+        <BellIcon height={25} width={25} color="white" />
+        <span>Notifications</span>
       </Link>
       <Link
         className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"

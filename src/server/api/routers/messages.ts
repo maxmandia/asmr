@@ -1,4 +1,8 @@
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
@@ -58,6 +62,17 @@ export const messagesRouter = createTRPCRouter({
         },
         orderBy: {
           createdAt: "asc",
+        },
+      });
+
+      await ctx.db.message.updateMany({
+        where: {
+          receiverId: ctx.auth.userId,
+          senderId: input.recipientId,
+          wasRead: false,
+        },
+        data: {
+          wasRead: true,
         },
       });
 
