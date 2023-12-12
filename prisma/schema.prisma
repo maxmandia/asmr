@@ -60,7 +60,6 @@ model Subscription {
   createdAt               DateTime   @default(now())
   subscriber              User       @relation("TheUserSubscribing", fields: [subscriberId], references: [id])
   subscribedTo            User       @relation("TheUserBeingSubscribedTo", fields: [subscribedToId], references: [id])
-
   @@index([subscriberId])
   @@index([subscribedToId])
   @@unique([subscriberId, subscribedToId]) 

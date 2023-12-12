@@ -88,6 +88,23 @@ async function main() {
       },
     },
   });
+  await prisma.message.create({
+    data: {
+      senderId: "user_2YeB8LEE6uRSP0ekBTK6TvWzxCu",
+      receiverId: "user_2W5yMCDxXqt6qvZZzOJ9LKNmHca",
+      message: "Hello, this is a test message!",
+      isTip: false,
+      tipPrice: null,
+      wasRead: false,
+      wasNotified: false,
+    },
+  });
+  await prisma.subscription.create({
+    data: {
+      subscriberId: "user_2YeB8LEE6uRSP0ekBTK6TvWzxCu",
+      subscribedToId: "user_2W5yMCDxXqt6qvZZzOJ9LKNmHca",
+    },
+  });
 }
 main()
   .then(async () => {

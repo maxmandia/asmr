@@ -1,12 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
-import {
-  EnterFullScreenIcon,
-  PauseIcon,
-  PlayIcon,
-} from "@radix-ui/react-icons";
 import type { Post } from "~/types/Post";
 import Link from "next/link";
+import UserProfilePicture from "./UserProfilePicture";
+
 interface Props {
   post: Post;
   setExpandedMediaContent: React.Dispatch<React.SetStateAction<Post | null>>;
@@ -19,7 +16,9 @@ function UserPost(props: Props) {
     <div>
       <div className="flex items-start gap-3">
         <Link href={`/${post.user.handle}`} prefetch={false}>
-          <UserPFP {...post} />
+          <UserProfilePicture
+            profile_picture_url={post.user.profile_picture_url}
+          />
         </Link>
         <div className="flex w-full flex-col">
           <Link href={`/${post.user.handle}`} prefetch={false}>
@@ -45,25 +44,6 @@ function UserPost(props: Props) {
 }
 
 export default UserPost;
-
-function UserPFP(post: Post) {
-  if (!post.user.profile_picture_url) {
-    return <div className="h-[30px] w-[30px] rounded-[30px] bg-primary" />;
-  }
-
-  return (
-    <div className="relative h-[30px] w-[30px]">
-      <Image
-        priority={true}
-        className="rounded-[200px]"
-        layout="fill"
-        objectFit="cover"
-        src={post.user.profile_picture_url}
-        alt={`${post.user.first_name}'s pfp`}
-      />
-    </div>
-  );
-}
 
 function PostImage(post: Post) {
   if (!post.image) return null;

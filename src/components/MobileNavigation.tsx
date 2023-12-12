@@ -24,14 +24,14 @@ function MobileNavigation() {
       <Link className="p-4" href={"/home"}>
         <HomeIcon height={25} width={25} color="white" />
       </Link>
-      <Link className="p-4" href={"/notifications"}>
-        <BellIcon height={25} width={25} color="white" />
+      <Link className="p-4" href={"/messages"}>
+        <ChatBubbleIcon height={25} width={25} color="white" />
       </Link>
       <Link className="p-4" href={"/post"}>
         <PlusCircledIcon height={25} width={25} color="white" />
       </Link>
-      <Link className="p-4" href={"/messages"}>
-        <ChatBubbleIcon height={25} width={25} color="white" />
+      <Link className="p-4" href={"/notifications"}>
+        <BellIcon height={25} width={25} color="white" />
       </Link>
       <Link className="p-4" href={`/${user.handle}`}>
         <HomeIcon height={25} width={25} color="white" />
