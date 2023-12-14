@@ -20,7 +20,7 @@ function Landing() {
 
   const bubbleTextStyle = {
     color: "transparent",
-    WebkitTextStroke: ".5px white",
+    WebkitTextStroke: "1px white",
   };
 
   const bubbleTextStyleWithShadow = {
@@ -58,11 +58,13 @@ function Landing() {
   return (
     <div>
       <div className="flex flex-col items-center justify-center gap-1 py-[200px]">
-        <span className="mr-20 -rotate-[34deg] self-end text-[30px]">🦋</span>
-        <h1 className="font-sf text-[50px] font-bold leading-none">
+        <span className="mr-20 -rotate-[34deg] self-end text-[30px] md:ml-[500px] md:self-center md:text-[50px]">
+          🦋
+        </span>
+        <h1 className="font-sf text-[50px] font-bold leading-none md:text-[80px] lg:text-[90px]">
           Hush Asmr
         </h1>
-        <span className="w-[250px] text-center font-sf text-[20px] text-[#676767]">
+        <span className="w-[250px] text-center font-sf text-[20px] text-[#676767] md:w-full md:text-[24px]">
           Where exceptional sounds get discovered.
         </span>
         <div className="my-5 flex items-end gap-[5px] rounded-[11px] bg-[#C9CBD2] p-[5px] text-[16px]">
@@ -73,7 +75,7 @@ function Landing() {
                 ? bubbleTextStyle
                 : bubbleTextStyleWithShadow
             }
-            className="rounded-[6px] border-[1px] border-solid border-black bg-input px-[10px] py-[8px]"
+            className="rounded-[6px] border-[1px] border-solid border-black bg-input px-[10px] py-[8px] md:text-[20px] lg:text-[24px]"
           >
             ctrl
           </button>
@@ -84,7 +86,7 @@ function Landing() {
                 ? bubbleTextStyle
                 : bubbleTextStyleWithShadow
             }
-            className="rounded-[6px] border-[1px] border-solid border-black bg-input px-[10px] py-[8px]"
+            className="rounded-[6px] border-[1px] border-solid border-black bg-input px-[10px] py-[8px] md:text-[20px] lg:text-[24px]"
           >
             cmd
           </button>
@@ -92,7 +94,7 @@ function Landing() {
             href="/home"
             onClick={() => handleKeyPress("watch")}
             style={isClicked && isClicked.watch ? {} : boxShadowStyle}
-            className="rounded-[6px] border-[1px] border-solid border-black border-opacity-20 bg-primary px-[20px] py-[8px] font-sf"
+            className="rounded-[6px] border-[1px] border-solid border-black border-opacity-20 bg-primary px-[20px] py-[8px] font-sf md:text-[20px] lg:text-[24px]"
           >
             start watching
           </Link>
@@ -103,23 +105,70 @@ function Landing() {
                 ? bubbleTextStyle
                 : bubbleTextStyleWithShadow
             }
-            className="rounded-[6px] border-[1px] border-solid border-black bg-input px-[10px] py-[8px]"
+            className="rounded-[6px] border-[1px] border-solid border-black bg-input px-[10px] py-[8px] md:text-[20px] lg:text-[24px]"
           >
             alt
           </button>
         </div>
-        <div className="absolute bottom-[-100px] left-0 right-0 overflow-hidden">
-          <div className="relative h-[300px] w-[300px]">
+        <div className="absolute bottom-[-100px] left-0 right-0 ml-[-20px] flex items-center justify-between overflow-hidden md:bottom-[-150px]">
+          <div className="relative h-[300px] w-[300px] flex-shrink-0 md:h-[400px] md:w-[400px]">
             <Image
               src={"/images/cloud.png"}
-              className="ml-[-20px]"
+              className=""
               alt="a beautiful cloud"
               layout="fill"
               objectFit="contain"
             />
+          </div>
+          <div className="relative z-10 ml-[-150px] h-[300px] w-[300px] flex-shrink-0 md:h-[400px] md:w-[400px]">
             <Image
               src={"/images/cloud.png"}
-              className="ml-[175px]"
+              className=""
+              alt="a beautiful cloud"
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
+          <div className="relative z-10 ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block">
+            <Image
+              src={"/images/cloud.png"}
+              className=""
+              alt="a beautiful cloud"
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
+          <div className="relative z-10 ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block">
+            <Image
+              src={"/images/cloud.png"}
+              className=""
+              alt="a beautiful cloud"
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
+          <div className="relative z-10 ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block">
+            <Image
+              src={"/images/cloud.png"}
+              className=""
+              alt="a beautiful cloud"
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
+          <div className="relative z-10 ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block">
+            <Image
+              src={"/images/cloud.png"}
+              className=""
+              alt="a beautiful cloud"
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
+          <div className="relative z-10 ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block">
+            <Image
+              src={"/images/cloud.png"}
+              className=""
               alt="a beautiful cloud"
               layout="fill"
               objectFit="contain"
