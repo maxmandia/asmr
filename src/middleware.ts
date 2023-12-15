@@ -14,6 +14,7 @@ export default authMiddleware({
     "/.well-known/apple-developer-merchantid-domain-association",
     "/api/cron/notifications",
   ],
+  ignoredRoutes: ["/"],
 });
 
 export const config = {

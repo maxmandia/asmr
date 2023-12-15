@@ -3,24 +3,21 @@ import { api } from "~/lib/utils/api";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import Image from "next/image";
-import { CookieIcon, MagicWandIcon } from "@radix-ui/react-icons";
+import {
+  CookieIcon,
+  LockOpen1Icon,
+  LockOpen2Icon,
+  MagicWandIcon,
+} from "@radix-ui/react-icons";
 import styles from "~/styles/home.module.css";
 
 const bongoURL = "/sounds/bongo.m4a";
 const clocURL = "/sounds/cloc.m4a";
 const malletURL = "/sounds/mallet.m4a";
 
-const animals = [
-  "bunny",
-  "cow",
-  "dog",
-  "fox",
-  "monkey",
-  "owl",
-  "panda",
-  "pig",
-  "tiger",
-];
+const animals = ["bunny", "cow", "dog", "fox"];
+
+const animals2 = ["tiger", "owl", "panda", "pig"];
 
 const peopleColors = [
   "blue-person",
@@ -199,10 +196,39 @@ function Landing() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center gap-10 px-4 py-[200px]">
+
+      <div className="flex flex-col items-center justify-center gap-10 px-4 py-[200px] lg:flex-row lg:flex-wrap lg:items-center">
         <div
           style={boxShadowStyle}
-          className={`${styles.gradient_border_2} relative flex  flex-col items-center justify-center rounded-[50px] border-[2px] border-solid border-transparent bg-input p-5`}
+          className={`${styles.gradient_border} relative flex h-[340px]  max-w-[400px] cursor-pointer flex-col items-center justify-center rounded-[50px] border-[2px] border-solid border-transparent bg-input p-5`}
+        >
+          <div className="flex w-[98%] flex-col gap-3">
+            <LockOpen2Icon height={50} width={50} />
+            <h2 className="font-sf text-[28px] font-bold leading-[33px]">
+              Unlock content from your favorite creators.
+            </h2>
+            <p className="text-[18px] leading-[22px] text-[#797979]">
+              Access exclusive ASMR content from the world’s best - but keep it
+              on the <span className="text-sf font-bold">Hush.</span>
+            </p>
+          </div>
+          <div className="flex items-center gap-1 overflow-hidden pt-6">
+            {animals.map((animal) => (
+              <div className="flex-shrink-0" key={animal}>
+                <Image
+                  className="select-none"
+                  src={`/images/${animal}.png`}
+                  alt="animal"
+                  height={75}
+                  width={75}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div
+          style={boxShadowStyle}
+          className={`${styles.gradient_border} relative flex h-[340px] max-w-[400px] cursor-pointer flex-col items-center justify-center rounded-[50px] border-[2px] border-solid border-transparent bg-input p-5`}
         >
           <div className="flex w-[98%] flex-col gap-3">
             <MagicWandIcon height={50} width={50} />
@@ -214,35 +240,7 @@ function Landing() {
               that’s truly magical.
             </p>
           </div>
-          <div className="flex items-center gap-1 overflow-scroll pt-6">
-            {animals.map((animal) => (
-              <div className="flex-shrink-0" key={animal}>
-                <Image
-                  className="select-none"
-                  src={`/images/${animal}.png`}
-                  alt="animal"
-                  height={80}
-                  width={80}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-        <div
-          style={boxShadowStyle}
-          className={`${styles.gradient_border} relative flex  flex-col items-center justify-center rounded-[50px] border-[2px] border-solid border-transparent bg-input p-5`}
-        >
-          <div className="flex w-[98%] flex-col gap-3">
-            <CookieIcon height={50} width={50} />
-            <h2 className="font-sf text-[28px] font-bold leading-[33px]">
-              Relaxing, fun, sexy asmr - here for you 24/7.{" "}
-            </h2>
-            <p className="text-[18px] leading-[22px] text-[#797979]">
-              Access exclusive content from your favorite asmr creators that can
-              only be found here.
-            </p>
-          </div>
-          <div className="flex items-center gap-1 pt-6">
+          <div className="overflow-none flex items-center gap-1 pt-6">
             {peopleColors.map((person) => (
               <div className="flex-shrink-0" key={person}>
                 <Image
@@ -256,16 +254,43 @@ function Landing() {
             ))}
           </div>
         </div>
-        <div className="flex w-full flex-col items-center">
-          <div className="ml-10 flex w-full flex-col">
-            <span className="font-sf text-[50px] font-bold">Hush.</span>
-            <span className="text-[18px] text-[#797979]">
-              Did you hear that ad?
-            </span>
-            <span className="text-[18px] text-[#797979]">Neither did we.</span>
+        <div
+          style={boxShadowStyle}
+          className={`${styles.gradient_border} relative flex h-[340px] max-w-[400px] cursor-pointer flex-col items-center justify-center rounded-[50px] border-[2px] border-solid border-transparent bg-input p-5`}
+        >
+          <div className="flex w-[98%] flex-col gap-3">
+            <CookieIcon height={50} width={50} />
+            <h2 className="font-sf text-[28px] font-bold leading-[33px]">
+              Relaxing, fun, sexy asmr - here for you 24/7.{" "}
+            </h2>
+            <p className="text-[18px] leading-[22px] text-[#797979]">
+              Soothing, playful, sensual ASMR; always here, always your own.
+            </p>
           </div>
-          <span className="text-[100px]">🤫</span>
+          <div className="flex items-center gap-1 overflow-hidden pt-6">
+            {animals2.map((animal) => (
+              <div className="flex-shrink-0" key={animal}>
+                <Image
+                  className="select-none"
+                  src={`/images/${animal}.png`}
+                  alt="animal"
+                  height={75}
+                  width={75}
+                />
+              </div>
+            ))}
+          </div>
         </div>
+      </div>
+      <div className="flex flex-col items-center">
+        <div className="flex w-full flex-col">
+          <span className="font-sf text-[50px] font-bold">Hush.</span>
+          <span className="text-[18px] text-[#797979]">
+            Did you hear that ad?
+          </span>
+          <span className="text-[18px] text-[#797979]">Neither did we.</span>
+        </div>
+        <span className="text-[100px]">🤫</span>
       </div>
     </div>
   );
