@@ -8,7 +8,6 @@ export default authMiddleware({
     "/sign-in",
     "/api/clerk-webhook",
     "/api/trpc/waitlists.addUserToWaitlist",
-    "/",
     "/api/capture-payment-success",
     "/api/capture-account-updated",
     "/.well-known/apple-developer-merchantid-domain-association",

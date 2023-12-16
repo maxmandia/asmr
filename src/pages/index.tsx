@@ -196,7 +196,6 @@ function Landing() {
           </div>
         </div>
       </div>
-
       <div className="flex flex-col items-center justify-center gap-10 px-4 py-[200px] lg:flex-row lg:flex-wrap lg:items-center">
         <div
           style={boxShadowStyle}
@@ -264,7 +263,8 @@ function Landing() {
               Relaxing, fun, sexy asmr - here for you 24/7.{" "}
             </h2>
             <p className="text-[18px] leading-[22px] text-[#797979]">
-              Soothing, playful, sensual ASMR; always here, always your own.
+              Soothing, playful, sensual ASMR; always here, always your own -
+              made just the way you like it.
             </p>
           </div>
           <div className="flex items-center gap-1 overflow-hidden pt-6">
@@ -282,13 +282,15 @@ function Landing() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center">
-        <div className="flex w-full flex-col">
-          <span className="font-sf text-[50px] font-bold">Hush.</span>
-          <span className="text-[18px] text-[#797979]">
+      <div className="flex flex-col items-center justify-center pb-[200px]">
+        <div className="flex w-full flex-col items-center">
+          <span className="font-sf text-[120px] font-bold leading-none lg:text-[400px]">
+            Hush<span className="text-[50px] lg:text-[75px]">.</span>
+          </span>
+          <span className="text-[18px] text-[#797979] md:text-[24px]">
             Did you hear that ad?
           </span>
-          <span className="text-[18px] text-[#797979]">Neither did we.</span>
+          <span className="text-[18px] text-[#797979]">Neither did we</span>
         </div>
         <span className="text-[100px]">🤫</span>
       </div>
