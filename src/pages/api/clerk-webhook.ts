@@ -75,16 +75,25 @@ export default async function handler(
           },
         });
 
+        const defaultHandle = `${
+          (data?.first_name as string) + (data?.last_name as string)
+        }`.toLowerCase();
+
+        const doesHandleExist = await prisma.user.findUnique({
+          where: {
+            handle: defaultHandle,
+          },
+        });
+
         await prisma.user.create({
           data: {
-            id: data.id as string,
+            id: data.id.toString(),
             email: email_address,
             first_name: data.first_name as string,
             last_name: data.last_name as string,
             profile_picture_url: (data.profile_image_url as string) ?? null,
             stripe_customer_id: stripeCustomer.id,
-            // TODO: Update this to be a real value
-            handle: data.first_name as string,
+            handle: doesHandleExist ? defaultHandle : data.id.toString(),
           },
         });
 
