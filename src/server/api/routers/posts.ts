@@ -8,8 +8,8 @@ import {
 } from "~/server/api/trpc";
 
 export const postsRouter = createTRPCRouter({
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.db.post.findMany({
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.post.findMany({
       include: {
         user: true,
       },
