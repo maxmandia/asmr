@@ -110,14 +110,16 @@ function Landing() {
           >
             cmd
           </button>
-          <Link
-            href="/home"
-            onClick={() => handleKeyPress("watch")}
+          <button
+            onClick={() => {
+              handleKeyPress("watch");
+              toast.error("coming soon.");
+            }}
             style={isClicked && isClicked.watch ? {} : boxShadowStyle}
             className="rounded-[6px] border-[1px] border-solid border-black border-opacity-20 bg-primary px-[20px] py-[8px] font-sf md:text-[20px] lg:text-[24px]"
           >
             start watching
-          </Link>
+          </button>
           <button
             onClick={() => handleKeyPress("alt")}
             style={
