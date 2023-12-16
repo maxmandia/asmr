@@ -4,6 +4,9 @@ export default {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        sf: ["var(--font-sf-rounded)"],
+      },
       colors: {
         background: "#161617",
         primary: "#9C4CD0",
