@@ -54,12 +54,7 @@ export default async function handler(
 
     switch (evt.type) {
       case "user.created":
-        if (
-          !data.first_name ||
-          !data.last_name ||
-          !data.email_addresses ||
-          !data.id
-        ) {
+        if (!data.email_addresses || !data.id) {
           const errorMsg = "Payload missing necessary fields.";
           await logError("/api/clerk-webhook", errorMsg);
           return res.status(400).json({ message: errorMsg });
@@ -75,25 +70,28 @@ export default async function handler(
           },
         });
 
-        const defaultHandle = `${
-          (data?.first_name as string) + (data?.last_name as string)
-        }`.toLowerCase();
-
         const doesHandleExist = await prisma.user.findUnique({
           where: {
-            handle: defaultHandle,
+            handle:
+              (data.username as string) ?? data?.unsafe_metadata?.username,
           },
         });
+
+        if (doesHandleExist) {
+          const errorMsg = "Handle already exists.";
+          await logError("/api/clerk-webhook", errorMsg);
+          return res.status(400).json({ message: errorMsg });
+        }
 
         await prisma.user.create({
           data: {
             id: data.id.toString(),
             email: email_address,
-            first_name: data.first_name as string,
-            last_name: data.last_name as string,
+            name: (data.username as string) ?? data?.unsafe_metadata?.username,
+            handle:
+              (data.username as string) ?? data?.unsafe_metadata?.username,
             profile_picture_url: (data.profile_image_url as string) ?? null,
             stripe_customer_id: stripeCustomer.id,
-            handle: doesHandleExist ? defaultHandle : data.id.toString(),
           },
         });
 

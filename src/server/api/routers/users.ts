@@ -61,7 +61,7 @@ export const usersRouter = createTRPCRouter({
       } else {
         const users = await ctx.db.user.findMany({
           where: {
-            first_name: {
+            name: {
               contains: input.query,
             },
             id: {
@@ -75,5 +75,35 @@ export const usersRouter = createTRPCRouter({
 
         return users;
       }
+    }),
+  validateHandle: publicProcedure
+    .input(z.object({ handle: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.db.user.findUnique({
+        where: {
+          handle: input.handle,
+        },
+      });
+
+      if (user) {
+        return true;
+      }
+
+      return false;
+    }),
+  doesEmailAlreadyExist: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.db.user.findUnique({
+        where: {
+          email: input.email,
+        },
+      });
+
+      if (user) {
+        return true;
+      }
+
+      return false;
     }),
 });

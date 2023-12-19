@@ -94,7 +94,7 @@ function User() {
           className="flex flex-col justify-center rounded-lg bg-input p-6"
         >
           <span className="text-center text-2xl">
-            Subscribe to {profileData?.user.first_name} ✨
+            Subscribe to {profileData?.user.name} ✨
           </span>
           <p className="text-grey">
             The subscription cost is $
@@ -147,7 +147,7 @@ function User() {
           <div className="relative h-[125px] w-full bg-red-100 md:rounded-[12px]">
             <Image
               src={profileData.user.profile_header_url}
-              alt={`${profileData.user.first_name}'s profile header`}
+              alt={`${profileData.user.name}'s profile header`}
               layout="fill"
               objectFit="cover"
               priority={true}
@@ -164,7 +164,7 @@ function User() {
             {profileData.user.profile_picture_url ? (
               <Image
                 src={profileData.user.profile_picture_url}
-                alt={`${profileData.user.first_name}'s profile picture`}
+                alt={`${profileData.user.name}'s profile picture`}
                 width={70}
                 height={70}
                 priority={true}
@@ -175,7 +175,7 @@ function User() {
             )}
             <div className="flex h-[70px] flex-col justify-between leading-none">
               <span className="text-[26px] font-medium">
-                {profileData.user.first_name}
+                {profileData.user.name}
               </span>
               <span className="text-[16px] text-grey">
                 @{profileData.user.handle}

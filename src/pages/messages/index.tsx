@@ -170,7 +170,7 @@ function Messages() {
                 <div className="relative h-[40px] w-[40px] rounded-[100px]">
                   <Image
                     src={selectedUser.profile_picture_url}
-                    alt={`${selectedUser.first_name}'s profile picture`}
+                    alt={`${selectedUser.name}'s profile picture`}
                     layout="fill"
                     objectFit="cover"
                     priority={true}
@@ -181,7 +181,7 @@ function Messages() {
                 <div className="h-[40px] w-[40px] rounded-[40px] bg-primary" />
               )}
               <span className="text-[20px] font-semibold">
-                {selectedUser.first_name}
+                {selectedUser.name}
               </span>
             </div>
           </div>
@@ -411,7 +411,7 @@ function UserMessageCard({
           <div className="relative h-[45px] w-[45px] rounded-[100px] bg-red-100">
             <Image
               src={user.profile_picture_url}
-              alt={`${user.first_name}'s profile picture`}
+              alt={`${user.name}'s profile picture`}
               layout="fill"
               objectFit="cover"
               priority={true}
@@ -422,7 +422,7 @@ function UserMessageCard({
           <div className="h-[45px] w-[45px] rounded-[45px] bg-primary" />
         )}
         <div className="flex flex-col">
-          <span className="text-[18px] font-semibold">{user.first_name}</span>
+          <span className="text-[18px] font-semibold">{user.name}</span>
           <span className="text-[14px] text-grey">@{user.handle}</span>
         </div>
       </div>

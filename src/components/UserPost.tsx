@@ -23,7 +23,7 @@ function UserPost(props: Props) {
         <div className="flex w-full flex-col">
           <Link href={`/${post.user.handle}`} prefetch={false}>
             <span className="font-medium hover:underline">
-              {post.user.first_name}
+              {post.user.name}
             </span>
           </Link>
           <p className="text-[14px]">{post.caption}</p>

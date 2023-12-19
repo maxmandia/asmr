@@ -8,8 +8,7 @@ async function main() {
       id: "ASJDLSADSJALDJASLKJD",
       email: "alice@prisma.io",
       stripe_customer_id: "cus_OzobuISR25yCn6",
-      first_name: "Alice",
-      last_name: "Prisma",
+      name: "Alice",
       profile_picture_url: "https://i.imgur.com/BdN9y8h.jpeg",
       handle: "alice",
       posts: {
@@ -30,8 +29,7 @@ async function main() {
       id: "user_2YeB8LEE6uRSP0ekBTK6TvWzxCu",
       email: "maxtesting1999@gmail.com",
       stripe_customer_id: "cus_OzoaHUCkkabXcF",
-      first_name: "Bob",
-      last_name: "Testing",
+      name: "Bob",
       profile_picture_url: "https://i.imgur.com/BdN9y8h.jpeg",
       handle: "bob",
       posts: {
@@ -61,8 +59,7 @@ async function main() {
       id: "user_2W5yMCDxXqt6qvZZzOJ9LKNmHca",
       email: "max@prisma.io",
       stripe_customer_id: "cus_Ozocd5CWheamgv",
-      first_name: "Max",
-      last_name: "Prisma",
+      name: "Max",
       profile_picture_url:
         "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18yVzV5TTZjRmgxSU1WS0lkWjNIMUM4d2piaEYifQ",
       profile_header_url:
