@@ -4,15 +4,7 @@ import Link from "next/link";
 import useCurrentUser from "~/hooks/useCurrentUser";
 
 function DesktopNavigation() {
-  const { data: user, isError, isLoading } = useCurrentUser();
-
-  if (isLoading) {
-    return null;
-  }
-
-  if (isError) {
-    return null;
-  }
+  const { data: user } = useCurrentUser();
 
   return (
     <div className="min-w-[200px]">
@@ -39,7 +31,7 @@ function DesktopNavigation() {
       </Link>
       <Link
         className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
-        href={`/${user.handle}`}
+        href={`/${user?.handle}`}
       >
         <HomeIcon height={25} width={25} color="white" />
         <span>Profile</span>

@@ -18,7 +18,13 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: ["img.clerk.com", "images.clerk.dev", "utfs.io", "i.imgur.com"],
+    domains: [
+      "img.clerk.com",
+      "images.clerk.dev",
+      "utfs.io",
+      "i.imgur.com",
+      "www.gravatar.com",
+    ],
   },
 };
 

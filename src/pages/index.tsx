@@ -1,11 +1,8 @@
-import React, { useMemo, useState } from "react";
-import { api } from "~/lib/utils/api";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
-import Link from "next/link";
 import Image from "next/image";
 import {
   CookieIcon,
-  LockOpen1Icon,
   LockOpen2Icon,
   MagicWandIcon,
 } from "@radix-ui/react-icons";

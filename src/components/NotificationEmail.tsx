@@ -1,19 +1,13 @@
 import React from "react";
-import Image from "next/image";
-import { emailMessages } from "~/lib/data/example-email-messages";
+
 import {
   Body,
   Button,
   Container,
-  Column,
   Head,
   Heading,
   Hr,
   Html,
-  Img,
-  Link,
-  Preview,
-  Row,
   Section,
   Tailwind,
   Text,
