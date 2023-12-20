@@ -10,7 +10,3 @@
   border-radius: 50px;
   padding: 3px;
 }
-
-.gradient_border:hover::before {
-  background: linear-gradient(to bottom, #9c4cd0, rgba(255, 255, 255, 0));
-}
