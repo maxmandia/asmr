@@ -215,7 +215,7 @@ function Landing() {
               <div className="flex-shrink-0" key={animal}>
                 <Image
                   className="select-none"
-                  src={`/images/${animal}.png`}
+                  src={`/images/memojis/${animal}.png`}
                   alt="animal"
                   height={75}
                   width={75}
@@ -271,7 +271,7 @@ function Landing() {
               <div className="flex-shrink-0" key={animal}>
                 <Image
                   className="select-none"
-                  src={`/images/${animal}.png`}
+                  src={`/images/memojis/${animal}.png`}
                   alt="animal"
                   height={75}
                   width={75}
