@@ -114,12 +114,8 @@ function User() {
     );
   }
 
-  if (profileLoading) {
-    return <span>...loading</span>;
-  }
-
-  if (profileError) {
-    return <span>...error</span>;
+  if (profileLoading || profileError) {
+    return null;
   }
 
   return (

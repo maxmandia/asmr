@@ -5,12 +5,8 @@ import UserPostsContainer from "~/components/UserPostsContainer";
 export default function Home() {
   const { data, isLoading, isError } = api.posts.getAll.useQuery();
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    return <div>Error...</div>;
+  if (isLoading || isError) {
+    return null;
   }
 
   return (
