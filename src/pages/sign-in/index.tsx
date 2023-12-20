@@ -51,7 +51,7 @@ function Page() {
       toast.success("Email sent!");
       const res = await startEmailLinkFlow({
         emailAddressId: emailAddressId,
-        redirectUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/home`,
+        redirectUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/verified`,
       });
 
       const verification = res.firstFactorVerification;

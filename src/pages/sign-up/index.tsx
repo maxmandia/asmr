@@ -80,7 +80,7 @@ function Page() {
 
       toast.success("Email sent!");
       const su = await startEmailLinkFlow({
-        redirectUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/home`,
+        redirectUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/verified`,
       });
 
       // Check the verification result.

@@ -16,7 +16,7 @@ export default authMiddleware({
     "/api/trpc/users.getUser",
     "/api/trpc/users.validateHandle",
   ],
-  ignoredRoutes: ["/", "/sign-in", "/sign-up"],
+  ignoredRoutes: ["/", "/sign-in", "/sign-up", "/verified"],
 });
 
 export const config = {
