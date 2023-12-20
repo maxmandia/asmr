@@ -10,11 +10,14 @@ import {
   MagicWandIcon,
 } from "@radix-ui/react-icons";
 import Link from "next/link";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 function Page() {
   const { signIn } = useSignIn();
   const emailRef = useRef<HTMLInputElement>(null);
   const [showEmailInput, setShowEmailInput] = useState(false);
+  const router = useRouter();
 
   const signInWith = (strategy: OAuthStrategy) => {
     if (!signIn) {
@@ -26,6 +29,53 @@ function Page() {
       redirectUrlComplete: "/home",
     });
   };
+
+  const { startEmailLinkFlow, cancelEmailLinkFlow } =
+    signIn?.createEmailLinkFlow() ?? {};
+
+  async function sendMagicLink() {
+    if (!signIn || !startEmailLinkFlow) {
+      return;
+    }
+
+    try {
+      const si = await signIn.create({
+        identifier: emailRef.current?.value ?? "",
+      });
+      const { emailAddressId } = si.supportedFirstFactors.find(
+        (ff) =>
+          ff.strategy === "email_link" &&
+          ff.safeIdentifier === emailRef.current?.value,
+      ) as any;
+
+      toast.success("Email sent!");
+      const res = await startEmailLinkFlow({
+        emailAddressId: emailAddressId,
+        redirectUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/home`,
+      });
+
+      const verification = res.firstFactorVerification;
+      if (verification.verifiedFromTheSameClient()) {
+        // If you're handling the verification result from
+        // another route/component, you should return here.
+        // See the <Verification/> component as an
+        // example below.
+        // If you want to complete the flow on this tab,
+        // don't return. Simply check the sign in status.
+        // return;
+      } else if (verification.status === "expired") {
+        // setExpired(true);
+      }
+      if (res.status === "complete") {
+        // setActive({ session: res.createdSessionId });
+        //Handle redirect
+        router.push("/home");
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="flex h-screen w-full items-center justify-center md:items-start md:py-[300px]">
@@ -41,7 +91,10 @@ function Page() {
                 className="w-[250px] rounded-md bg-input px-4 py-2 outline-none placeholder:text-grey"
                 placeholder="johnnyappleseed@gmail.com"
               />
-              <button className="flex w-[250px] items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 hover:bg-primary_hover">
+              <button
+                onClick={sendMagicLink}
+                className="flex w-[250px] items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 hover:bg-primary_hover"
+              >
                 <MagicWandIcon className="h-5 w-5" />
                 Send magic link
               </button>
