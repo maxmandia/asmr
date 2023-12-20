@@ -1,7 +1,5 @@
 import React, { useRef, useState } from "react";
-import { SignIn, useSignIn } from "@clerk/nextjs";
-import Layout from "~/components/Layout";
-import { dark } from "@clerk/themes";
+import { useSignIn } from "@clerk/nextjs";
 import { OAuthStrategy } from "@clerk/nextjs/dist/types/server";
 import Image from "next/image";
 import {
