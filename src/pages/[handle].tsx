@@ -159,8 +159,8 @@ function User() {
         )}
       </div>
       <div className="px-5">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start gap-4  py-4">
+        <div className="flex items-center justify-between py-4">
+          <div className="flex items-start gap-4 ">
             {profileData.user.profile_picture_url ? (
               <Image
                 src={profileData.user.profile_picture_url}
@@ -185,36 +185,38 @@ function User() {
               </span>
             </div>
           </div>
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(
-                `${process.env.NEXT_PUBLIC_BASE_URL}/${profileData.user.handle}`,
-              );
-              toast.success("copied to clipboard");
-            }}
-            className="mt-5 rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white"
-          >
-            <Share2Icon height={20} width={20} />
-          </button>
-          {profileData.user.isMe &&
-          !profileData.user.subscriptionSetting?.isComplete ? (
+          <div className="flex flex-col items-end gap-2">
             <button
-              onClick={() => expressAccountMutation()}
-              className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `${process.env.NEXT_PUBLIC_BASE_URL}/${profileData.user.handle}`,
+                );
+                toast.success("copied to clipboard");
+              }}
+              className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white"
             >
-              activate subscriptions
+              <Share2Icon height={20} width={20} />
             </button>
-          ) : null}
-          {profileData.user.isMe &&
-          profileData.user.subscriptionSetting?.isComplete &&
-          !profileData.user.subscriptionSetting.priceId ? (
-            <Link
-              href={"/settings/monetization"}
-              className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
-            >
-              finish setup
-            </Link>
-          ) : null}
+            {profileData.user.isMe &&
+            !profileData.user.subscriptionSetting?.isComplete ? (
+              <button
+                onClick={() => expressAccountMutation()}
+                className="rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
+              >
+                activate subscriptions
+              </button>
+            ) : null}
+            {profileData.user.isMe &&
+            profileData.user.subscriptionSetting?.isComplete &&
+            !profileData.user.subscriptionSetting.priceId ? (
+              <Link
+                href={"/settings/monetization"}
+                className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
+              >
+                finish setup
+              </Link>
+            ) : null}
+          </div>
         </div>
         {!profileData.user.isMe && (
           <div className="flex gap-2">
