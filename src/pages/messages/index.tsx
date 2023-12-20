@@ -86,7 +86,7 @@ function Messages() {
     lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
   }, [messages]);
 
-  if (isCurrentUserLoading || isErrorGettingCurrentUser) {
+  if (isCurrentUserLoading || isErrorGettingCurrentUser || !currentUser) {
     return null;
   }
 

@@ -1,7 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { SignIn, useSignIn, useSignUp } from "@clerk/nextjs";
-import Layout from "~/components/Layout";
-import { dark } from "@clerk/themes";
+import React, { useRef, useState } from "react";
+import { useSignUp } from "@clerk/nextjs";
 import { OAuthStrategy } from "@clerk/nextjs/dist/types/server";
 import Image from "next/image";
 import {
@@ -17,13 +15,12 @@ import { api } from "~/lib/utils/api";
 
 function Page() {
   const router = useRouter();
-  const handleRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const [handle, setHandle] = useState("");
   const [showEmailInput, setShowEmailInput] = useState(false);
   const [showHandleInput, setShowHandleInput] = useState(true);
   const { signUp, isLoaded, setActive } = useSignUp();
-  const { data, refetch } = api.users.validateHandle.useQuery(
+  const { refetch } = api.users.validateHandle.useQuery(
     { handle: handle },
     {
       enabled: false,

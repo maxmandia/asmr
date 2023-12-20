@@ -12,7 +12,11 @@ type ResponseData = {
 type EventType = "user.created" | "user.updated" | "user.deleted";
 
 type Event = {
-  data: Record<string, string | number>;
+  data: Record<string, string | number> & {
+    unsafe_metadata?: {
+      username?: string;
+    };
+  };
   object: "event";
   type: EventType;
 };

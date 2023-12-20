@@ -25,16 +25,13 @@ export const usersRouter = createTRPCRouter({
       }
       return user;
     }),
-  getUser: publicProcedure.query(async ({ ctx }) => {
+  getUser: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
       where: {
-        id: ctx.auth.userId ?? "",
+        id: ctx.auth.userId,
       },
     });
 
-    if (!user) {
-      return null;
-    }
     return user;
   }),
   searchUsers: protectedProcedure
