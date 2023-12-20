@@ -3,7 +3,12 @@ import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
-import { LockClosedIcon, PersonIcon, Share2Icon } from "@radix-ui/react-icons";
+import {
+  LockClosedIcon,
+  PersonIcon,
+  Share2Icon,
+  GearIcon,
+} from "@radix-ui/react-icons";
 import UserPostsContainer from "~/components/UserPostsContainer";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -181,18 +186,28 @@ function User() {
               </span>
             </div>
           </div>
-          <div className="flex flex-col items-end gap-2">
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(
-                  `${process.env.NEXT_PUBLIC_BASE_URL}/${profileData.user.handle}`,
-                );
-                toast.success("copied to clipboard");
-              }}
-              className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white"
-            >
-              <Share2Icon height={20} width={20} />
-            </button>
+          <div className="flex flex-col items-end justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <button
+                title="copy profile link"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    `${process.env.NEXT_PUBLIC_BASE_URL}/${profileData.user.handle}`,
+                  );
+                  toast.success("copied to clipboard");
+                }}
+                className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white hover:bg-card_hover"
+              >
+                <Share2Icon height={20} width={20} />
+              </button>
+              <Link
+                title="settings"
+                href={"/settings"}
+                className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white hover:bg-card_hover"
+              >
+                <GearIcon height={20} width={20} />
+              </Link>
+            </div>
             {profileData.user.isMe &&
             !profileData.user.subscriptionSetting?.isComplete ? (
               <button
