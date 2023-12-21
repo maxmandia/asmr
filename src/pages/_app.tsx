@@ -9,6 +9,7 @@ import { api } from "../lib/utils/api";
 import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "react-hot-toast";
 import localFont from "next/font/local";
+import Head from "next/head";
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -45,6 +46,12 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
     <ClerkProvider {...pageProps}>
       <QueryClientProvider client={queryClient}>
         <Toaster />
+        <Head>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"
+          />
+        </Head>
         <div className={`h-screen bg-background text-text ${sf.variable}`}>
           {getLayout(<Component {...pageProps} />)}
           <Analytics />

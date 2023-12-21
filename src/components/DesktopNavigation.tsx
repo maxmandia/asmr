@@ -7,7 +7,7 @@ function DesktopNavigation() {
   const { data: user } = useCurrentUser();
 
   return (
-    <div className="min-w-[200px]">
+    <nav className="min-w-[200px]">
       <Link
         className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
         href={"/home"}
@@ -42,7 +42,7 @@ function DesktopNavigation() {
       >
         post
       </Link>
-    </div>
+    </nav>
   );
 }
 

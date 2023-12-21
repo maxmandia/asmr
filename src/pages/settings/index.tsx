@@ -14,6 +14,13 @@ function Settings() {
   return (
     <div className="w-full p-5 md:w-[50%] md:p-1">
       <Link
+        href={"/settings/edit"}
+        className="flex w-full items-center justify-between rounded-[12px] p-3 hover:bg-card_hover"
+      >
+        <span>Edit profile</span>
+        <CaretRightIcon height={20} width={20} />
+      </Link>
+      <Link
         href={"/settings/monetization"}
         className="flex w-full items-center justify-between rounded-[12px] p-3 hover:bg-card_hover"
       >
@@ -26,7 +33,7 @@ function Settings() {
         }}
       >
         <div className="flex w-full items-center justify-between rounded-[12px] p-3 hover:bg-card_hover">
-          <span>Signout</span>
+          <span>Sign out</span>
           <CaretRightIcon height={20} width={20} />
         </div>
       </SignOutButton>
