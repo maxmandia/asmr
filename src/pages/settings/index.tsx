@@ -17,7 +17,7 @@ function Settings() {
         href={"/settings/edit"}
         className="flex w-full items-center justify-between rounded-[12px] p-3 hover:bg-card_hover"
       >
-        <span>Edit Profile</span>
+        <span>Edit profile</span>
         <CaretRightIcon height={20} width={20} />
       </Link>
       <Link
@@ -33,7 +33,7 @@ function Settings() {
         }}
       >
         <div className="flex w-full items-center justify-between rounded-[12px] p-3 hover:bg-card_hover">
-          <span>Signout</span>
+          <span>Sign out</span>
           <CaretRightIcon height={20} width={20} />
         </div>
       </SignOutButton>
