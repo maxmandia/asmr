@@ -91,7 +91,9 @@ export default async function handler(
           data: {
             id: data.id.toString(),
             email: email_address,
-            name: (data.username as string) ?? data?.unsafe_metadata?.username,
+            name:
+              (data.username as string).trim() ??
+              data?.unsafe_metadata?.username,
             handle:
               (data.username as string) ?? data?.unsafe_metadata?.username,
             profile_picture_url: (data.profile_image_url as string) ?? null,

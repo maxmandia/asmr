@@ -128,7 +128,12 @@ function Page() {
             <>
               <input
                 value={handle}
-                onChange={(e) => setHandle(e.target.value)}
+                onChange={(e) => {
+                  if (e.target.value.includes(" ")) {
+                    return;
+                  }
+                  setHandle(e.target.value);
+                }}
                 type="text"
                 className="w-[250px] rounded-md bg-input px-4 py-2 outline-none placeholder:text-grey"
                 placeholder="johnnyappleseed"
