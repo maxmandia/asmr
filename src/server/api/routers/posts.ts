@@ -13,6 +13,9 @@ export const postsRouter = createTRPCRouter({
       include: {
         user: true,
       },
+      where: {
+        isPaid: false,
+      },
       orderBy: {
         createdAt: "desc",
       },

@@ -253,7 +253,7 @@ function User() {
             ) : null}
           </div>
         )}
-        <nav className="flex items-center gap-5 border-b-[.5px] border-grey py-2 font-medium">
+        <div className="mb-4 flex items-center gap-5 border-b-[.5px] border-grey py-2 font-medium">
           <button
             onClick={() => setTabSelected("home")}
             className={`${tabSelected === "home" ? "text-white" : "text-grey"}`}
@@ -268,7 +268,7 @@ function User() {
           >
             Videos
           </button>
-        </nav>
+        </div>
         <UserPostsContainer
           data={
             tabSelected === "home"
