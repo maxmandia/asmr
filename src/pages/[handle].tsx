@@ -143,7 +143,7 @@ function User() {
             subscribedToId={profileData.user.id}
           />
         )}
-      <div className="md:px-5">
+      <div>
         {profileData.user.profile_header_url ? (
           <div className="relative h-[125px] w-full bg-red-100 md:rounded-[12px]">
             <Image
@@ -159,122 +159,126 @@ function User() {
           <div className="h-[125px] w-full bg-primary md:rounded-[12px]" />
         )}
       </div>
-      <div className="flex items-center justify-between py-4">
-        <div className="flex items-start gap-4 ">
-          {profileData.user.profile_picture_url ? (
-            <Image
-              src={profileData.user.profile_picture_url}
-              alt={`${profileData.user.name}'s profile picture`}
-              width={70}
-              height={70}
-              priority={true}
-              className="h-[70px] w-[70px] rounded-[100px] bg-white object-cover"
-            />
-          ) : (
-            <div className="h-[70px] w-[70px] rounded-[100px] bg-white" />
-          )}
-          <div className="flex h-[70px] flex-col justify-between leading-none">
-            <span className="text-[26px] font-medium">
-              {profileData.user.name}
-            </span>
-            <span className="text-[16px] text-grey">
-              @{profileData.user.handle}
-            </span>
-            <span className="text-[14px] text-grey">
-              {profileData.user._count.followers} Followers
-            </span>
+      <div className="px-5 md:px-0">
+        <div className="flex items-center justify-between py-4">
+          <div className="flex items-start gap-4 ">
+            {profileData.user.profile_picture_url ? (
+              <Image
+                src={profileData.user.profile_picture_url}
+                alt={`${profileData.user.name}'s profile picture`}
+                width={70}
+                height={70}
+                priority={true}
+                className="h-[70px] w-[70px] rounded-[100px] bg-white object-cover"
+              />
+            ) : (
+              <div className="h-[70px] w-[70px] rounded-[100px] bg-white" />
+            )}
+            <div className="flex h-[70px] flex-col justify-between leading-none">
+              <span className="text-[26px] font-medium">
+                {profileData.user.name}
+              </span>
+              <span className="text-[16px] text-grey">
+                @{profileData.user.handle}
+              </span>
+              <span className="text-[14px] text-grey">
+                {profileData.user._count.followers} Followers
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-end justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <button
+                title="copy profile link"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    `${process.env.NEXT_PUBLIC_BASE_URL}/${profileData.user.handle}`,
+                  );
+                  toast.success("copied to clipboard");
+                }}
+                className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white hover:bg-card_hover"
+              >
+                <Share2Icon height={20} width={20} />
+              </button>
+              <Link
+                title="settings"
+                href={"/settings"}
+                className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white hover:bg-card_hover"
+              >
+                <GearIcon height={20} width={20} />
+              </Link>
+            </div>
+            {profileData.user.isMe &&
+            !profileData.user.subscriptionSetting?.isComplete ? (
+              <button
+                onClick={() => expressAccountMutation()}
+                className="rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
+              >
+                activate subscriptions
+              </button>
+            ) : null}
+            {profileData.user.isMe &&
+            profileData.user.subscriptionSetting?.isComplete &&
+            !profileData.user.subscriptionSetting.priceId ? (
+              <Link
+                href={"/settings/monetization"}
+                className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
+              >
+                finish setup
+              </Link>
+            ) : null}
           </div>
         </div>
-        <div className="flex flex-col items-end justify-between gap-2">
-          <div className="flex items-center gap-2">
+        {!profileData.user.isMe && (
+          <div className="flex gap-2">
             <button
-              title="copy profile link"
-              onClick={() => {
-                navigator.clipboard.writeText(
-                  `${process.env.NEXT_PUBLIC_BASE_URL}/${profileData.user.handle}`,
-                );
-                toast.success("copied to clipboard");
-              }}
-              className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white hover:bg-card_hover"
+              onClick={followHandler}
+              className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-white py-[4px] font-medium text-black hover:bg-white_hover"
             >
-              <Share2Icon height={20} width={20} />
+              <PersonIcon />
+              {profileData.user.isFollowing ? "Unfollow" : "Follow"}
             </button>
-            <Link
-              title="settings"
-              href={"/settings"}
-              className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white hover:bg-card_hover"
-            >
-              <GearIcon height={20} width={20} />
-            </Link>
+            {profileData.user.subscriptionSetting ? (
+              <button
+                onClick={() => {
+                  if (!profileData.user.subscriber) {
+                    setShowSubscriptionModal(true);
+                  }
+                }}
+                className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-primary py-[4px] font-medium hover:bg-primary_hover"
+              >
+                {profileData.user.subscriber ? "✨" : <LockClosedIcon />}
+                {profileData.user.subscriber ? "Subscribed" : "Subscribe"}
+              </button>
+            ) : null}
           </div>
-          {profileData.user.isMe &&
-          !profileData.user.subscriptionSetting?.isComplete ? (
-            <button
-              onClick={() => expressAccountMutation()}
-              className="rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
-            >
-              activate subscriptions
-            </button>
-          ) : null}
-          {profileData.user.isMe &&
-          profileData.user.subscriptionSetting?.isComplete &&
-          !profileData.user.subscriptionSetting.priceId ? (
-            <Link
-              href={"/settings/monetization"}
-              className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
-            >
-              finish setup
-            </Link>
-          ) : null}
-        </div>
-      </div>
-      {!profileData.user.isMe && (
-        <div className="flex gap-2">
+        )}
+        <div className="mb-4 flex items-center gap-5 border-b-[.5px] border-grey py-2 font-medium">
           <button
-            onClick={followHandler}
-            className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-white py-[4px] font-medium text-black hover:bg-white_hover"
+            onClick={() => setTabSelected("home")}
+            className={`${tabSelected === "home" ? "text-white" : "text-grey"}`}
           >
-            <PersonIcon />
-            {profileData.user.isFollowing ? "Unfollow" : "Follow"}
+            Home
           </button>
-          {profileData.user.subscriptionSetting ? (
-            <button
-              onClick={() => {
-                if (!profileData.user.subscriber) {
-                  setShowSubscriptionModal(true);
-                }
-              }}
-              className="flex w-full items-center justify-center gap-2 rounded-[100px] bg-primary py-[4px] font-medium hover:bg-primary_hover"
-            >
-              {profileData.user.subscriber ? "✨" : <LockClosedIcon />}
-              {profileData.user.subscriber ? "Subscribed" : "Subscribe"}
-            </button>
-          ) : null}
+          <button
+            onClick={() => setTabSelected("videos")}
+            className={`${
+              tabSelected === "videos" ? "text-white" : "text-grey"
+            }`}
+          >
+            Videos
+          </button>
         </div>
-      )}
-      <div className="mb-4 flex items-center gap-5 border-b-[.5px] border-grey py-2 font-medium">
-        <button
-          onClick={() => setTabSelected("home")}
-          className={`${tabSelected === "home" ? "text-white" : "text-grey"}`}
-        >
-          Home
-        </button>
-        <button
-          onClick={() => setTabSelected("videos")}
-          className={`${tabSelected === "videos" ? "text-white" : "text-grey"}`}
-        >
-          Videos
-        </button>
-      </div>
 
-      <div className="flex flex-grow flex-col overflow-y-auto py-8">
-        <UserPostsContainer
-          data={
-            tabSelected === "home"
-              ? profileData.posts
-              : profileData.posts.filter((post) => post.video)
-          }
-        />
+        <div className="flex flex-grow flex-col overflow-y-auto py-8">
+          <UserPostsContainer
+            data={
+              tabSelected === "home"
+                ? profileData.posts
+                : profileData.posts.filter((post) => post.video)
+            }
+          />
+        </div>
       </div>
     </div>
   );
