@@ -21,6 +21,55 @@ export const postsRouter = createTRPCRouter({
       },
     });
   }),
+  getAllFollowingPosts: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const followedUsersPosts = await ctx.db.user.findUnique({
+        where: {
+          id: ctx.auth.userId,
+        },
+        include: {
+          following: {
+            include: {
+              following: {
+                include: {
+                  posts: {
+                    take: 10, // Limit the number of posts
+                    skip: 0, // Skip posts for pagination
+                    orderBy: {
+                      createdAt: "desc",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!followedUsersPosts) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      // Extracting the paginated posts
+      const posts = followedUsersPosts.following.flatMap((follow) =>
+        follow.following.posts.map((post) => ({
+          ...post,
+          user: follow.following,
+        })),
+      );
+
+      return posts;
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Something went wrong",
+      });
+    }
+    // return posts;
+  }),
   getPostsFromUser: protectedProcedure
     .input(z.object({ handle: z.string() }))
     .query(async ({ ctx, input }) => {

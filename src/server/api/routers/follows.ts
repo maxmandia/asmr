@@ -5,11 +5,11 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const followsRouter = createTRPCRouter({
   followUser: protectedProcedure
-    .input(z.object({ userId: z.string() }))
+    .input(z.object({ handle: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.db.user.findUnique({
         where: {
-          id: input.userId,
+          handle: input.handle,
         },
       });
 
@@ -23,7 +23,7 @@ export const followsRouter = createTRPCRouter({
       const follow = await ctx.db.follow.create({
         data: {
           followerId: ctx.auth.userId,
-          followingId: input.userId,
+          followingId: user.id,
         },
       });
 
@@ -31,11 +31,11 @@ export const followsRouter = createTRPCRouter({
     }),
 
   unfollowUser: protectedProcedure
-    .input(z.object({ userId: z.string() }))
+    .input(z.object({ handle: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.db.user.findUnique({
         where: {
-          id: input.userId,
+          id: input.handle,
         },
       });
 
@@ -50,7 +50,7 @@ export const followsRouter = createTRPCRouter({
         where: {
           followerId_followingId: {
             followerId: ctx.auth.userId,
-            followingId: input.userId,
+            followingId: user.id,
           },
         },
       });

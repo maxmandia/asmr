@@ -19,7 +19,7 @@ function UserPostsContainer({ data }: Props) {
           post={expandedMediaContent}
         />
       ) : (
-        <div className="flex flex-col gap-8 py-8 pb-[50px] md:pb-[25px]">
+        <div className="flex w-full flex-col gap-8">
           {data?.map((post) => (
             <UserPost
               setExpandedMediaContent={setExpandedMediaContent}
