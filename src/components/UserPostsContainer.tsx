@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Post } from "~/types/Post";
 import ExpandedMedia from "~/components/ExpandedMedia";
 import UserPost from "./UserPost";
+import { SubscribedUsers } from "~/types/SubscribedUsers";
 
 interface Props {
   data: Post[];
+  subscribedUsers: SubscribedUsers;
 }
 
-function UserPostsContainer({ data }: Props) {
+function UserPostsContainer({ data, subscribedUsers }: Props) {
   const [expandedMediaContent, setExpandedMediaContent] = useState<Post | null>(
     null,
   );
@@ -25,6 +27,7 @@ function UserPostsContainer({ data }: Props) {
               setExpandedMediaContent={setExpandedMediaContent}
               key={post.id}
               post={post}
+              subscribedUsers={subscribedUsers}
             />
           ))}
         </div>

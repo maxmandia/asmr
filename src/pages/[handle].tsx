@@ -277,6 +277,7 @@ function User() {
                 ? profileData.posts
                 : profileData.posts.filter((post) => post.video)
             }
+            subscribedUsers={profileData.subscribedUserIds ?? []}
           />
         </div>
       </div>

@@ -33,12 +33,23 @@ async function main() {
       profile_picture_url: "https://i.imgur.com/BdN9y8h.jpeg",
       handle: "bob",
       posts: {
-        create: {
-          caption: "YO this is bob!",
-          image: "https://i.imgur.com/ozY3D3m.jpeg",
-          video: null,
-          fileKey: null,
-          isPaid: false,
+        createMany: {
+          data: [
+            {
+              caption: "YO this is bob!",
+              image: "https://i.imgur.com/ozY3D3m.jpeg",
+              video: null,
+              fileKey: null,
+              isPaid: false,
+            },
+            {
+              caption: "Exlcusive content from me - Bob!",
+              image: "https://i.imgur.com/NVx4lcH.jpeg",
+              video: null,
+              fileKey: null,
+              isPaid: true,
+            },
+          ],
         },
       },
       subscriptionSetting: {
@@ -96,10 +107,16 @@ async function main() {
       wasNotified: false,
     },
   });
-  await prisma.subscription.create({
+  // await prisma.subscription.create({
+  //   data: {
+  //     subscribedToId: "user_2YeB8LEE6uRSP0ekBTK6TvWzxCu",
+  //     subscriberId: "user_2W5yMCDxXqt6qvZZzOJ9LKNmHca",
+  //   },
+  // });
+  await prisma.follow.create({
     data: {
-      subscriberId: "user_2YeB8LEE6uRSP0ekBTK6TvWzxCu",
-      subscribedToId: "user_2W5yMCDxXqt6qvZZzOJ9LKNmHca",
+      followerId: "user_2W5yMCDxXqt6qvZZzOJ9LKNmHca",
+      followingId: "user_2YeB8LEE6uRSP0ekBTK6TvWzxCu",
     },
   });
 }
