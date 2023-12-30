@@ -269,17 +269,16 @@ function User() {
             Videos
           </button>
         </div>
-
-        <div className="flex flex-grow flex-col overflow-y-auto py-8">
-          <UserPostsContainer
-            data={
-              tabSelected === "home"
-                ? profileData.posts
-                : profileData.posts.filter((post) => post.video)
-            }
-            subscribedUsers={profileData.subscribedUserIds ?? []}
-          />
-        </div>
+      </div>
+      <div className="flex flex-grow flex-col overflow-y-scroll px-5 md:px-0">
+        <UserPostsContainer
+          data={
+            tabSelected === "home"
+              ? profileData.posts
+              : profileData.posts.filter((post) => post.video)
+          }
+          subscribedUsers={profileData.subscribedUserIds ?? []}
+        />
       </div>
     </div>
   );
