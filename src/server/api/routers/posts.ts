@@ -13,10 +13,74 @@ export const postsRouter = createTRPCRouter({
       include: {
         user: true,
       },
+      where: {
+        isPaid: false,
+      },
       orderBy: {
         createdAt: "desc",
       },
     });
+  }),
+  getAllFollowingPosts: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const followedUsersPosts = await ctx.db.user.findUnique({
+        where: {
+          id: ctx.auth.userId,
+        },
+        include: {
+          subscribedTo: true,
+          following: {
+            include: {
+              following: {
+                include: {
+                  posts: {
+                    take: 10, // Limit the number of posts
+                    skip: 0, // Skip posts for pagination
+                    orderBy: {
+                      createdAt: "desc",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const subscribedUsers = await ctx.db.subscription.findMany({
+        where: {
+          subscriberId: ctx.auth.userId,
+        },
+      });
+
+      if (!followedUsersPosts) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      // Extract the IDs from the subscribed users
+      const subscribedUserIds = subscribedUsers.map(
+        (user) => user.subscribedToId,
+      );
+
+      // Extracting the paginated posts
+      const posts = followedUsersPosts.following.flatMap((follow) =>
+        follow.following.posts.map((post) => ({
+          ...post,
+          user: follow.following,
+        })),
+      );
+
+      return { posts, subscribedUserIds };
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Something went wrong",
+      });
+    }
+    // return posts;
   }),
   getPostsFromUser: protectedProcedure
     .input(z.object({ handle: z.string() }))
@@ -57,6 +121,17 @@ export const postsRouter = createTRPCRouter({
         },
       });
 
+      const subscribedUsers = await ctx.db.subscription.findMany({
+        where: {
+          subscriberId: ctx.auth.userId,
+        },
+      });
+
+      // Extract the IDs from the subscribed users
+      const subscribedUserIds = subscribedUsers.map(
+        (user) => user.subscribedToId,
+      );
+
       const isFollowing = await ctx.db.follow.findFirst({
         where: {
           followerId: ctx.auth.userId,
@@ -86,6 +161,7 @@ export const postsRouter = createTRPCRouter({
           },
           currentUser,
           posts,
+          subscribedUserIds,
         };
       }
     }),

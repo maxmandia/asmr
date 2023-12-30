@@ -64,11 +64,11 @@ function User() {
 
     if (profileData.user.isFollowing) {
       unfollowMutation({
-        userId: router.query.id as string,
+        handle: router.query.handle as string,
       });
     } else {
       followMutation({
-        userId: router.query.id as string,
+        handle: router.query.handle as string,
       });
     }
   }
@@ -124,7 +124,7 @@ function User() {
   }
 
   return (
-    <div className="h-[calc(100vh_-_56px)] overflow-y-scroll md:w-[50%]">
+    <div className="flex h-[calc(100vh_-_56px)] flex-col overflow-y-hidden md:w-[50%]">
       {showSubscriptionModal && profileData.user.subscriptionSetting && (
         <SubscriptionModal />
       )}
@@ -143,7 +143,7 @@ function User() {
             subscribedToId={profileData.user.id}
           />
         )}
-      <div className="md:px-5">
+      <div>
         {profileData.user.profile_header_url ? (
           <div className="relative h-[125px] w-full bg-red-100 md:rounded-[12px]">
             <Image
@@ -159,7 +159,7 @@ function User() {
           <div className="h-[125px] w-full bg-primary md:rounded-[12px]" />
         )}
       </div>
-      <div className="px-5">
+      <div className="px-5 md:px-0">
         <div className="flex items-center justify-between py-4">
           <div className="flex items-start gap-4 ">
             {profileData.user.profile_picture_url ? (
@@ -253,7 +253,7 @@ function User() {
             ) : null}
           </div>
         )}
-        <nav className="flex items-center gap-5 border-b-[.5px] border-grey py-2 font-medium">
+        <div className="mb-4 flex items-center gap-5 border-b-[.5px] border-grey py-2 font-medium">
           <button
             onClick={() => setTabSelected("home")}
             className={`${tabSelected === "home" ? "text-white" : "text-grey"}`}
@@ -268,13 +268,16 @@ function User() {
           >
             Videos
           </button>
-        </nav>
+        </div>
+      </div>
+      <div className="flex flex-grow flex-col overflow-y-scroll px-5 md:px-0">
         <UserPostsContainer
           data={
             tabSelected === "home"
               ? profileData.posts
               : profileData.posts.filter((post) => post.video)
           }
+          subscribedUsers={profileData.subscribedUserIds ?? []}
         />
       </div>
     </div>
