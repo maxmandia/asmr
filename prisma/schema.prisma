@@ -97,9 +97,5 @@ model Message {
   @@index([wasRead])
 }
 
-model Waitlist {
-  id             Int        @id @default(autoincrement())
-  email          String     @unique
-  createdAt      DateTime   @default(now())
-}
+
 
