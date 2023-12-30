@@ -23,7 +23,7 @@ export default function Page() {
       toast.success("post created");
       setTimeout(() => {
         toast.dismiss();
-        router.push("/").catch((err) => console.log(err));
+        router.push("/home");
       }, 1000);
     },
     onError: () => {

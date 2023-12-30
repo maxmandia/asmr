@@ -4,31 +4,16 @@ import Link from "next/link";
 import useCurrentUser from "~/hooks/useCurrentUser";
 
 function DesktopNavigation() {
-  const { data: user, isError, isLoading } = useCurrentUser();
-
-  if (isLoading) {
-    return null;
-  }
-
-  if (isError) {
-    return null;
-  }
+  const { data: user } = useCurrentUser();
 
   return (
-    <div className="min-w-[200px]">
+    <nav className="min-w-[200px]">
       <Link
         className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
         href={"/home"}
       >
         <HomeIcon height={25} width={25} color="white" />
         <span>Home</span>
-      </Link>
-      <Link
-        className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
-        href={"/notifications"}
-      >
-        <BellIcon height={25} width={25} color="white" />
-        <span>Notifications</span>
       </Link>
       <Link
         className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
@@ -39,7 +24,14 @@ function DesktopNavigation() {
       </Link>
       <Link
         className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
-        href={`/${user.handle}`}
+        href={"/notifications"}
+      >
+        <BellIcon height={25} width={25} color="white" />
+        <span>Notifications</span>
+      </Link>
+      <Link
+        className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
+        href={`/${user?.handle}`}
       >
         <HomeIcon height={25} width={25} color="white" />
         <span>Profile</span>
@@ -50,7 +42,7 @@ function DesktopNavigation() {
       >
         post
       </Link>
-    </div>
+    </nav>
   );
 }
 

@@ -32,14 +32,37 @@ export const usersRouter = createTRPCRouter({
       },
     });
 
-    if (!user) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "User not found",
-      });
-    }
     return user;
   }),
+  updateUserProfile: protectedProcedure
+    .input(
+      z.object({
+        name: z.string().optional(),
+        profile_picture_url: z.string().optional(),
+        profile_header_url: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const user = await ctx.db.user.update({
+          where: {
+            id: ctx.auth.userId,
+          },
+          data: {
+            name: input.name,
+            profile_picture_url: input.profile_picture_url,
+            profile_header_url: input.profile_header_url,
+          },
+        });
+
+        return user;
+      } catch (error: any) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error.message,
+        });
+      }
+    }),
   searchUsers: protectedProcedure
     .input(z.object({ query: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -64,7 +87,7 @@ export const usersRouter = createTRPCRouter({
       } else {
         const users = await ctx.db.user.findMany({
           where: {
-            first_name: {
+            name: {
               contains: input.query,
             },
             id: {
@@ -78,5 +101,35 @@ export const usersRouter = createTRPCRouter({
 
         return users;
       }
+    }),
+  validateHandle: publicProcedure
+    .input(z.object({ handle: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.db.user.findUnique({
+        where: {
+          handle: input.handle,
+        },
+      });
+
+      if (user) {
+        return true;
+      }
+
+      return false;
+    }),
+  doesEmailAlreadyExist: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.db.user.findUnique({
+        where: {
+          email: input.email,
+        },
+      });
+
+      if (user) {
+        return true;
+      }
+
+      return false;
     }),
 });

@@ -4,6 +4,13 @@ export default {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        sf: ["var(--font-sf-rounded)"],
+      },
+      height: {
+        // @ts-ignore
+        screen: ["100vh /* fallback for Opera, IE and etc. */", "100svh"],
+      },
       colors: {
         background: "#161617",
         primary: "#9C4CD0",

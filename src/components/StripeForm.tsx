@@ -6,16 +6,22 @@ import {
 } from "@stripe/react-stripe-js";
 import toast from "react-hot-toast";
 const URL = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+import { api } from "~/lib/utils/api";
 
 export default function StripeForm({
   setShowPaymentModal,
+
+  isTip = false,
 }: {
   setShowPaymentModal: React.Dispatch<React.SetStateAction<boolean>>;
+  isTip?: boolean;
 }) {
   const elements = useElements();
   const stripe = useStripe();
+  const utils = api.useContext();
 
-  async function paymentHandler() {
+  async function paymentHandler(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     try {
       if (!stripe || !elements) {
         throw new Error("Stripe isn't working right now");
@@ -27,16 +33,27 @@ export default function StripeForm({
           return_url: `${URL}/home`,
           save_payment_method: true,
         },
+        redirect: "if_required",
       });
 
-      toast.success("Payment was made successfully");
+      if (isTip) {
+        utils.messages.invalidate();
+      } else {
+        utils.posts.invalidate();
+      }
+
+      setShowPaymentModal(false);
+      toast.success("Payment successful!");
     } catch (error: any) {
       toast.error(error);
     }
   }
 
   return (
-    <form onSubmit={paymentHandler} className="rounded-lg bg-input p-5">
+    <form
+      onSubmit={(e) => paymentHandler(e)}
+      className="rounded-lg bg-input p-5"
+    >
       <div className="flex w-full items-end justify-end">
         <button
           onClick={(e) => {

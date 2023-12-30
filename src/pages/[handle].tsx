@@ -3,7 +3,12 @@ import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
-import { LockClosedIcon, PersonIcon, Share2Icon } from "@radix-ui/react-icons";
+import {
+  LockClosedIcon,
+  PersonIcon,
+  Share2Icon,
+  GearIcon,
+} from "@radix-ui/react-icons";
 import UserPostsContainer from "~/components/UserPostsContainer";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -59,11 +64,11 @@ function User() {
 
     if (profileData.user.isFollowing) {
       unfollowMutation({
-        userId: router.query.id as string,
+        handle: router.query.handle as string,
       });
     } else {
       followMutation({
-        userId: router.query.id as string,
+        handle: router.query.handle as string,
       });
     }
   }
@@ -94,7 +99,7 @@ function User() {
           className="flex flex-col justify-center rounded-lg bg-input p-6"
         >
           <span className="text-center text-2xl">
-            Subscribe to {profileData?.user.first_name} ✨
+            Subscribe to {profileData?.user.name} ✨
           </span>
           <p className="text-grey">
             The subscription cost is $
@@ -114,16 +119,12 @@ function User() {
     );
   }
 
-  if (profileLoading) {
-    return <span>...loading</span>;
-  }
-
-  if (profileError) {
-    return <span>...error</span>;
+  if (profileLoading || profileError) {
+    return null;
   }
 
   return (
-    <div className="h-[calc(100vh_-_56px)] overflow-y-scroll md:w-[50%]">
+    <div className="flex h-[calc(100vh_-_56px)] flex-col overflow-y-hidden md:w-[50%]">
       {showSubscriptionModal && profileData.user.subscriptionSetting && (
         <SubscriptionModal />
       )}
@@ -142,12 +143,12 @@ function User() {
             subscribedToId={profileData.user.id}
           />
         )}
-      <div className="md:px-5">
+      <div>
         {profileData.user.profile_header_url ? (
           <div className="relative h-[125px] w-full bg-red-100 md:rounded-[12px]">
             <Image
               src={profileData.user.profile_header_url}
-              alt={`${profileData.user.first_name}'s profile header`}
+              alt={`${profileData.user.name}'s profile header`}
               layout="fill"
               objectFit="cover"
               priority={true}
@@ -158,13 +159,13 @@ function User() {
           <div className="h-[125px] w-full bg-primary md:rounded-[12px]" />
         )}
       </div>
-      <div className="px-5">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start gap-4  py-4">
+      <div className="px-5 md:px-0">
+        <div className="flex items-center justify-between py-4">
+          <div className="flex items-start gap-4 ">
             {profileData.user.profile_picture_url ? (
               <Image
                 src={profileData.user.profile_picture_url}
-                alt={`${profileData.user.first_name}'s profile picture`}
+                alt={`${profileData.user.name}'s profile picture`}
                 width={70}
                 height={70}
                 priority={true}
@@ -175,7 +176,7 @@ function User() {
             )}
             <div className="flex h-[70px] flex-col justify-between leading-none">
               <span className="text-[26px] font-medium">
-                {profileData.user.first_name}
+                {profileData.user.name}
               </span>
               <span className="text-[16px] text-grey">
                 @{profileData.user.handle}
@@ -185,36 +186,48 @@ function User() {
               </span>
             </div>
           </div>
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(
-                `${process.env.NEXT_PUBLIC_BASE_URL}/${profileData.user.handle}`,
-              );
-              toast.success("copied to clipboard");
-            }}
-            className="mt-5 rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white"
-          >
-            <Share2Icon height={20} width={20} />
-          </button>
-          {profileData.user.isMe &&
-          !profileData.user.subscriptionSetting?.isComplete ? (
-            <button
-              onClick={() => expressAccountMutation()}
-              className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
-            >
-              activate subscriptions
-            </button>
-          ) : null}
-          {profileData.user.isMe &&
-          profileData.user.subscriptionSetting?.isComplete &&
-          !profileData.user.subscriptionSetting.priceId ? (
-            <Link
-              href={"/settings/monetization"}
-              className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
-            >
-              finish setup
-            </Link>
-          ) : null}
+          <div className="flex flex-col items-end justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <button
+                title="copy profile link"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    `${process.env.NEXT_PUBLIC_BASE_URL}/${profileData.user.handle}`,
+                  );
+                  toast.success("copied to clipboard");
+                }}
+                className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white hover:bg-card_hover"
+              >
+                <Share2Icon height={20} width={20} />
+              </button>
+              <Link
+                title="settings"
+                href={"/settings"}
+                className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white hover:bg-card_hover"
+              >
+                <GearIcon height={20} width={20} />
+              </Link>
+            </div>
+            {profileData.user.isMe &&
+            !profileData.user.subscriptionSetting?.isComplete ? (
+              <button
+                onClick={() => expressAccountMutation()}
+                className="rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
+              >
+                activate subscriptions
+              </button>
+            ) : null}
+            {profileData.user.isMe &&
+            profileData.user.subscriptionSetting?.isComplete &&
+            !profileData.user.subscriptionSetting.priceId ? (
+              <Link
+                href={"/settings/monetization"}
+                className="mt-5 rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
+              >
+                finish setup
+              </Link>
+            ) : null}
+          </div>
         </div>
         {!profileData.user.isMe && (
           <div className="flex gap-2">
@@ -240,7 +253,7 @@ function User() {
             ) : null}
           </div>
         )}
-        <nav className="flex items-center gap-5 border-b-[.5px] border-grey py-2 font-medium">
+        <div className="mb-4 flex items-center gap-5 border-b-[.5px] border-grey py-2 font-medium">
           <button
             onClick={() => setTabSelected("home")}
             className={`${tabSelected === "home" ? "text-white" : "text-grey"}`}
@@ -255,13 +268,16 @@ function User() {
           >
             Videos
           </button>
-        </nav>
+        </div>
+      </div>
+      <div className="flex flex-grow flex-col overflow-y-scroll px-5 md:px-0">
         <UserPostsContainer
           data={
             tabSelected === "home"
               ? profileData.posts
               : profileData.posts.filter((post) => post.video)
           }
+          subscribedUsers={profileData.subscribedUserIds ?? []}
         />
       </div>
     </div>

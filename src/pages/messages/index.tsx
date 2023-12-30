@@ -1,12 +1,11 @@
 import {
   ArrowLeftIcon,
   Cross1Icon,
-  ImageIcon,
   PaperPlaneIcon,
   PersonIcon,
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
 import Image from "next/image";
@@ -26,6 +25,7 @@ function Messages() {
     isError: isErrorGettingCurrentUser,
   } = useCurrentUser();
   const utils = api.useContext();
+  const lastMessageRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -40,7 +40,8 @@ function Messages() {
       }
     },
   });
-  const { data: conversations } = api.messages.getMessagedUserIds.useQuery();
+  const { data: conversations, isLoading: conversationsIsLoading } =
+    api.messages.getMessagedUserIds.useQuery();
   const { data: messages } = api.messages.getMessages.useQuery(
     {
       recipientId: selectedUser?.id ?? "",
@@ -49,11 +50,6 @@ function Messages() {
       enabled: selectedUser !== null,
     },
   );
-  const { mutate: sendTip } = api.messages.sendTip.useMutation({
-    onSuccess: () => {
-      utils.messages.invalidate();
-    },
-  });
 
   async function sendHandler() {
     if (
@@ -69,6 +65,8 @@ function Messages() {
       recipientId: selectedUser.id,
       message: inputRef.current.value,
     });
+
+    inputRef.current.value = "";
   }
 
   async function tipHandler(tipAmount: string) {
@@ -84,12 +82,17 @@ function Messages() {
     setShowPaymentElement(true);
   }
 
-  if (isCurrentUserLoading || isErrorGettingCurrentUser) {
+  useEffect(() => {
+    // when a new messages is recieved or sent, bring it into view
+    lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
+  }, [messages]);
+
+  if (isCurrentUserLoading || isErrorGettingCurrentUser || !currentUser) {
     return null;
   }
 
   return (
-    <div className="fixed h-[92%] w-full p-5 md:static md:flex md:h-full md:items-center md:justify-between md:gap-5">
+    <div className="fixed h-[92%] w-full py-5 md:static md:flex md:h-full md:items-center md:justify-between md:gap-5">
       {showNewMessageModal && (
         <NewMessageModal
           setSelectedUser={setSelectedUser}
@@ -114,7 +117,7 @@ function Messages() {
         </>
       ) : null}
       <div
-        className={`h-full md:w-2/3 lg:w-[50%] ${
+        className={`h-full px-5 md:w-2/3 lg:w-[50%] ${
           selectedUser && "hidden md:block"
         }`}
       >
@@ -132,7 +135,9 @@ function Messages() {
             !conversations?.some((convo) => selectedUser.id === convo.id) && (
               <UserMessageCard user={selectedUser} />
             )}
-          {conversations && conversations.length > 0
+          {conversationsIsLoading
+            ? null
+            : conversations && conversations.length > 0
             ? conversations?.map((conversation) => (
                 <UserMessageCard
                   key={conversation.id}
@@ -159,7 +164,7 @@ function Messages() {
       </div>
       {selectedUser && (
         <div className="md:relative md:h-full md:w-full">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 px-5">
             <button onClick={() => setSelectedUser(null)} className="md:hidden">
               <ArrowLeftIcon height={24} width={24} />
             </button>
@@ -168,7 +173,7 @@ function Messages() {
                 <div className="relative h-[40px] w-[40px] rounded-[100px]">
                   <Image
                     src={selectedUser.profile_picture_url}
-                    alt={`${selectedUser.first_name}'s profile picture`}
+                    alt={`${selectedUser.name}'s profile picture`}
                     layout="fill"
                     objectFit="cover"
                     priority={true}
@@ -179,12 +184,12 @@ function Messages() {
                 <div className="h-[40px] w-[40px] rounded-[40px] bg-primary" />
               )}
               <span className="text-[20px] font-semibold">
-                {selectedUser.first_name}
+                {selectedUser.name}
               </span>
             </div>
           </div>
-          <div className="flex h-[80vh] flex-col gap-2 overflow-auto py-5 pb-10 md:pb-20">
-            {messages?.map((message) => {
+          <div className="flex h-[80vh] flex-col gap-2 overflow-auto px-5 py-5 pb-10 md:pb-[50px]">
+            {messages?.map((message, index) => {
               if (message.senderId !== currentUser.id) {
                 if (message.isTip) {
                   return (
@@ -205,9 +210,11 @@ function Messages() {
                       <span className="w-fit rounded-t-full rounded-br-full bg-input px-4 py-1">
                         {message.message}
                       </span>
-                      <span className="text-[12px] text-grey">
-                        {moment(message.createdAt).fromNow()}
-                      </span>
+                      {index === messages.length - 1 && (
+                        <span className="text-[12px] text-grey">
+                          {moment(message.createdAt).fromNow()}
+                        </span>
+                      )}
                     </div>
                   );
               } else {
@@ -230,13 +237,16 @@ function Messages() {
                       <span className="w-fit rounded-t-full rounded-bl-full bg-primary px-4 py-1">
                         {message.message}
                       </span>
-                      <span className="text-[12px] text-grey">
-                        {moment(message.createdAt).fromNow()}
-                      </span>
+                      {index === messages.length - 1 && (
+                        <span className="text-[12px] text-grey">
+                          {moment(message.createdAt).fromNow()}
+                        </span>
+                      )}
                     </div>
                   );
               }
             })}
+            <div ref={lastMessageRef} />
           </div>
           <div className="absolute bottom-5 left-0 right-0 mx-3 flex flex-col items-start gap-[6px] md:bottom-0">
             {showTipMenu && (
@@ -256,13 +266,20 @@ function Messages() {
                 })}
               </div>
             )}
-            <div className="flex w-full items-center justify-between rounded-[6px] bg-input p-3">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                sendHandler();
+              }}
+              className="flex w-full items-center justify-between rounded-[6px] bg-input p-3"
+            >
               <div className="flex items-center gap-2 md:gap-3">
                 <div className="flex items-center gap-[6px] md:gap-2">
                   {/* <button title="upload an image">
                     <ImageIcon className="h-[18px] w-[18px] md:h-[22px] md:w-[22px]" />
                   </button> */}
                   <button
+                    type="button"
                     onClick={() => setShowTipMenu((prev) => !prev)}
                     title="select tip amount"
                   >
@@ -282,10 +299,10 @@ function Messages() {
                   placeholder="say hello!"
                 />
               </div>
-              <button title="send message" onClick={sendHandler}>
+              <button type="submit" title="send message">
                 <PaperPlaneIcon className="h-[18px] w-[18px] md:h-[22px] md:w-[22px]" />
               </button>
-            </div>
+            </form>
           </div>
         </div>
       )}
@@ -397,7 +414,7 @@ function UserMessageCard({
           <div className="relative h-[45px] w-[45px] rounded-[100px] bg-red-100">
             <Image
               src={user.profile_picture_url}
-              alt={`${user.first_name}'s profile picture`}
+              alt={`${user.name}'s profile picture`}
               layout="fill"
               objectFit="cover"
               priority={true}
@@ -408,7 +425,7 @@ function UserMessageCard({
           <div className="h-[45px] w-[45px] rounded-[45px] bg-primary" />
         )}
         <div className="flex flex-col">
-          <span className="text-[18px] font-semibold">{user.first_name}</span>
+          <span className="text-[18px] font-semibold">{user.name}</span>
           <span className="text-[14px] text-grey">@{user.handle}</span>
         </div>
       </div>

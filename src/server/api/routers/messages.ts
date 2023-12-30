@@ -1,4 +1,8 @@
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
@@ -35,38 +39,6 @@ export const messagesRouter = createTRPCRouter({
 
       return message;
     }),
-  sendTip: protectedProcedure
-    .input(
-      z.object({
-        amount: z.string(),
-        recipientId: z.string(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const recipient = await ctx.db.user.findUnique({
-        where: {
-          id: input.recipientId,
-        },
-      });
-
-      if (!recipient) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      const tip = await ctx.db.message.create({
-        data: {
-          isTip: true,
-          tipPrice: input.amount,
-          receiverId: input.recipientId,
-          senderId: ctx.auth.userId,
-        },
-      });
-
-      return tip;
-    }),
 
   getMessages: protectedProcedure
     .input(
@@ -90,6 +62,17 @@ export const messagesRouter = createTRPCRouter({
         },
         orderBy: {
           createdAt: "asc",
+        },
+      });
+
+      await ctx.db.message.updateMany({
+        where: {
+          receiverId: ctx.auth.userId,
+          senderId: input.recipientId,
+          wasRead: false,
+        },
+        data: {
+          wasRead: true,
         },
       });
 
