@@ -1,7 +1,6 @@
 import { createTRPCRouter } from "~/server/api/trpc";
 import { postsRouter } from "./routers/posts";
 import { usersRouter } from "./routers/users";
-import { waitlistsRouter } from "./routers/waitlists";
 import { followsRouter } from "./routers/follows";
 import { subscriptionSettingsRouter } from "./routers/subscription-settings";
 import { stripeRouter } from "./routers/stripe";
@@ -15,7 +14,6 @@ import { notificationsRouter } from "./routers/notifications";
 export const appRouter = createTRPCRouter({
   posts: postsRouter,
   users: usersRouter,
-  waitlists: waitlistsRouter,
   follows: followsRouter,
   subscriptionSettings: subscriptionSettingsRouter,
   stripe: stripeRouter,
