@@ -40,7 +40,8 @@ function Messages() {
       }
     },
   });
-  const { data: conversations } = api.messages.getMessagedUserIds.useQuery();
+  const { data: conversations, isLoading: conversationsIsLoading } =
+    api.messages.getMessagedUserIds.useQuery();
   const { data: messages } = api.messages.getMessages.useQuery(
     {
       recipientId: selectedUser?.id ?? "",
@@ -134,7 +135,9 @@ function Messages() {
             !conversations?.some((convo) => selectedUser.id === convo.id) && (
               <UserMessageCard user={selectedUser} />
             )}
-          {conversations && conversations.length > 0
+          {conversationsIsLoading
+            ? null
+            : conversations && conversations.length > 0
             ? conversations?.map((conversation) => (
                 <UserMessageCard
                   key={conversation.id}
