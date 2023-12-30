@@ -84,6 +84,7 @@ function LockedContent(post: Post) {
           This post is locked.
         </p>
         <Link
+          prefetch={false}
           href={`/${post.user.handle}`}
           className="rounded-[6px] bg-primary px-4 py-2 text-[14px] hover:bg-primary_hover"
         >
