@@ -12,6 +12,7 @@ import localFont from "next/font/local";
 import Head from "next/head";
 import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -68,6 +69,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
           <div className={`h-screen bg-background text-text ${sf.variable}`}>
             {getLayout(<Component {...pageProps} />)}
             <Analytics />
+            <SpeedInsights />
           </div>
         </QueryClientProvider>
       </PostHogProvider>
