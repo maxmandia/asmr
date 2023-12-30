@@ -79,7 +79,7 @@ function LockedContent(post: Post) {
 
   return (
     <div className="relative mt-5 h-[300px] w-full overflow-hidden rounded-[18px] transition duration-300 ease-in-out hover:bg-opacity-60">
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-[18px] bg-black bg-opacity-50">
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-[18px] bg-card_hover bg-opacity-50">
         <p className="text-xl font-medium text-white md:text-2xl">
           This post is locked.
         </p>
