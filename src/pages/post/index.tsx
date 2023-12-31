@@ -16,7 +16,9 @@ export default function Page() {
   const user = useUser();
   const [file, setFile] = useState<File[] | null>(null);
   const [caption, setCaption] = useState<string>("");
-  const [isPaid, setIsPaid] = useState<boolean>(true);
+  const [isPaid, setIsPaid] = useState<boolean>(false);
+  const { data: hasCompletedSubscriptionOnboarding } =
+    api.users.hasCompletedSubscriptionOnboarding.useQuery();
   const { mutate } = api.posts.create.useMutation({
     onSuccess: () => {
       toast.dismiss();
@@ -132,14 +134,6 @@ export default function Page() {
               <DropdownMenu.Content className="mt-2 w-[150px] rounded-[6px] bg-input">
                 <DropdownMenu.Group>
                   <DropdownMenu.Item
-                    onClick={() => setIsPaid(true)}
-                    className="rounded-[6px] p-2 hover:bg-input_hover"
-                  >
-                    <span className="text-[14px] font-medium text-text">
-                      subscribers only
-                    </span>
-                  </DropdownMenu.Item>
-                  <DropdownMenu.Item
                     onClick={() => setIsPaid(false)}
                     className="rounded-[6px] p-2 hover:bg-input_hover"
                   >
@@ -147,6 +141,16 @@ export default function Page() {
                       free
                     </span>
                   </DropdownMenu.Item>
+                  {hasCompletedSubscriptionOnboarding && (
+                    <DropdownMenu.Item
+                      onClick={() => setIsPaid(true)}
+                      className="rounded-[6px] p-2 hover:bg-input_hover"
+                    >
+                      <span className="text-[14px] font-medium text-text">
+                        subscribers only
+                      </span>
+                    </DropdownMenu.Item>
+                  )}
                 </DropdownMenu.Group>
               </DropdownMenu.Content>
             </DropdownMenu.Portal>

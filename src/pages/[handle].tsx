@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import Overlay from "~/components/Overlay";
 import SubscriptionPaymentModal from "~/components/SubscriptionPaymentModal";
+import posthog from "posthog-js";
 
 function User() {
   const router = useRouter();
@@ -54,6 +55,9 @@ function User() {
   });
   const { mutate: expressAccountMutation } =
     api.stripe.createExpressAccount.useMutation({
+      onMutate: () => {
+        posthog.capture("creator_started_express_setup");
+      },
       onSuccess: (resp) => {
         router.replace(resp.url);
       },

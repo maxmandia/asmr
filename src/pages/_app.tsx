@@ -1,7 +1,7 @@
 import { type AppType } from "next/dist/shared/lib/utils";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, useUser } from "@clerk/nextjs";
 import "~/styles/globals.css";
-import type { ReactElement, ReactNode } from "react";
+import { type ReactElement, type ReactNode } from "react";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -65,6 +65,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
               name="viewport"
               content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"
             />
+            <link rel="icon" href="/favicon.png" />
           </Head>
           <div className={`h-screen bg-background text-text ${sf.variable}`}>
             {getLayout(<Component {...pageProps} />)}
