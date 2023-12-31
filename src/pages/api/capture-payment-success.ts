@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import posthog from "posthog-js";
 import { prisma } from "~/config/prisma";
 import { stripe } from "~/config/stripe";
 
@@ -23,11 +24,16 @@ export default async function handler(
           receiverId: object.metadata.recieverId,
         },
       });
+      posthog.capture("user_tip", {
+        amount: object.amount / 100,
+      });
       return resp.status(200).json({ status: "ok" });
     } else {
       // SUBSCRIPTION
       const invoice = await stripe.invoices.retrieve(object.invoice);
-
+      posthog.capture("user_subscription", {
+        amount: object.amount / 100,
+      });
       if (
         !invoice.subscription_details?.metadata ||
         !invoice.subscription_details?.metadata.subscribedToId ||

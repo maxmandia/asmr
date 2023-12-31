@@ -132,4 +132,28 @@ export const usersRouter = createTRPCRouter({
 
       return false;
     }),
+  hasCompletedSubscriptionOnboarding: protectedProcedure.query(
+    async ({ ctx }) => {
+      try {
+        const subscriptionSetting = await ctx.db.subscriptionSetting.findUnique(
+          {
+            where: {
+              userId: ctx.auth.userId,
+            },
+          },
+        );
+
+        if (subscriptionSetting && subscriptionSetting.isComplete) {
+          return true;
+        }
+
+        return false;
+      } catch (error: any) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: error.message,
+        });
+      }
+    },
+  ),
 });

@@ -61,15 +61,17 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
+import { logError } from "~/lib/helpers/log-error";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
-  errorFormatter({ shape }) {
+  errorFormatter({ shape, error }) {
+    logError(error.name, error.message);
     return shape;
   },
 });
 
-// check if the user is signed in, otherwise through a UNAUTHORIZED CODE
+// check if the user is signed in, otherwise throw an UNAUTHORIZED CODE
 const isAuthed = t.middleware(({ next, ctx }) => {
   if (!ctx.auth.userId) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
