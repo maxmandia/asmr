@@ -65,6 +65,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
               name="viewport"
               content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"
             />
+            <link rel="icon" href="/favicon.png" />
           </Head>
           <div className={`h-screen bg-background text-text ${sf.variable}`}>
             {getLayout(<Component {...pageProps} />)}
