@@ -4,6 +4,7 @@ import { Webhook, WebhookRequiredHeaders } from "svix";
 import { prisma } from "~/config/prisma";
 import { logError } from "~/lib/helpers/log-error";
 import { stripe } from "~/config/stripe";
+import posthog from "posthog-js";
 
 type ResponseData = {
   message: string;
@@ -98,7 +99,7 @@ export default async function handler(
             stripe_customer_id: stripeCustomer.id,
           },
         });
-
+        posthog.capture("user_created");
         return res.status(200).json({ message: "User created." });
 
       case "user.deleted":

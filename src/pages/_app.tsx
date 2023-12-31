@@ -1,7 +1,7 @@
 import { type AppType } from "next/dist/shared/lib/utils";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, useUser } from "@clerk/nextjs";
 import "~/styles/globals.css";
-import type { ReactElement, ReactNode } from "react";
+import { useEffect, type ReactElement, type ReactNode } from "react";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -54,6 +54,15 @@ const queryClient = new QueryClient();
 
 const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? ((page) => page);
+  const { user } = useUser();
+
+  useEffect(() => {
+    if (user) {
+      posthog.identify(user.id, {
+        email: user.emailAddresses[0]?.emailAddress,
+      });
+    }
+  }, [user]);
 
   return (
     <ClerkProvider {...pageProps}>
