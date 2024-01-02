@@ -70,7 +70,7 @@ model SubscriptionSetting {
   id                      Int        @id @default(autoincrement())
   userId                  String     @unique
   createdAt               DateTime   @default(now())
-  connectAccountId        String
+  connectAccountId        String     @unique
   isComplete              Boolean    @default(false) // if the connectAccount is completed
   productId               String?  
   priceId                 String?
