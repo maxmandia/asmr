@@ -217,7 +217,10 @@ function User() {
             {profileData.user.isMe &&
             !profileData.user.subscriptionSetting?.isComplete ? (
               <button
-                onClick={() => expressAccountMutation()}
+                onClick={() => {
+                  toast.loading("Creating your account...");
+                  expressAccountMutation();
+                }}
                 className="rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
               >
                 activate subscriptions
