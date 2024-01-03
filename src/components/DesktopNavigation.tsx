@@ -1,5 +1,10 @@
 import React from "react";
-import { HomeIcon, ChatBubbleIcon, BellIcon } from "@radix-ui/react-icons";
+import {
+  HomeIcon,
+  ChatBubbleIcon,
+  BellIcon,
+  PersonIcon,
+} from "@radix-ui/react-icons";
 import Link from "next/link";
 import useCurrentUser from "~/hooks/useCurrentUser";
 
@@ -33,7 +38,7 @@ function DesktopNavigation() {
         className="flex items-center gap-5 rounded-[12px] p-4 hover:bg-card_hover"
         href={`/${user?.handle}`}
       >
-        <HomeIcon height={25} width={25} color="white" />
+        <PersonIcon height={25} width={25} color="white" />
         <span>Profile</span>
       </Link>
       <Link
