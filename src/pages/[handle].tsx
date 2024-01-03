@@ -244,7 +244,7 @@ function User() {
               <PersonIcon />
               {profileData.user.isFollowing ? "Unfollow" : "Follow"}
             </button>
-            {profileData.user.subscriptionSetting ? (
+            {profileData.user.subscriptionSetting?.isComplete ? (
               <button
                 onClick={() => {
                   if (!profileData.user.subscriber) {
