@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { Message } from "~/types/Message";
 import useCurrentUser from "~/hooks/useCurrentUser";
 import TipPaymentModal from "~/components/TipPaymentModal";
+import Link from "next/link";
 
 function Messages() {
   const {
@@ -168,7 +169,10 @@ function Messages() {
             <button onClick={() => setSelectedUser(null)} className="md:hidden">
               <ArrowLeftIcon height={24} width={24} />
             </button>
-            <div className="flex items-center gap-2">
+            <Link
+              href={`/${selectedUser.handle}`}
+              className="flex items-center gap-2"
+            >
               {selectedUser.profile_picture_url ? (
                 <div className="relative h-[40px] w-[40px] rounded-[100px]">
                   <Image
@@ -186,7 +190,7 @@ function Messages() {
               <span className="text-[20px] font-semibold">
                 {selectedUser.name}
               </span>
-            </div>
+            </Link>
           </div>
           <div className="flex h-[80vh] flex-col gap-2 overflow-auto px-5 py-5 pb-10 md:pb-[50px]">
             {messages?.map((message, index) => {
