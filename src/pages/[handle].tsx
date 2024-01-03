@@ -204,13 +204,15 @@ function User() {
               >
                 <Share2Icon height={20} width={20} />
               </button>
-              <Link
-                title="settings"
-                href={"/settings"}
-                className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white hover:bg-card_hover"
-              >
-                <GearIcon height={20} width={20} />
-              </Link>
+              {profileData.user.isMe && (
+                <Link
+                  title="settings"
+                  href={"/settings"}
+                  className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white hover:bg-card_hover"
+                >
+                  <GearIcon height={20} width={20} />
+                </Link>
+              )}
             </div>
             {profileData.user.isMe &&
             !profileData.user.subscriptionSetting?.isComplete ? (
