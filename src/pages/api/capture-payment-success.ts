@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import posthog from "posthog-js";
 import { prisma } from "~/config/prisma";
 import { stripe } from "~/config/stripe";
+import { sendPaymentEmail } from "~/lib/helpers/send-payment-email";
 
 export default async function handler(
   req: NextApiRequest,
@@ -27,6 +28,18 @@ export default async function handler(
       posthog.capture("user_tip", {
         amount: object.amount / 100,
       });
+      const recievingUser = await prisma.user.findUnique({
+        where: {
+          id: object.metadata.recieverId,
+        },
+      });
+
+      if (!recievingUser) {
+        return resp.status(200).json({ status: "ok" });
+      }
+
+      await sendPaymentEmail(recievingUser?.email, "tip", object.amount / 100);
+
       return resp.status(200).json({ status: "ok" });
     } else {
       // SUBSCRIPTION
@@ -67,6 +80,22 @@ export default async function handler(
           followingId: invoice.subscription_details.metadata.subscribedToId,
         },
       });
+
+      const recievingUser = await prisma.user.findUnique({
+        where: {
+          id: object.metadata.recieverId,
+        },
+      });
+
+      if (!recievingUser) {
+        return resp.status(200).json({ status: "ok" });
+      }
+
+      await sendPaymentEmail(
+        recievingUser?.email,
+        "subscription",
+        object.amount / 100,
+      );
 
       return resp.status(200).json({ status: "ok" });
     }

@@ -204,18 +204,23 @@ function User() {
               >
                 <Share2Icon height={20} width={20} />
               </button>
-              <Link
-                title="settings"
-                href={"/settings"}
-                className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white hover:bg-card_hover"
-              >
-                <GearIcon height={20} width={20} />
-              </Link>
+              {profileData.user.isMe && (
+                <Link
+                  title="settings"
+                  href={"/settings"}
+                  className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white hover:bg-card_hover"
+                >
+                  <GearIcon height={20} width={20} />
+                </Link>
+              )}
             </div>
             {profileData.user.isMe &&
             !profileData.user.subscriptionSetting?.isComplete ? (
               <button
-                onClick={() => expressAccountMutation()}
+                onClick={() => {
+                  toast.loading("Creating your account...");
+                  expressAccountMutation();
+                }}
                 className="rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
               >
                 activate subscriptions
@@ -242,7 +247,7 @@ function User() {
               <PersonIcon />
               {profileData.user.isFollowing ? "Unfollow" : "Follow"}
             </button>
-            {profileData.user.subscriptionSetting ? (
+            {profileData.user.subscriptionSetting?.isComplete ? (
               <button
                 onClick={() => {
                   if (!profileData.user.subscriber) {
