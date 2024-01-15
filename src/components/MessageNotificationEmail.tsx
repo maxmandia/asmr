@@ -37,7 +37,7 @@ type Message = ({
   wasNotified: boolean;
 })[];
 
-function NotificationEmail({
+function MessageNotificationEmail({
   messages,
   uniqueSenders,
 }: {
@@ -102,4 +102,4 @@ function NotificationEmail({
   );
 }
 
-export default NotificationEmail;
+export default MessageNotificationEmail;
