@@ -4,6 +4,7 @@ import {
   ChatBubbleIcon,
   BellIcon,
   PlusCircledIcon,
+  PersonIcon,
 } from "@radix-ui/react-icons";
 import Link from "next/link";
 import useCurrentUser from "~/hooks/useCurrentUser";
@@ -26,7 +27,7 @@ function MobileNavigation() {
         <BellIcon height={25} width={25} color="white" />
       </Link>
       <Link className="p-4" href={`/${user?.handle}`}>
-        <HomeIcon height={25} width={25} color="white" />
+        <PersonIcon height={25} width={25} color="white" />
       </Link>
     </nav>
   );

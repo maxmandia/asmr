@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "~/config/prisma";
 import { resend } from "~/config/resend";
-import NotificationEmail from "~/components/NotificationEmail";
+import MessageNotificationEmail from "~/components/MessageNotificationEmail";
 
 export default async function handler(
   req: NextApiRequest,
@@ -74,7 +74,7 @@ export default async function handler(
         subject: `You have ${messages.length} new message${
           messages.length > 1 ? "s" : ""
         }`,
-        react: NotificationEmail({ messages, uniqueSenders }) as any,
+        react: MessageNotificationEmail({ messages, uniqueSenders }) as any,
       });
 
       for (const message of messages) {
