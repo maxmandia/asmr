@@ -7,6 +7,7 @@ import {
   MagicWandIcon,
 } from "@radix-ui/react-icons";
 import styles from "~/styles/home.module.css";
+import Link from "next/link";
 
 const bongoURL = "/sounds/bongo.m4a";
 const clocURL = "/sounds/cloc.m4a";
@@ -107,16 +108,13 @@ function Landing() {
           >
             cmd
           </button>
-          <button
-            onClick={() => {
-              handleKeyPress("watch");
-              toast.error("coming soon.");
-            }}
+          <Link
+            href={"home"}
             style={isClicked && isClicked.watch ? {} : boxShadowStyle}
             className="rounded-[6px] border-[1px] border-solid border-black border-opacity-20 bg-primary px-[20px] py-[8px] font-sf md:text-[20px] lg:text-[24px]"
           >
             start watching
-          </button>
+          </Link>
           <button
             onClick={() => handleKeyPress("alt")}
             style={
