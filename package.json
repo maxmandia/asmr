@@ -6,7 +6,7 @@
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "scripts": {
-    "build": "next build && next-sitemap",
+    "build": "next build",
     "stu": "npx prisma studio",
     "db:seed": "npx prisma db seed",
     "db:reset": "npx prisma db push --force-reset && npx prisma db seed",
@@ -14,7 +14,8 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.3",
