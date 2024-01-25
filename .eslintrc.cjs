@@ -29,6 +29,7 @@ const config = {
     "@typescript-eslint/await-thenable": "off",
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
   },
+  ignorePatterns: ["next-sitemap.config.js"],
 };
 
 module.exports = config;

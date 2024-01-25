@@ -14,7 +14,8 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.3",
@@ -41,6 +42,7 @@
     "moment": "^2.29.4",
     "next": "^14.0.2",
     "next-axiom": "^1.0.0",
+    "next-sitemap": "^4.2.3",
     "posthog-js": "^1.96.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
