@@ -11,15 +11,6 @@ async function main() {
       name: "Alice",
       profile_picture_url: "https://i.imgur.com/BdN9y8h.jpeg",
       handle: "alice",
-      posts: {
-        create: {
-          caption: "My first post!",
-          image: "https://i.imgur.com/2d8NQCY.jpeg",
-          video: null,
-          fileKey: null,
-          isPaid: false,
-        },
-      },
     },
   });
   await prisma.user.upsert({
@@ -33,23 +24,11 @@ async function main() {
       profile_picture_url: "https://i.imgur.com/BdN9y8h.jpeg",
       handle: "bob",
       posts: {
-        createMany: {
-          data: [
-            {
-              caption: "YO this is bob!",
-              image: "https://i.imgur.com/ozY3D3m.jpeg",
-              video: null,
-              fileKey: null,
-              isPaid: false,
-            },
-            {
-              caption: "Exlcusive content from me - Bob!",
-              image: "https://i.imgur.com/NVx4lcH.jpeg",
-              video: null,
-              fileKey: null,
-              isPaid: true,
-            },
-          ],
+        create: {
+          assetId: "Sfu7A5E01kLeTI6uXs8zVTgPbnGcy1zDCoLckPHd8QRs",
+          playbackId: "7uamdmz8eGto2TtUEjAx2IzJqms00eTI3QtG501LR0102A4",
+          caption: "This is a post from Bob!",
+          isPaid: false,
         },
       },
       subscriptionSetting: {
@@ -78,11 +57,9 @@ async function main() {
       handle: "max",
       posts: {
         create: {
-          caption: "YO this is max!",
-          image:
-            "https://utfs.io/f/4d778816-f1d3-4b3f-92a2-2c4c9987168d-1x98be.jpg",
-          video: null,
-          fileKey: null,
+          assetId: "iS59cfTrsFAisXMKx4lAm012a02XuyVkcGg6T8jIt2PbM",
+          playbackId: "SOLDCfXRhUlKOlzGmbISiZhfhAmaaiCAy3A76RqWK2w",
+          caption: "This is a post from max!",
           isPaid: false,
         },
       },

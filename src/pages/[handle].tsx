@@ -19,7 +19,6 @@ import posthog from "posthog-js";
 function User() {
   const router = useRouter();
   const utils = api.useContext();
-  const [tabSelected, setTabSelected] = useState<"home" | "videos">("home");
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [showPaymentElement, setShowPaymentElement] = useState(false);
   const {
@@ -263,29 +262,12 @@ function User() {
           </div>
         )}
         <div className="mb-4 flex items-center gap-5 border-b-[.5px] border-grey py-2 font-medium">
-          <button
-            onClick={() => setTabSelected("home")}
-            className={`${tabSelected === "home" ? "text-white" : "text-grey"}`}
-          >
-            Home
-          </button>
-          <button
-            onClick={() => setTabSelected("videos")}
-            className={`${
-              tabSelected === "videos" ? "text-white" : "text-grey"
-            }`}
-          >
-            Videos
-          </button>
+          <button className="text-white">Home</button>
         </div>
       </div>
       <div className="flex flex-grow flex-col overflow-y-scroll px-5 md:px-0">
         <UserPostsContainer
-          data={
-            tabSelected === "home"
-              ? profileData.posts
-              : profileData.posts.filter((post) => post.video)
-          }
+          data={profileData.posts}
           subscribedUsers={profileData.subscribedUserIds ?? []}
         />
       </div>
