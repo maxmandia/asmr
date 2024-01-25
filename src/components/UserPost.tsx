@@ -4,15 +4,14 @@ import type { Post } from "~/types/Post";
 import Link from "next/link";
 import UserProfilePicture from "./UserProfilePicture";
 import { SubscribedUsers } from "~/types/SubscribedUsers";
-
+import MuxPlayer from "@mux/mux-player-react";
 interface Props {
   post: Post;
-  setExpandedMediaContent: React.Dispatch<React.SetStateAction<Post | null>>;
   subscribedUsers: SubscribedUsers;
 }
 
 function UserPost(props: Props) {
-  const { post, setExpandedMediaContent, subscribedUsers } = props;
+  const { post, subscribedUsers } = props;
 
   return (
     <div>
@@ -32,15 +31,7 @@ function UserPost(props: Props) {
           {post.isPaid ? (
             <>
               {subscribedUsers.includes(post.user.id) ? (
-                // ✅ the user is subscribed and can view the exclusive content ✅
-                <div
-                  onClick={() => {
-                    if (post.image) {
-                      setExpandedMediaContent(post);
-                    }
-                  }}
-                >
-                  <PostImage {...post} />
+                <div>
                   <PostVideo {...post} />
                 </div>
               ) : (
@@ -53,14 +44,7 @@ function UserPost(props: Props) {
             </>
           ) : (
             // ✅ the post is not exclusive, anyone can view it ✅
-            <div
-              onClick={() => {
-                if (post.image) {
-                  setExpandedMediaContent(post);
-                }
-              }}
-            >
-              <PostImage {...post} />
+            <div>
               <PostVideo {...post} />
             </div>
           )}
@@ -73,10 +57,6 @@ function UserPost(props: Props) {
 export default UserPost;
 
 function LockedContent(post: Post) {
-  if (!post.image && !post.video) {
-    return null;
-  }
-
   return (
     <div className="relative mt-5 h-[300px] w-full overflow-hidden rounded-[18px] transition duration-300 ease-in-out hover:bg-opacity-60">
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-[18px] bg-card_hover bg-opacity-50">
@@ -95,47 +75,13 @@ function LockedContent(post: Post) {
   );
 }
 
-function PostImage(post: Post) {
-  if (!post.image) return null;
-
+function PostVideo(post: Post) {
   return (
     <div className="relative mt-5 h-[300px] w-full overflow-hidden rounded-[18px]">
-      <Image
-        layout="fill"
-        objectFit="cover"
-        src={post.image}
-        alt="post image"
-      />
-    </div>
-  );
-}
-
-function PostVideo(post: Post) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [showControls, setShowControls] = useState(false);
-
-  if (!post.video) return null;
-
-  return (
-    <div
-      className="relative mt-5 h-[300px] w-full overflow-hidden rounded-[18px]"
-      onMouseOver={() => setShowControls(true)}
-    >
-      <video
-        onClick={() => {
-          if (!showControls) {
-            setShowControls(true);
-          }
-        }}
-        controls={showControls}
-        autoPlay
-        controlsList="nodownload"
-        muted
-        ref={videoRef}
+      <MuxPlayer
         className="absolute left-0 top-0 h-full w-full object-cover"
-        src={post.video}
-        playsInline
-        loop
+        streamType="on-demand"
+        playbackId={post.playbackId}
       />
     </div>
   );
