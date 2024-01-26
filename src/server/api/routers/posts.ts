@@ -13,7 +13,14 @@ export const postsRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.post.findMany({
       include: {
-        user: true,
+        user: {
+          select: {
+            name: true,
+            profile_picture_url: true,
+            id: true,
+            handle: true,
+          },
+        },
       },
       where: {
         isPaid: false,

@@ -30,6 +30,14 @@ export const usersRouter = createTRPCRouter({
       where: {
         id: ctx.auth.userId,
       },
+      select: {
+        profile_header_url: true,
+        profile_picture_url: true,
+        name: true,
+        handle: true,
+        stripe_customer_id: true,
+        id: true,
+      },
     });
 
     return user;
@@ -73,7 +81,11 @@ export const usersRouter = createTRPCRouter({
               not: ctx.auth.userId,
             },
           },
-          include: {
+          select: {
+            name: true,
+            id: true,
+            profile_picture_url: true,
+            handle: true,
             subscriptionSetting: true,
           },
           orderBy: {
@@ -83,6 +95,7 @@ export const usersRouter = createTRPCRouter({
           },
           take: 10,
         });
+
         return users;
       } else {
         const users = await ctx.db.user.findMany({
@@ -94,7 +107,11 @@ export const usersRouter = createTRPCRouter({
               not: ctx.auth.userId,
             },
           },
-          include: {
+          select: {
+            name: true,
+            id: true,
+            profile_picture_url: true,
+            handle: true,
             subscriptionSetting: true,
           },
         });

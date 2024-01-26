@@ -106,7 +106,12 @@ export const messagesRouter = createTRPCRouter({
       where: {
         id: { in: Array.from(uniqueUserIds) },
       },
-      include: {
+      select: {
+        id: true,
+        handle: true,
+        name: true,
+        profile_picture_url: true,
+        stripe_customer_id: true,
         subscriptionSetting: true,
       },
     });
