@@ -81,7 +81,11 @@ export const usersRouter = createTRPCRouter({
               not: ctx.auth.userId,
             },
           },
-          include: {
+          select: {
+            name: true,
+            id: true,
+            profile_picture_url: true,
+            handle: true,
             subscriptionSetting: true,
           },
           orderBy: {
@@ -91,6 +95,7 @@ export const usersRouter = createTRPCRouter({
           },
           take: 10,
         });
+
         return users;
       } else {
         const users = await ctx.db.user.findMany({
@@ -102,7 +107,11 @@ export const usersRouter = createTRPCRouter({
               not: ctx.auth.userId,
             },
           },
-          include: {
+          select: {
+            name: true,
+            id: true,
+            profile_picture_url: true,
+            handle: true,
             subscriptionSetting: true,
           },
         });
