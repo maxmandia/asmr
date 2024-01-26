@@ -1,6 +1,3 @@
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
-
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const notificationsRouter = createTRPCRouter({
@@ -10,7 +7,12 @@ export const notificationsRouter = createTRPCRouter({
         subscribedToId: ctx.auth.userId,
       },
       include: {
-        subscriber: true,
+        subscriber: {
+          select: {
+            profile_picture_url: true,
+            handle: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",

@@ -30,6 +30,14 @@ export const usersRouter = createTRPCRouter({
       where: {
         id: ctx.auth.userId,
       },
+      select: {
+        profile_header_url: true,
+        profile_picture_url: true,
+        name: true,
+        handle: true,
+        stripe_customer_id: true,
+        id: true,
+      },
     });
 
     return user;
