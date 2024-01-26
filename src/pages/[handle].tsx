@@ -178,7 +178,7 @@ function User() {
               <div className="h-[70px] w-[70px] rounded-[100px] bg-white" />
             )}
             <div className="flex h-[70px] flex-col justify-between leading-none">
-              <span className="text-[26px] font-medium">
+              <span className="truncate whitespace-nowrap text-[24px] font-medium md:text-[26px]">
                 {profileData.user.name}
               </span>
               <span className="text-[16px] text-grey">
@@ -220,7 +220,7 @@ function User() {
                   toast.loading("Creating your account...");
                   expressAccountMutation();
                 }}
-                className="rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover"
+                className="max-w-[100px] rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover lg:max-w-none"
               >
                 activate subscriptions
               </button>
