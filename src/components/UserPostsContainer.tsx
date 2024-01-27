@@ -10,11 +10,18 @@ interface Props {
 
 function UserPostsContainer({ data, subscribedUsers }: Props) {
   return (
-    <div className="flex h-full w-full flex-col gap-8 overflow-scroll">
+    // <div className="flex h-full w-full flex-col gap-8">
+    <>
       {data?.map((post) => (
-        <UserPost key={post.id} post={post} subscribedUsers={subscribedUsers} />
+        <UserPost
+          key={post.id}
+          post={post}
+          subscribedUsers={subscribedUsers}
+          isLast={data.indexOf(post) === data.length - 1}
+        />
       ))}
-    </div>
+    </>
+    // </div>
   );
 }
 

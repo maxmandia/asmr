@@ -18,7 +18,7 @@ export default function Home() {
 
   return (
     <div className="flex h-[calc(100vh_-_56px)] flex-col px-5 md:w-[50%] md:p-0">
-      <div className="flex w-full items-center justify-center gap-4 py-4">
+      <div className="sticky flex w-full items-center justify-center gap-4 py-4">
         <button
           className={showFollowing ? "text-grey" : ""}
           onClick={() => setShowFollowing(false)}
@@ -32,7 +32,7 @@ export default function Home() {
           Following
         </button>
       </div>
-      <div className="flex flex-grow overflow-y-auto py-8 md:pb-[25px]">
+      <div className="no-scrollbar flex flex-grow flex-col gap-4 overflow-y-auto md:pb-[25px]">
         <UserPostsContainer
           data={showFollowing ? followingData?.posts ?? [] : data ?? []}
           subscribedUsers={followingData?.subscribedUserIds ?? []}
