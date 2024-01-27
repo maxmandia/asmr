@@ -11,6 +11,14 @@ async function main() {
       name: "Alice",
       profile_picture_url: "https://i.imgur.com/BdN9y8h.jpeg",
       handle: "alice",
+      posts: {
+        create: {
+          assetId: "KZLsTOt02vy00hPBz4y4RhJomsHwPhNZQTTzXCh2UkZs00",
+          playbackId: "crFUV8RBcB7TeatUB4RmudF3GLvqIN1FPu02JGvuUYnY",
+          caption: "This is a post from alice!",
+          isPaid: false,
+        },
+      },
     },
   });
   await prisma.user.upsert({
@@ -25,8 +33,8 @@ async function main() {
       handle: "bob",
       posts: {
         create: {
-          assetId: "Sfu7A5E01kLeTI6uXs8zVTgPbnGcy1zDCoLckPHd8QRs",
-          playbackId: "7uamdmz8eGto2TtUEjAx2IzJqms00eTI3QtG501LR0102A4",
+          assetId: "ILBtpSJ8z5LTx4Hs9XjYNIolIwFAhjLVPTzJjQ02f2Ys",
+          playbackId: "REJtdpTtCCxlgIxdbrtqkuhHV3MD00IE315LNgwPJLIg",
           caption: "This is a post from Bob!",
           isPaid: false,
         },
@@ -56,11 +64,21 @@ async function main() {
         "https://utfs.io/f/93e773d4-e1ad-4766-b4b9-2f5349b79040-1x98hn.JPG",
       handle: "max",
       posts: {
-        create: {
-          assetId: "iS59cfTrsFAisXMKx4lAm012a02XuyVkcGg6T8jIt2PbM",
-          playbackId: "SOLDCfXRhUlKOlzGmbISiZhfhAmaaiCAy3A76RqWK2w",
-          caption: "This is a post from max!",
-          isPaid: false,
+        createMany: {
+          data: [
+            {
+              assetId: "EjRAsMm2KhTEwQBuFaEkuFhyhlgMlxAq3VteNMlSGxU",
+              playbackId: "vH3uASN02ObXysKU6veJiar3ZKegTRT00JhBw02Z4FPVUc",
+              caption: "This is a post from max!",
+              isPaid: false,
+            },
+            {
+              assetId: "g5E00MA0202TzkAQSlhZFN02blkz00iusOegay01EoW8bB4nk",
+              playbackId: "oa7nSJfPaIAUSFMPo017MIb1Gu01KgasJlMwNjGR00SM8Y",
+              caption: "This is another post from max!",
+              isPaid: false,
+            },
+          ],
         },
       },
       // subscriptionSetting: {

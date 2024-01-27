@@ -32,7 +32,7 @@ export default function Home() {
           Following
         </button>
       </div>
-      <div className="flex flex-grow overflow-y-auto py-8 pb-[50px] md:pb-[25px]">
+      <div className="flex flex-grow overflow-y-auto py-8 md:pb-[25px]">
         <UserPostsContainer
           data={showFollowing ? followingData?.posts ?? [] : data ?? []}
           subscribedUsers={followingData?.subscribedUserIds ?? []}

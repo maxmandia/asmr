@@ -274,7 +274,7 @@ function User() {
           <button className="text-white">Home</button>
         </div>
       </div>
-      <div className="flex flex-grow flex-col overflow-y-scroll px-5 md:px-0">
+      <div className="flex flex-grow flex-col overflow-y-scroll px-5 pb-[10px] md:px-0">
         <UserPostsContainer
           data={profileData.posts}
           subscribedUsers={profileData.subscribedUserIds ?? []}
