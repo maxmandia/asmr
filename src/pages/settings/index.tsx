@@ -7,6 +7,7 @@ import { api } from "~/lib/utils/api";
 import { useRouter } from "next/router";
 import posthog from "posthog-js";
 import toast from "react-hot-toast";
+import { getCountryCodeFromCoordinates } from "~/lib/helpers/get-user-country";
 function Settings() {
   const { sessionId } = useAuth();
   const { data } = api.users.hasCompletedSubscriptionOnboarding.useQuery();
@@ -41,7 +42,9 @@ function Settings() {
             router.push("/settings/monetization");
           } else {
             toast.loading("Creating your account...");
-            expressAccountMutation();
+            expressAccountMutation({
+              countryCode: getCountryCodeFromCoordinates(),
+            });
           }
         }}
         className="flex w-full items-center justify-between rounded-[12px] p-3 hover:bg-card_hover"
