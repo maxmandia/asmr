@@ -10,7 +10,7 @@ interface Props {
 
 function UserPostsContainer({ data, subscribedUsers }: Props) {
   return (
-    <div className="flex w-full flex-col gap-8">
+    <div className="flex h-full w-full flex-col gap-8 overflow-scroll">
       {data?.map((post) => (
         <UserPost key={post.id} post={post} subscribedUsers={subscribedUsers} />
       ))}
