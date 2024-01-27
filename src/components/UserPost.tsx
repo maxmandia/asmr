@@ -8,13 +8,14 @@ import MuxPlayer from "@mux/mux-player-react";
 interface Props {
   post: Post;
   subscribedUsers: SubscribedUsers;
+  isLast: boolean;
 }
 
 function UserPost(props: Props) {
-  const { post, subscribedUsers } = props;
+  const { post, subscribedUsers, isLast } = props;
 
   return (
-    <div>
+    <div className={`${isLast ? "pb-[150px] md:pb-[50px]" : ""}`}>
       <div className="flex items-start gap-3">
         <Link href={`/${post.user.handle}`} prefetch={false}>
           <UserProfilePicture
