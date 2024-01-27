@@ -15,10 +15,12 @@ import Link from "next/link";
 import Overlay from "~/components/Overlay";
 import SubscriptionPaymentModal from "~/components/SubscriptionPaymentModal";
 import posthog from "posthog-js";
+import { getCountryCodeFromCoordinates } from "~/lib/helpers/get-user-country";
 
 function User() {
   const router = useRouter();
   const utils = api.useContext();
+  const [countryCode, setCountryCode] = useState<string | null>(null);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [showPaymentElement, setShowPaymentElement] = useState(false);
   const {
@@ -61,6 +63,11 @@ function User() {
         router.replace(resp.url);
       },
     });
+
+  useEffect(() => {
+    const code = getCountryCodeFromCoordinates();
+    setCountryCode(code);
+  }, []);
 
   function followHandler() {
     if (!profileData) return;
@@ -218,7 +225,9 @@ function User() {
               <button
                 onClick={() => {
                   toast.loading("Creating your account...");
-                  expressAccountMutation();
+                  expressAccountMutation({
+                    countryCode: countryCode ?? "US",
+                  });
                 }}
                 className="max-w-[100px] rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover lg:max-w-none"
               >
