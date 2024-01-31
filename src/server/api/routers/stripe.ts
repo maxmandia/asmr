@@ -124,7 +124,7 @@ export const stripeRouter = createTRPCRouter({
   createExpressAccount: protectedProcedure
     .input(
       z.object({
-        countryCode: z.string(),
+        countryCode: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -155,10 +155,17 @@ export const stripeRouter = createTRPCRouter({
           account: user.subscriptionSetting.connectAccountId,
           refresh_url: `${URL}/sign-in`,
           return_url: `${URL}/home`,
-          type: "account_onboarding",
+          type: "account_update",
         });
         return { url: accountLink.url };
       } else {
+        // throw an error if the country code is not provided
+        if (!input.countryCode) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Country code is required",
+          });
+        }
         // create a connect account
         const account = await stripe.accounts.create({
           type: "express",
@@ -202,4 +209,28 @@ export const stripeRouter = createTRPCRouter({
         return { url: accountLink.url };
       }
     }),
+
+  hasUserCreatedConnectAccount: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: {
+        id: ctx.auth.userId,
+      },
+      select: {
+        subscriptionSetting: true,
+      },
+    });
+
+    if (!user) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
+    }
+
+    console.log(user.subscriptionSetting);
+
+    return {
+      hasCreated: user.subscriptionSetting ? true : false,
+    };
+  }),
 });
