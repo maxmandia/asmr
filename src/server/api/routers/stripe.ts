@@ -155,7 +155,7 @@ export const stripeRouter = createTRPCRouter({
           account: user.subscriptionSetting.connectAccountId,
           refresh_url: `${URL}/sign-in`,
           return_url: `${URL}/home`,
-          type: "account_update",
+          type: "account_onboarding",
         });
         return { url: accountLink.url };
       } else {
