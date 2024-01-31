@@ -8,6 +8,8 @@ import {
   PersonIcon,
   Share2Icon,
   GearIcon,
+  Cross1Icon,
+  ArrowRightIcon,
 } from "@radix-ui/react-icons";
 import UserPostsContainer from "~/components/UserPostsContainer";
 import toast from "react-hot-toast";
@@ -15,12 +17,12 @@ import Link from "next/link";
 import Overlay from "~/components/Overlay";
 import SubscriptionPaymentModal from "~/components/SubscriptionPaymentModal";
 import posthog from "posthog-js";
-import { getCountryCodeFromCoordinates } from "~/lib/helpers/get-user-country";
+import CountrySelector from "~/components/CountrySelector";
 
 function User() {
   const router = useRouter();
   const utils = api.useContext();
-  const [countryCode, setCountryCode] = useState<string | null>(null);
+  const [showCountrySelector, setShowCountrySelector] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [showPaymentElement, setShowPaymentElement] = useState(false);
   const {
@@ -36,6 +38,20 @@ function User() {
     },
   );
 
+  const { refetch } = api.stripe.hasUserCreatedConnectAccount.useQuery(
+    undefined,
+    {
+      enabled: false,
+      onSuccess(data) {
+        if (data.hasCreated) {
+          toast.loading("Hang tight...");
+          expressAccountMutation({});
+        } else {
+          setShowCountrySelector(true);
+        }
+      },
+    },
+  );
   const { mutate: followMutation } = api.follows.followUser.useMutation({
     onSuccess: () => {
       toast.success("successfully followed user ✨");
@@ -64,11 +80,6 @@ function User() {
       },
     });
 
-  useEffect(() => {
-    const code = getCountryCodeFromCoordinates();
-    setCountryCode(code);
-  }, []);
-
   function followHandler() {
     if (!profileData) return;
 
@@ -81,6 +92,13 @@ function User() {
         handle: router.query.handle as string,
       });
     }
+  }
+
+  function expressMutationHelper(countryCode: string) {
+    toast.loading("Hang tight...");
+    expressAccountMutation({
+      countryCode,
+    });
   }
 
   function SubscriptionModal() {
@@ -135,6 +153,12 @@ function User() {
 
   return (
     <div className="flex h-[calc(100vh_-_56px)] flex-col overflow-y-hidden md:w-[50%]">
+      {showCountrySelector && (
+        <CountrySelector
+          expressMutationHelper={expressMutationHelper}
+          setShowCountrySelector={setShowCountrySelector}
+        />
+      )}
       {showSubscriptionModal && profileData.user.subscriptionSetting && (
         <SubscriptionModal />
       )}
@@ -224,10 +248,7 @@ function User() {
             !profileData.user.subscriptionSetting?.isComplete ? (
               <button
                 onClick={() => {
-                  toast.loading("Creating your account...");
-                  expressAccountMutation({
-                    countryCode: countryCode ?? "US",
-                  });
+                  refetch();
                 }}
                 className="max-w-[100px] rounded-xl bg-primary px-3 py-1 text-[12px] text-white hover:bg-primary_hover lg:max-w-none"
               >
