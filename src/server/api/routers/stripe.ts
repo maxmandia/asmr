@@ -50,6 +50,9 @@ export const stripeRouter = createTRPCRouter({
           payment_behavior: "default_incomplete",
           expand: ["latest_invoice.payment_intent"],
           on_behalf_of: connectAccountId,
+          transfer_data: {
+            destination: connectAccountId,
+          },
           metadata: {
             paymentType: PaymentType.SUBSCRIPTION,
             subscriberId,
@@ -98,6 +101,9 @@ export const stripeRouter = createTRPCRouter({
           },
           application_fee_amount: Math.round(price * 100 * 0.19),
           on_behalf_of: connectAccountId,
+          transfer_data: {
+            destination: connectAccountId,
+          },
           metadata: {
             paymentType: PaymentType.TIP,
             senderId: ctx.auth.userId,
