@@ -97,9 +97,7 @@ export const stripeRouter = createTRPCRouter({
             enabled: true,
           },
           application_fee_amount: Math.round(price * 100 * 0.19),
-          transfer_data: {
-            destination: connectAccountId,
-          },
+          on_behalf_of: connectAccountId,
           metadata: {
             paymentType: PaymentType.TIP,
             senderId: ctx.auth.userId,
