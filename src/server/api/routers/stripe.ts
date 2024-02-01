@@ -49,10 +49,7 @@ export const stripeRouter = createTRPCRouter({
           },
           payment_behavior: "default_incomplete",
           expand: ["latest_invoice.payment_intent"],
-          transfer_data: {
-            destination: connectAccountId,
-          },
-
+          on_behalf_of: connectAccountId,
           metadata: {
             paymentType: PaymentType.SUBSCRIPTION,
             subscriberId,
