@@ -277,7 +277,7 @@ function Messages() {
               }}
               className="flex w-full items-center justify-between rounded-[6px] bg-input p-3"
             >
-              <div className="flex items-center gap-2 md:gap-3">
+              <div className="flex w-full items-center gap-2 md:gap-3">
                 <div className="flex items-center gap-[6px] md:gap-2">
                   {/* <button title="upload an image">
                     <ImageIcon className="h-[18px] w-[18px] md:h-[22px] md:w-[22px]" />
@@ -298,13 +298,13 @@ function Messages() {
                 </div>
                 <input
                   ref={inputRef}
-                  className="bg-input text-[18px] placeholder:text-[18px] focus:outline-none"
+                  className="w-full bg-input text-[18px] placeholder:text-[18px] focus:outline-none"
                   type="text"
                   placeholder="say hello!"
                 />
               </div>
               <button type="submit" title="send message">
-                <PaperPlaneIcon className="h-[18px] w-[18px] md:h-[22px] md:w-[22px]" />
+                <PaperPlaneIcon className="ml-4 h-[18px] w-[18px] md:h-[22px] md:w-[22px]" />
               </button>
             </form>
           </div>
