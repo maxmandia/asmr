@@ -5,6 +5,7 @@ import Link from "next/link";
 import UserProfilePicture from "./UserProfilePicture";
 import { SubscribedUsers } from "~/types/SubscribedUsers";
 import MuxPlayer from "@mux/mux-player-react";
+import { useUser } from "@clerk/nextjs";
 interface Props {
   post: Post;
   subscribedUsers: SubscribedUsers;
@@ -13,6 +14,7 @@ interface Props {
 
 function UserPost(props: Props) {
   const { post, subscribedUsers, isLast } = props;
+  const { user } = useUser();
 
   return (
     <div className={`${isLast ? "pb-[150px] md:pb-[50px]" : ""}`}>
@@ -23,13 +25,26 @@ function UserPost(props: Props) {
           />
         </Link>
         <div className="flex w-full flex-col">
-          <Link href={`/${post.user.handle}`} prefetch={false}>
-            <span className="font-medium hover:underline">
-              {post.user.name}
-            </span>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link href={`/${post.user.handle}`} prefetch={false}>
+              <span className="text-[17px] font-medium hover:underline">
+                {post.user.name}
+              </span>
+            </Link>
+            {post.isPaid ? (
+              <div className="flex items-center justify-center rounded-xl bg-input px-2 py-1">
+                <span className="text-[8px] md:text-[9px]">
+                  Subscribers Only
+                </span>
+              </div>
+            ) : null}
+          </div>
           <p className="text-[14px]">{post.caption}</p>
-          {post.isPaid ? (
+          {post.isPaid && post.userId === user?.id ? (
+            <div>
+              <PostVideo {...post} />
+            </div>
+          ) : post.isPaid ? (
             <>
               {subscribedUsers.includes(post.user.id) ? (
                 <div>
@@ -39,7 +54,6 @@ function UserPost(props: Props) {
                 // 🚫 the user can NOT view the exclusive content 🚫
                 <>
                   <LockedContent {...post} />
-                  <PostVideo {...post} />
                 </>
               )}
             </>
