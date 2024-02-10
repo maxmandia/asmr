@@ -81,14 +81,14 @@ async function main() {
           ],
         },
       },
-      // subscriptionSetting: {
-      //   create: {
-      //     connectAccountId: "acct_1ODr6GIyNR7z2wEf",
-      //     isComplete: true,
-      //     productId: "prod_P2nG5XcGhHI0cG",
-      //     priceId: "price_1OEhfpIN7xQGjCuLmCCq0xMF",
-      //   },
-      // },
+      subscriptionSetting: {
+        create: {
+          connectAccountId: "acct_1ODr6GIyNR7z2wEf",
+          isComplete: true,
+          productId: "prod_P2nG5XcGhHI0cG",
+          priceId: "price_1OEhfpIN7xQGjCuLmCCq0xMF",
+        },
+      },
     },
   });
   await prisma.message.create({

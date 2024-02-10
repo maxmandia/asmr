@@ -31,16 +31,20 @@ function Messages() {
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showTipMenu, setShowTipMenu] = useState(false);
-  const [selectedTipPrice, setSelectedTipPrice] = useState<string>("");
+  const [messageId, setMessageId] = useState<number | null>(null);
+  const [selectedTipPrice, setSelectedTipPrice] = useState("");
   const [showPaymentElement, setShowPaymentElement] = useState(false);
-  const { mutate } = api.messages.sendMessage.useMutation({
-    onSuccess: () => {
-      utils.messages.invalidate();
-      if (inputRef?.current && inputRef.current.value) {
-        inputRef.current.value = "";
-      }
-    },
-  });
+  const { mutate: sendMessage, mutateAsync: sendTipMessageAsync } =
+    api.messages.sendMessage.useMutation({
+      onSuccess: (data) => {
+        if (!data.isTip) {
+          utils.messages.invalidate();
+        }
+        if (inputRef?.current && inputRef.current.value) {
+          inputRef.current.value = "";
+        }
+      },
+    });
   const { data: conversations, isLoading: conversationsIsLoading } =
     api.messages.getMessagedUserIds.useQuery();
   const { data: messages } = api.messages.getMessages.useQuery(
@@ -62,9 +66,10 @@ function Messages() {
       return;
     }
 
-    mutate({
+    sendMessage({
       recipientId: selectedUser.id,
       message: inputRef.current.value,
+      isTip: false,
     });
 
     inputRef.current.value = "";
@@ -79,7 +84,14 @@ function Messages() {
       return toast.error("This user has not set up their Stripe account yet");
     }
 
+    const message = await sendTipMessageAsync({
+      recipientId: selectedUser.id,
+      isTip: true,
+      tipPrice: tipAmount,
+    });
+
     setSelectedTipPrice(tipAmount);
+    setMessageId(message.id);
     setShowPaymentElement(true);
   }
 
@@ -102,6 +114,7 @@ function Messages() {
       )}
       {showPaymentElement &&
       selectedTipPrice &&
+      messageId &&
       selectedUser?.subscriptionSetting?.connectAccountId &&
       selectedUser?.subscriptionSetting?.priceId &&
       currentUser ? (
@@ -111,6 +124,7 @@ function Messages() {
             connectAccountId={
               selectedUser?.subscriptionSetting?.connectAccountId
             }
+            messageId={messageId}
             customerId={currentUser?.stripe_customer_id}
             price={Number(selectedTipPrice)}
             subscribedToId={selectedUser?.id}

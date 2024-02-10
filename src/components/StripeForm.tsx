@@ -27,7 +27,7 @@ export default function StripeForm({
         throw new Error("Stripe isn't working right now");
       }
 
-      await stripe.confirmPayment({
+      let data = await stripe.confirmPayment({
         elements,
         confirmParams: {
           return_url: `${URL}/home`,
@@ -37,9 +37,9 @@ export default function StripeForm({
       });
 
       if (isTip) {
-        utils.messages.invalidate();
-      } else {
         utils.posts.invalidate();
+      } else {
+        utils.messages.invalidate();
       }
 
       setShowPaymentModal(false);
