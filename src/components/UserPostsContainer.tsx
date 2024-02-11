@@ -6,11 +6,15 @@ import { SubscribedUsers } from "~/types/SubscribedUsers";
 interface Props {
   data: Post[];
   subscribedUsers: SubscribedUsers;
+  setShowSubscriptionModal?: (value: boolean) => void;
 }
 
-function UserPostsContainer({ data, subscribedUsers }: Props) {
+function UserPostsContainer({
+  data,
+  subscribedUsers,
+  setShowSubscriptionModal,
+}: Props) {
   return (
-    // <div className="flex h-full w-full flex-col gap-8">
     <>
       {data?.map((post) => (
         <UserPost
@@ -18,10 +22,10 @@ function UserPostsContainer({ data, subscribedUsers }: Props) {
           post={post}
           subscribedUsers={subscribedUsers}
           isLast={data.indexOf(post) === data.length - 1}
+          setShowSubscriptionModal={setShowSubscriptionModal ?? undefined}
         />
       ))}
     </>
-    // </div>
   );
 }
 

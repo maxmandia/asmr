@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import Layout from "~/components/Layout";
 import { api } from "~/lib/utils/api";
 import {
@@ -8,16 +8,14 @@ import {
   PersonIcon,
   Share2Icon,
   GearIcon,
-  Cross1Icon,
-  ArrowRightIcon,
 } from "@radix-ui/react-icons";
 import UserPostsContainer from "~/components/UserPostsContainer";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import Overlay from "~/components/Overlay";
 import SubscriptionPaymentModal from "~/components/SubscriptionPaymentModal";
 import posthog from "posthog-js";
 import CountrySelector from "~/components/CountrySelector";
+import { SubscriptionModal } from "~/components/SubscriptionModal";
 
 function User() {
   const router = useRouter();
@@ -101,52 +99,6 @@ function User() {
     });
   }
 
-  function SubscriptionModal() {
-    const modalRef = useRef<HTMLDivElement>(null);
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
-        setShowSubscriptionModal(false);
-      }
-    };
-
-    useEffect(() => {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
-
-    return (
-      <Overlay>
-        <div
-          ref={modalRef}
-          className="flex flex-col justify-center rounded-lg bg-input p-6"
-        >
-          <span className="text-center text-2xl">
-            Subscribe to {profileData?.user.name} ✨
-          </span>
-          <p className="text-grey">
-            The subscription cost is $
-            {profileData?.user.subscriptionSetting?.price}/month.
-          </p>
-          <button
-            onClick={() => {
-              setShowSubscriptionModal(false);
-              setShowPaymentElement(true);
-            }}
-            className="mt-5 rounded-[4px] bg-primary py-1 hover:bg-primary_hover"
-          >
-            Subscribe
-          </button>
-        </div>
-      </Overlay>
-    );
-  }
-
   if (profileLoading || profileError) {
     return null;
   }
@@ -160,7 +112,11 @@ function User() {
         />
       )}
       {showSubscriptionModal && profileData.user.subscriptionSetting && (
-        <SubscriptionModal />
+        <SubscriptionModal
+          user={profileData.user}
+          setShowPaymentElement={setShowPaymentElement}
+          setShowSubscriptionModal={setShowSubscriptionModal}
+        />
       )}
       {showPaymentElement &&
         profileData.user.subscriptionSetting?.priceId &&
@@ -299,6 +255,7 @@ function User() {
         <UserPostsContainer
           data={profileData.posts}
           subscribedUsers={profileData.subscribedUserIds ?? []}
+          setShowSubscriptionModal={setShowSubscriptionModal}
         />
       </div>
     </div>

@@ -36,7 +36,7 @@ async function main() {
           assetId: "ILBtpSJ8z5LTx4Hs9XjYNIolIwFAhjLVPTzJjQ02f2Ys",
           playbackId: "REJtdpTtCCxlgIxdbrtqkuhHV3MD00IE315LNgwPJLIg",
           caption: "This is a post from Bob!",
-          isPaid: false,
+          isPaid: true,
         },
       },
       subscriptionSetting: {
