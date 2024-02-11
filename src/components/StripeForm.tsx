@@ -27,7 +27,7 @@ export default function StripeForm({
         throw new Error("Stripe isn't working right now");
       }
 
-      let data = await stripe.confirmPayment({
+      await stripe.confirmPayment({
         elements,
         confirmParams: {
           return_url: `${URL}/home`,

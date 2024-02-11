@@ -41,7 +41,7 @@ async function main() {
       },
       subscriptionSetting: {
         create: {
-          connectAccountId: "acct_1OEiR4RDu4b9PueH",
+          connectAccountId: "acct_1OiikKIPkEbnYOB1",
           isComplete: true,
           price: 20,
           productId: "prod_Ozm59u0jgWnPpu",
