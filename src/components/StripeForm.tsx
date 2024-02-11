@@ -37,9 +37,9 @@ export default function StripeForm({
       });
 
       if (isTip) {
-        utils.messages.invalidate();
-      } else {
         utils.posts.invalidate();
+      } else {
+        utils.messages.invalidate();
       }
 
       setShowPaymentModal(false);

@@ -3,6 +3,7 @@ import posthog from "posthog-js";
 import { prisma } from "~/config/prisma";
 import { stripe } from "~/config/stripe";
 import { sendPaymentEmail } from "~/lib/helpers/send-payment-email";
+import { api } from "~/lib/utils/api";
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,14 +18,6 @@ export default async function handler(
   try {
     // TIP
     if (object?.metadata?.paymentType === "tip") {
-      await prisma.message.create({
-        data: {
-          isTip: true,
-          tipPrice: String(object.amount / 100),
-          senderId: object.metadata.senderId,
-          receiverId: object.metadata.recieverId,
-        },
-      });
       posthog.capture("user_tip", {
         amount: object.amount / 100,
       });

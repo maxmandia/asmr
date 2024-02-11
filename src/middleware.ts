@@ -17,6 +17,7 @@ export default authMiddleware({
     "/verified",
     "/api/clerk-webhook",
     "/api/capture-payment-success",
+    "/api/capture-payment-failed",
     "/api/capture-account-updated",
     "/.well-known/apple-developer-merchantid-domain-association",
     "/api/cron/notifications",

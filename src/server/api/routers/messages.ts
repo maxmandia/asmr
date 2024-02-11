@@ -10,8 +10,10 @@ export const messagesRouter = createTRPCRouter({
   sendMessage: protectedProcedure
     .input(
       z.object({
-        message: z.string(),
+        message: z.string().optional(),
         recipientId: z.string(),
+        isTip: z.boolean(),
+        tipPrice: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -30,10 +32,11 @@ export const messagesRouter = createTRPCRouter({
 
       const message = await ctx.db.message.create({
         data: {
-          isTip: false,
+          isTip: input.isTip,
           message: input.message,
           receiverId: input.recipientId,
           senderId: ctx.auth.userId,
+          tipPrice: input.tipPrice,
         },
       });
 
