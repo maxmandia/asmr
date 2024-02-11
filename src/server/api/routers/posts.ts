@@ -123,7 +123,11 @@ export const postsRouter = createTRPCRouter({
           userId: user.id,
         },
         include: {
-          user: true,
+          user: {
+            include: {
+              subscriptionSetting: true,
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",

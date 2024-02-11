@@ -1,20 +1,23 @@
-import React, { useRef, useState } from "react";
-import Image from "next/image";
+import React from "react";
+
 import type { Post } from "~/types/Post";
 import Link from "next/link";
 import UserProfilePicture from "./UserProfilePicture";
 import { SubscribedUsers } from "~/types/SubscribedUsers";
 import MuxPlayer from "@mux/mux-player-react";
 import { useUser } from "@clerk/nextjs";
+import { NextRouter, useRouter } from "next/router";
 interface Props {
   post: Post;
   subscribedUsers: SubscribedUsers;
   isLast: boolean;
+  setShowSubscriptionModal?: (value: boolean) => void;
 }
 
 function UserPost(props: Props) {
-  const { post, subscribedUsers, isLast } = props;
+  const { post, subscribedUsers, isLast, setShowSubscriptionModal } = props;
   const { user } = useUser();
+  const router = useRouter();
 
   return (
     <div className={`${isLast ? "pb-[150px] md:pb-[50px]" : ""}`}>
@@ -53,7 +56,13 @@ function UserPost(props: Props) {
               ) : (
                 // 🚫 the user can NOT view the exclusive content 🚫
                 <>
-                  <LockedContent {...post} />
+                  <LockedContent
+                    setShowSubscriptionModal={
+                      setShowSubscriptionModal ?? undefined
+                    }
+                    router={router}
+                    handle={post.user.handle}
+                  />
                 </>
               )}
             </>
@@ -71,20 +80,34 @@ function UserPost(props: Props) {
 
 export default UserPost;
 
-function LockedContent(post: Post) {
+function LockedContent({
+  setShowSubscriptionModal,
+  router,
+  handle,
+}: {
+  setShowSubscriptionModal?: (value: boolean) => void;
+  router: NextRouter;
+  handle: string;
+}) {
   return (
     <div className="relative mt-5 h-[300px] w-full overflow-hidden rounded-[18px] transition duration-300 ease-in-out hover:bg-opacity-60">
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-[18px] bg-card_hover bg-opacity-50">
         <p className="text-xl font-medium text-white md:text-2xl">
           This post is locked.
         </p>
-        <Link
-          prefetch={false}
-          href={`/${post.user.handle}`}
+        <button
+          onClick={() => {
+            if (setShowSubscriptionModal) {
+              setShowSubscriptionModal(true);
+            } else {
+              // take the user to the creator's page to subscribe
+              router.push(`/${handle}`);
+            }
+          }}
           className="rounded-[6px] bg-primary px-4 py-2 text-[14px] hover:bg-primary_hover"
         >
           ✨ Subscribe
-        </Link>
+        </button>
       </div>
     </div>
   );
