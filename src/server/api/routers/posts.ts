@@ -213,42 +213,60 @@ export const postsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        const { data } = await axios.get(
-          `https://api.mux.com/video/v1/uploads/${input.uploadId}`,
-          {
-            auth: {
-              username: process.env.MUX_TOKEN_ID!,
-              password: process.env.MUX_TOKEN_SECRET!,
-            },
-          },
-        );
+        const maxRetryCount = 5;
+        let retryCount = 0;
 
-        if (data.data.status === "asset_created") {
-          // get the playback id
-          const { data: assetData } = await axios.get(
-            `https://api.mux.com/video/v1/assets/${data.data.asset_id}`,
-            {
-              auth: {
-                username: process.env.MUX_TOKEN_ID!,
-                password: process.env.MUX_TOKEN_SECRET!,
+        const checkAssetStatus = async () => {
+          try {
+            const { data } = await axios.get(
+              `https://api.mux.com/video/v1/uploads/${input.uploadId}`,
+              {
+                auth: {
+                  username: process.env.MUX_TOKEN_ID!,
+                  password: process.env.MUX_TOKEN_SECRET!,
+                },
               },
-            },
-          );
+            );
 
-          await prisma.post.create({
-            data: {
-              assetId: data.data.asset_id,
-              playbackId: assetData.data.playback_ids[0].id,
-              caption: input.caption,
-              isPaid: input.isPaid,
-              userId: ctx.auth.userId,
-            },
-          });
-          return;
-        } else {
-          // the asset is not ready
-          return;
-        }
+            if (data.data.status === "asset_created") {
+              // get the playback id
+              const { data: assetData } = await axios.get(
+                `https://api.mux.com/video/v1/assets/${data.data.asset_id}`,
+                {
+                  auth: {
+                    username: process.env.MUX_TOKEN_ID!,
+                    password: process.env.MUX_TOKEN_SECRET!,
+                  },
+                },
+              );
+
+              await prisma.post.create({
+                data: {
+                  assetId: data.data.asset_id,
+                  playbackId: assetData.data.playback_ids[0].id,
+                  caption: input.caption,
+                  isPaid: input.isPaid,
+                  userId: ctx.auth.userId,
+                },
+              });
+              return;
+            } else {
+              // the asset is not ready
+              if (retryCount < maxRetryCount) {
+                retryCount++;
+                setTimeout(checkAssetStatus, 1000); // Retry after 1 second
+              } else {
+                // Max retry count reached, handle the error
+                console.log("Max retry count reached. Asset creation failed.");
+              }
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        };
+
+        await checkAssetStatus();
+        return;
       } catch (error) {
         console.log(error);
       }
