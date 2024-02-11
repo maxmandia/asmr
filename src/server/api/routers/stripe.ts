@@ -85,11 +85,13 @@ export const stripeRouter = createTRPCRouter({
         customerId: z.string(),
         connectAccountId: z.string(),
         creatorId: z.string(),
+        messageId: z.number(),
       }),
     )
     .query(async ({ ctx, input }) => {
       try {
-        const { price, customerId, connectAccountId, creatorId } = input;
+        const { price, customerId, connectAccountId, creatorId, messageId } =
+          input;
 
         const paymentIntent = await stripe.paymentIntents.create({
           customer: customerId,
@@ -108,6 +110,7 @@ export const stripeRouter = createTRPCRouter({
             paymentType: PaymentType.TIP,
             senderId: ctx.auth.userId,
             recieverId: creatorId,
+            messageId,
           },
         });
 

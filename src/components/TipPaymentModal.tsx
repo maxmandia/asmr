@@ -14,9 +14,11 @@ function TipPaymentModal({
   connectAccountId,
   subscribedToId,
   setShowPaymentModal,
+  messageId,
   price,
 }: {
   customerId: string;
+  messageId: number;
   price: number;
   connectAccountId: string;
   subscribedToId: string;
@@ -31,6 +33,7 @@ function TipPaymentModal({
     customerId,
     connectAccountId,
     creatorId: subscribedToId,
+    messageId,
   });
 
   if (!tipData?.clientSecret) {
