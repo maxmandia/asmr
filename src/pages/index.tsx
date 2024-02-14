@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import toast from "react-hot-toast";
 import Image from "next/image";
 import {
   CookieIcon,
@@ -8,6 +7,7 @@ import {
 } from "@radix-ui/react-icons";
 import styles from "~/styles/home.module.css";
 import Link from "next/link";
+import Head from "next/head";
 
 const bongoURL = "/sounds/bongo.m4a";
 const clocURL = "/sounds/cloc.m4a";
@@ -75,6 +75,10 @@ function Landing() {
 
   return (
     <div>
+      <Head>
+        <title>Watch Sexy Asmr Videos</title>
+        <meta property="og:title" content="Hush Asmr" key="title" />
+      </Head>
       <div className="flex h-screen flex-col items-center gap-1 py-40">
         <span className="mr-20 -rotate-[34deg] self-end text-[30px] md:ml-[500px] md:self-center md:text-[40px] lg:text-[50px]">
           🦋
@@ -130,7 +134,7 @@ function Landing() {
         <div className="absolute bottom-[-100px] left-0 right-0 ml-[-20px] flex items-center justify-between overflow-hidden md:bottom-[-150px]">
           <div className="relative h-[300px] w-[300px] flex-shrink-0 md:h-[400px] md:w-[400px] lg:opacity-50">
             <Image
-              src={"/images/cloud.png"}
+              src={"/images/cloud.webp"}
               className=""
               alt="a beautiful cloud"
               layout="fill"
@@ -139,7 +143,7 @@ function Landing() {
           </div>
           <div className="relative z-10 ml-[-150px] h-[300px] w-[300px] flex-shrink-0 md:h-[400px] md:w-[400px] lg:opacity-70">
             <Image
-              src={"/images/cloud.png"}
+              src={"/images/cloud.webp"}
               className=""
               alt="a beautiful cloud"
               layout="fill"
@@ -148,7 +152,7 @@ function Landing() {
           </div>
           <div className="relative z-[0] ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block lg:opacity-80">
             <Image
-              src={"/images/cloud.png"}
+              src={"/images/cloud.webp"}
               className=""
               alt="a beautiful cloud"
               layout="fill"
@@ -157,7 +161,7 @@ function Landing() {
           </div>
           <div className="relative z-10 ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block lg:opacity-80">
             <Image
-              src={"/images/cloud.png"}
+              src={"/images/cloud.webp"}
               className=""
               alt="a beautiful cloud"
               layout="fill"
@@ -166,7 +170,7 @@ function Landing() {
           </div>
           <div className="relative z-[0] ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block lg:opacity-80">
             <Image
-              src={"/images/cloud.png"}
+              src={"/images/cloud.webp"}
               className=""
               alt="a beautiful cloud"
               layout="fill"
@@ -175,7 +179,7 @@ function Landing() {
           </div>
           <div className="relative z-10 ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block lg:opacity-70">
             <Image
-              src={"/images/cloud.png"}
+              src={"/images/cloud.webp"}
               className=""
               alt="a beautiful cloud"
               layout="fill"
@@ -184,7 +188,7 @@ function Landing() {
           </div>
           <div className="relative z-[0] ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block lg:opacity-50">
             <Image
-              src={"/images/cloud.png"}
+              src={"/images/cloud.webp"}
               className=""
               alt="a beautiful cloud"
               layout="fill"
@@ -217,6 +221,7 @@ function Landing() {
                   alt="animal"
                   height={75}
                   width={75}
+                  loading="lazy"
                 />
               </div>
             ))}
@@ -245,6 +250,7 @@ function Landing() {
                   alt="person"
                   height={50}
                   width={50}
+                  loading="lazy"
                 />
               </div>
             ))}
@@ -273,6 +279,7 @@ function Landing() {
                   alt="animal"
                   height={75}
                   width={75}
+                  loading="lazy"
                 />
               </div>
             ))}
