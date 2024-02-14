@@ -78,6 +78,10 @@ function Landing() {
       <Head>
         <title>Watch Sexy Asmr Videos</title>
         <meta property="og:title" content="Hush Asmr" key="title" />
+        <meta
+          name="description"
+          content="Discover sexy asmr videos and sounds. Watch the best asmr videos on the internet."
+        />
       </Head>
       <div className="flex h-screen flex-col items-center gap-1 py-40">
         <span className="mr-20 -rotate-[34deg] self-end text-[30px] md:ml-[500px] md:self-center md:text-[40px] lg:text-[50px]">
@@ -135,64 +139,64 @@ function Landing() {
           <div className="relative h-[300px] w-[300px] flex-shrink-0 md:h-[400px] md:w-[400px] lg:opacity-50">
             <Image
               src={"/images/cloud.webp"}
-              className=""
               alt="a beautiful cloud"
               layout="fill"
               objectFit="contain"
+              priority
             />
           </div>
           <div className="relative z-10 ml-[-150px] h-[300px] w-[300px] flex-shrink-0 md:h-[400px] md:w-[400px] lg:opacity-70">
             <Image
               src={"/images/cloud.webp"}
-              className=""
               alt="a beautiful cloud"
               layout="fill"
               objectFit="contain"
+              priority
             />
           </div>
           <div className="relative z-[0] ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block lg:opacity-80">
             <Image
               src={"/images/cloud.webp"}
-              className=""
               alt="a beautiful cloud"
               layout="fill"
               objectFit="contain"
+              priority
             />
           </div>
           <div className="relative z-10 ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block lg:opacity-80">
             <Image
               src={"/images/cloud.webp"}
-              className=""
               alt="a beautiful cloud"
               layout="fill"
               objectFit="contain"
+              priority
             />
           </div>
           <div className="relative z-[0] ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block lg:opacity-80">
             <Image
               src={"/images/cloud.webp"}
-              className=""
               alt="a beautiful cloud"
               layout="fill"
               objectFit="contain"
+              priority
             />
           </div>
           <div className="relative z-10 ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block lg:opacity-70">
             <Image
               src={"/images/cloud.webp"}
-              className=""
               alt="a beautiful cloud"
               layout="fill"
               objectFit="contain"
+              priority
             />
           </div>
           <div className="relative z-[0] ml-[-150px] hidden h-[400px] w-[400px] flex-shrink-0 md:block lg:opacity-50">
             <Image
               src={"/images/cloud.webp"}
-              className=""
               alt="a beautiful cloud"
               layout="fill"
               objectFit="contain"
+              priority
             />
           </div>
         </div>
