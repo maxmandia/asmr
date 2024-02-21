@@ -1,23 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Layout from "~/components/Layout";
 import UserProfileImage from "~/components/UserProfileImage";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { ImageIcon } from "@radix-ui/react-icons";
-import { useUploadThing } from "~/lib/utils/uploadthing";
-import { useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import { determineFileType } from "~/lib/helpers/determine-file-type";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { api } from "~/lib/utils/api";
 import MuxUploader from "@mux/mux-uploader-react";
-import axios from "axios";
 
 export default function Page() {
   const router = useRouter();
-  const user = useUser();
   const [canPost, setCanPost] = useState<boolean>(false);
-  const [file, setFile] = useState<File[] | null>(null);
   const [caption, setCaption] = useState<string>("");
   const [isPaid, setIsPaid] = useState<boolean>(false);
   const { data: uploadUrlData } = api.posts.getUploadUrl.useQuery(undefined, {
