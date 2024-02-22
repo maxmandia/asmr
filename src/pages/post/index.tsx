@@ -7,33 +7,68 @@ import { useRouter } from "next/router";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { api } from "~/lib/utils/api";
 import MuxUploader from "@mux/mux-uploader-react";
+import Overlay from "~/components/Overlay";
+import Spinner from "~/components/Spinner";
 
 export default function Page() {
   const router = useRouter();
-  const [canPost, setCanPost] = useState<boolean>(false);
+  const [isUploaded, setIsUploaded] = useState<boolean>(true);
   const [caption, setCaption] = useState<string>("");
   const [isPaid, setIsPaid] = useState<boolean>(false);
+
+  // Getting the upload url from the server
   const { data: uploadUrlData } = api.posts.getUploadUrl.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
+
+  // Checking if the user has completed the subscription onboarding
   const { data: hasCompletedSubscriptionOnboarding } =
     api.users.hasCompletedSubscriptionOnboarding.useQuery();
-  const { mutate } = api.posts.createPost.useMutation({
-    onSuccess: () => {
-      toast.dismiss();
-      toast.success("post created");
-      setTimeout(() => {
-        toast.dismiss();
-        router.push("/home");
-      }, 1000);
+
+  // Checking the status of the asset once it's uploaded
+  api.posts.checkAssetStatus.useQuery(
+    {
+      isPaid,
+      caption,
+      uploadId: uploadUrlData?.uploadId,
     },
-    onError: () => {
-      toast.error("error occurred creating post");
+    {
+      refetchOnWindowFocus: false,
+      enabled: Boolean(isUploaded && uploadUrlData?.uploadId),
+      onSuccess: (message) => {
+        if (message === "success") {
+          // the asset is ready for playback
+          setIsUploaded(false);
+          toast.success("post created successfully");
+          router.push("/home");
+        } else {
+          // the asset isn't ready yet, continue polling
+          return;
+        }
+      },
+      onError: () => {
+        toast.error("error creating post");
+        setIsUploaded(false);
+      },
+      refetchInterval: 3000,
     },
-  });
+  );
 
   return (
     <div className="flex flex-col px-5 py-7 md:w-[60%]">
+      {isUploaded && (
+        <>
+          <Overlay>
+            <div className="flex flex-col items-center justify-center gap-1 rounded-xl bg-input p-5 md:p-8">
+              <span>Please wait until video is ready for playback.</span>
+              <span className="text-grey">
+                This should take less then 60 seconds.
+              </span>
+              <Spinner size={2} />
+            </div>
+          </Overlay>
+        </>
+      )}
       <div className="flex items-start justify-between ">
         <div className="flex items-center gap-3">
           <UserProfileImage />
@@ -70,24 +105,6 @@ export default function Page() {
             </DropdownMenu.Portal>
           </DropdownMenu.Root>
         </div>
-        <button
-          disabled={!canPost}
-          onClick={() => {
-            if (!uploadUrlData?.uploadId) {
-              return;
-            }
-            mutate({
-              uploadId: uploadUrlData.uploadId,
-              isPaid,
-              caption: caption ?? null,
-            });
-          }}
-          className={`rounded-[6px] bg-primary px-[20px] py-[10px] text-[14px] font-medium hover:bg-primary_hover ${
-            !canPost && "opacity-50"
-          }`}
-        >
-          create!
-        </button>
       </div>
       <div className="py-5">
         <textarea
@@ -102,8 +119,7 @@ export default function Page() {
         <MuxUploader
           onSuccess={(e) => {
             console.log(e);
-
-            setCanPost(true);
+            setIsUploaded(true);
           }}
           endpoint={uploadUrlData?.uploadUrl ?? ""}
         />
