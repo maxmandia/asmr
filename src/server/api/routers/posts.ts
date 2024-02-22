@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import axios from "axios";
 import { z } from "zod";
 import { prisma } from "~/config/prisma";
+import { logError } from "~/lib/helpers/log-error";
 
 import {
   createTRPCRouter,
@@ -203,72 +204,62 @@ export const postsRouter = createTRPCRouter({
       uploadId: data.data.id,
     };
   }),
-  createPost: protectedProcedure
+
+  checkAssetStatus: protectedProcedure
     .input(
       z.object({
         uploadId: z.string(),
-        isPaid: z.boolean(),
         caption: z.string().optional(),
+        isPaid: z.boolean(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        const maxRetryCount = 5;
-        let retryCount = 0;
+        // check the status of the asset
+        const { data } = await axios.get(
+          `https://api.mux.com/video/v1/uploads/${input.uploadId}`,
+          {
+            auth: {
+              username: process.env.MUX_TOKEN_ID!,
+              password: process.env.MUX_TOKEN_SECRET!,
+            },
+          },
+        );
 
-        const checkAssetStatus = async () => {
-          try {
-            const { data } = await axios.get(
-              `https://api.mux.com/video/v1/uploads/${input.uploadId}`,
-              {
-                auth: {
-                  username: process.env.MUX_TOKEN_ID!,
-                  password: process.env.MUX_TOKEN_SECRET!,
-                },
+        // if the asset is created then get the playback id
+        if (data.data.status === "asset_created") {
+          const { data: assetData } = await axios.get(
+            `https://api.mux.com/video/v1/assets/${data.data.asset_id}`,
+            {
+              auth: {
+                username: process.env.MUX_TOKEN_ID!,
+                password: process.env.MUX_TOKEN_SECRET!,
               },
-            );
+            },
+          );
 
-            if (data.data.status === "asset_created") {
-              // get the playback id
-              const { data: assetData } = await axios.get(
-                `https://api.mux.com/video/v1/assets/${data.data.asset_id}`,
-                {
-                  auth: {
-                    username: process.env.MUX_TOKEN_ID!,
-                    password: process.env.MUX_TOKEN_SECRET!,
-                  },
-                },
-              );
+          // post the video to the database
+          await prisma.post.create({
+            data: {
+              assetId: data.data.asset_id,
+              playbackId: assetData.data.playback_ids[0].id,
+              caption: input.caption,
+              isPaid: input.isPaid,
+              userId: ctx.auth.userId,
+            },
+          });
 
-              await prisma.post.create({
-                data: {
-                  assetId: data.data.asset_id,
-                  playbackId: assetData.data.playback_ids[0].id,
-                  caption: input.caption,
-                  isPaid: input.isPaid,
-                  userId: ctx.auth.userId,
-                },
-              });
-              return;
-            } else {
-              // the asset is not ready
-              if (retryCount < maxRetryCount) {
-                retryCount++;
-                setTimeout(checkAssetStatus, 1000); // Retry after 1 second
-              } else {
-                // Max retry count reached, handle the error
-                console.log("Max retry count reached. Asset creation failed.");
-              }
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        };
-
-        await checkAssetStatus();
-        return;
-      } catch (error) {
-        console.log(error);
+          return "success";
+        } else {
+          // the asset is not ready, so return a message to the client
+          return "asset_not_ready";
+        }
+      } catch (error: any) {
+        logError("checkAssetStatus", "Error checking asset status", error);
+        return new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Error checking asset status",
+        });
       }
     }),
 });
