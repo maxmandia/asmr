@@ -12,7 +12,7 @@ import Spinner from "~/components/Spinner";
 
 export default function Page() {
   const router = useRouter();
-  const [isUploaded, setIsUploaded] = useState<boolean>(true);
+  const [isUploaded, setIsUploaded] = useState<boolean>(false);
   const [caption, setCaption] = useState<string>("");
   const [isPaid, setIsPaid] = useState<boolean>(false);
 
