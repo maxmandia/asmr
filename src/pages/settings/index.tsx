@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React, { useState } from "react";
-import Layout from "~/components/Layout";
+import Layout from "~/layouts/Layout";
 import { CaretRightIcon } from "@radix-ui/react-icons";
 import { SignOutButton, useAuth } from "@clerk/nextjs";
 import { api } from "~/lib/utils/api";

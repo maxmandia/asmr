@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect } from "react";
-import MobileNavigation from "./MobileNavigation";
-import DesktopNavigation from "./DesktopNavigation";
+import MobileNavigation from "../components/MobileNavigation";
+import DesktopNavigation from "../components/DesktopNavigation";
 import { useUser } from "@clerk/nextjs";
 import posthog from "posthog-js";
 
