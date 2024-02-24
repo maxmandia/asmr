@@ -18,6 +18,7 @@ import { Message } from "~/types/Message";
 import useCurrentUser from "~/hooks/useCurrentUser";
 import TipPaymentModal from "~/components/TipPaymentModal";
 import Link from "next/link";
+import { MessageseLayout } from "~/layouts/MessagesLayout";
 
 function Messages({ children }: { children: React.ReactNode }) {
   const {
@@ -104,82 +105,84 @@ function Messages({ children }: { children: React.ReactNode }) {
     return null;
   }
 
-  return (
-    <div className="fixed h-[92%] w-full py-5 md:static md:flex md:h-full md:items-center md:justify-between md:gap-5">
-      {showNewMessageModal && (
-        <NewMessageModal
-          setSelectedUser={setSelectedUser}
-          setShowNewMessageModal={setShowNewMessageModal}
-        />
-      )}
-      {showPaymentElement &&
-      selectedTipPrice &&
-      messageId &&
-      selectedUser?.subscriptionSetting?.connectAccountId &&
-      selectedUser?.subscriptionSetting?.priceId &&
-      currentUser ? (
-        <>
-          <TipPaymentModal
-            setShowPaymentModal={setShowPaymentElement}
-            connectAccountId={
-              selectedUser?.subscriptionSetting?.connectAccountId
-            }
-            messageId={messageId}
-            customerId={currentUser?.stripe_customer_id}
-            price={Number(selectedTipPrice)}
-            subscribedToId={selectedUser?.id}
-          />
-        </>
-      ) : null}
-      <div
-        className={`h-full px-5 md:w-2/3 lg:w-[50%] ${
-          selectedUser && "hidden md:block"
-        }`}
-      >
-        <div className="flex items-center justify-between">
-          <span>Messages</span>
-          <button
-            className="rounded-md p-2 hover:bg-input_hover"
-            onClick={() => setShowNewMessageModal(true)}
-          >
-            <PlusCircledIcon />
-          </button>
-        </div>
-        <div className="flex h-full w-full flex-col items-start justify-start py-3">
-          {selectedUser &&
-            !conversations?.some((convo) => selectedUser.id === convo.id) && (
-              <UserMessageCard user={selectedUser} />
-            )}
-          {conversationsIsLoading
-            ? null
-            : conversations && conversations.length > 0
-            ? conversations?.map((conversation) => (
-                <UserMessageCard
-                  key={conversation.id}
-                  user={conversation}
-                  setSelectedUser={setSelectedUser}
-                />
-              ))
-            : !selectedUser && (
-                <div className="flex h-full flex-col items-center justify-center md:gap-1">
-                  <div className="flex items-center">
-                    <PersonIcon className="h-[25px] w-[25px] md:h-[30px] md:w-[30px]" />
-                    <PersonIcon className="ml-[-12px] h-[25px] w-[25px] md:h-[30px] md:w-[30px]" />
-                  </div>
-                  <span className="text-medium text-[22px] md:text-[26px]">
-                    No conversations yet
-                  </span>
-                  <p className="w-3/4 text-center text-[14px] text-grey md:text-[16px]">
-                    Start a conversation with your favorite creator to get
-                    started.
-                  </p>
-                </div>
-              )}
-        </div>
-      </div>
-      {children}
-    </div>
-  );
+  return null;
+
+  // (
+  //   <div className="fixed h-[92%] w-full py-5 md:static md:flex md:h-full md:items-center md:justify-between md:gap-5">
+  //     {showNewMessageModal && (
+  //       <NewMessageModal
+  //         setSelectedUser={setSelectedUser}
+  //         setShowNewMessageModal={setShowNewMessageModal}
+  //       />
+  //     )}
+  //     {showPaymentElement &&
+  //     selectedTipPrice &&
+  //     messageId &&
+  //     selectedUser?.subscriptionSetting?.connectAccountId &&
+  //     selectedUser?.subscriptionSetting?.priceId &&
+  //     currentUser ? (
+  //       <>
+  //         <TipPaymentModal
+  //           setShowPaymentModal={setShowPaymentElement}
+  //           connectAccountId={
+  //             selectedUser?.subscriptionSetting?.connectAccountId
+  //           }
+  //           messageId={messageId}
+  //           customerId={currentUser?.stripe_customer_id}
+  //           price={Number(selectedTipPrice)}
+  //           subscribedToId={selectedUser?.id}
+  //         />
+  //       </>
+  //     ) : null}
+  //     <div
+  //       className={`h-full px-5 md:w-2/3 lg:w-[50%] ${
+  //         selectedUser && "hidden md:block"
+  //       }`}
+  //     >
+  //       <div className="flex items-center justify-between">
+  //         <span>Messages</span>
+  //         <button
+  //           className="rounded-md p-2 hover:bg-input_hover"
+  //           onClick={() => setShowNewMessageModal(true)}
+  //         >
+  //           <PlusCircledIcon />
+  //         </button>
+  //       </div>
+  //       <div className="flex h-full w-full flex-col items-start justify-start py-3">
+  //         {selectedUser &&
+  //           !conversations?.some((convo) => selectedUser.id === convo.id) && (
+  //             <UserMessageCard user={selectedUser} />
+  //           )}
+  //         {conversationsIsLoading
+  //           ? null
+  //           : conversations && conversations.length > 0
+  //           ? conversations?.map((conversation) => (
+  //               <UserMessageCard
+  //                 key={conversation.id}
+  //                 user={conversation}
+  //                 setSelectedUser={setSelectedUser}
+  //               />
+  //             ))
+  //           : !selectedUser && (
+  //               <div className="flex h-full flex-col items-center justify-center md:gap-1">
+  //                 <div className="flex items-center">
+  //                   <PersonIcon className="h-[25px] w-[25px] md:h-[30px] md:w-[30px]" />
+  //                   <PersonIcon className="ml-[-12px] h-[25px] w-[25px] md:h-[30px] md:w-[30px]" />
+  //                 </div>
+  //                 <span className="text-medium text-[22px] md:text-[26px]">
+  //                   No conversations yet
+  //                 </span>
+  //                 <p className="w-3/4 text-center text-[14px] text-grey md:text-[16px]">
+  //                   Start a conversation with your favorite creator to get
+  //                   started.
+  //                 </p>
+  //               </div>
+  //             )}
+  //       </div>
+  //     </div>
+  //     {children}
+  //   </div>,
+  // );
 }
 
 function UserTip({
@@ -308,5 +311,9 @@ function UserMessageCard({
 export default Messages;
 
 Messages.getLayout = function getLayout(page: JSX.Element) {
-  return <Layout>{page}</Layout>;
+  return (
+    <Layout>
+      <MessageseLayout>{page}</MessageseLayout>
+    </Layout>
+  );
 };
