@@ -46,20 +46,33 @@ export const messagesRouter = createTRPCRouter({
   getMessages: protectedProcedure
     .input(
       z.object({
-        recipientId: z.string(),
+        handle: z.string(),
       }),
     )
     .query(async ({ ctx, input }) => {
+      const user = await ctx.db.user.findUnique({
+        where: {
+          handle: input.handle,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
       const messages = await ctx.db.message.findMany({
         where: {
           OR: [
             {
-              receiverId: input.recipientId,
+              receiverId: user.id,
               senderId: ctx.auth.userId,
             },
             {
               receiverId: ctx.auth.userId,
-              senderId: input.recipientId,
+              senderId: user.id,
             },
           ],
         },
@@ -71,7 +84,7 @@ export const messagesRouter = createTRPCRouter({
       await ctx.db.message.updateMany({
         where: {
           receiverId: ctx.auth.userId,
-          senderId: input.recipientId,
+          senderId: user.id,
           wasRead: false,
         },
         data: {

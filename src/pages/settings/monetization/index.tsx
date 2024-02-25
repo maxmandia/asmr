@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import Layout from "~/components/Layout";
+import Layout from "~/layouts/Layout";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/router";
 import { api } from "~/lib/utils/api";

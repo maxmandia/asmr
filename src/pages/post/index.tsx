@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "~/components/Layout";
+import Layout from "~/layouts/Layout";
 import UserProfileImage from "~/components/UserProfileImage";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import toast from "react-hot-toast";
