@@ -8,6 +8,7 @@ import {
   PersonIcon,
   Share2Icon,
   GearIcon,
+  ChatBubbleIcon,
 } from "@radix-ui/react-icons";
 import UserPostsContainer from "~/components/UserPostsContainer";
 import toast from "react-hot-toast";
@@ -178,6 +179,16 @@ function User() {
           </div>
           <div className="flex flex-col items-end justify-between gap-2">
             <div className="flex items-center gap-2">
+              {!profileData.user.isMe && (
+                <Link
+                  title="message user"
+                  href={`/messages/${profileData.user.handle}`}
+                  className="w-fit rounded-[100px] border-[1px] border-solid border-input p-2 text-[12px] text-white hover:bg-card_hover"
+                >
+                  <ChatBubbleIcon height={20} width={20} />
+                </Link>
+              )}
+
               <button
                 title="copy profile link"
                 onClick={() => {
