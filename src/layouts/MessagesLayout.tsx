@@ -2,8 +2,7 @@ import { User } from "~/types/User";
 import { Cross1Icon, PersonIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { api } from "~/lib/utils/api";
 import Image from "next/image";
-import useCurrentUser from "~/hooks/useCurrentUser";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import debounce from "lodash.debounce";
 
@@ -13,16 +12,16 @@ export const MessageseLayout = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const {
-    data: currentUser,
-    isLoading: isCurrentUserLoading,
-    isError: isErrorGettingCurrentUser,
-  } = useCurrentUser();
   const router = useRouter();
-  const utils = api.useContext();
-  const lastMessageRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const [showNewMessageModal, setShowNewMessageModal] = useState(false);
+  const { data: selectedUser } = api.users.getUserByHandle.useQuery(
+    {
+      handle: router.query.handle as string,
+    },
+    {
+      enabled: !!router.query.handle,
+    },
+  );
 
   const { data: conversations, isLoading: conversationsIsLoading } =
     api.messages.getMessagedUserIds.useQuery();
@@ -46,10 +45,11 @@ export const MessageseLayout = ({
           </button>
         </div>
         <div className="flex h-full w-full flex-col items-start justify-start py-3">
-          {/* {selectedUser &&
-            !conversations?.some((convo) => selectedUser.id === convo.id) && (
-              <UserMessageCard user={selectedUser} />
-            )} */}
+          {router?.query?.handle &&
+            selectedUser &&
+            !conversations?.some(
+              (convo) => router.query.handle === convo.handle,
+            ) && <UserMessageCard user={selectedUser} />}
           {conversationsIsLoading ? null : conversations &&
             conversations.length > 0 ? (
             conversations?.map((conversation) => (
@@ -126,7 +126,6 @@ function NewMessageModal({
 
 function UserMessageCard({
   user,
-
   setShowNewMessageModal,
 }: {
   user: User;
