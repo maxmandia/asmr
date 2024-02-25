@@ -1,6 +1,6 @@
 import { StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
 import React from "react";
-import Layout from "~/components/Layout";
+import Layout from "~/layouts/Layout";
 import { api } from "~/lib/utils/api";
 import UserProfilePicture from "~/components/UserProfilePicture";
 

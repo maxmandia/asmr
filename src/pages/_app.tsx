@@ -68,6 +68,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
             <link rel="icon" href="/favicon.png" />
           </Head>
           <div className={`h-screen bg-background text-text ${sf.variable}`}>
+            <div id="overlay" />
             {getLayout(<Component {...pageProps} />)}
             <Analytics />
             <SpeedInsights />

@@ -25,6 +25,33 @@ export const usersRouter = createTRPCRouter({
       }
       return user;
     }),
+
+  getUserByHandle: protectedProcedure
+    .input(z.object({ handle: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.db.user.findUnique({
+        where: {
+          handle: input.handle,
+        },
+        select: {
+          name: true,
+          id: true,
+          profile_picture_url: true,
+          handle: true,
+          subscriptionSetting: true,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      return user;
+    }),
+
   getUser: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
       where: {

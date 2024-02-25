@@ -1,4 +1,4 @@
-import Layout from "~/components/Layout";
+import Layout from "~/layouts/Layout";
 import { api } from "~/lib/utils/api";
 import UserPostsContainer from "~/components/UserPostsContainer";
 import { useState } from "react";
