@@ -18,6 +18,7 @@ export const MessageseLayout = ({
     isLoading: isCurrentUserLoading,
     isError: isErrorGettingCurrentUser,
   } = useCurrentUser();
+  const router = useRouter();
   const utils = api.useContext();
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -30,26 +31,11 @@ export const MessageseLayout = ({
       {showNewMessageModal && (
         <NewMessageModal setShowNewMessageModal={setShowNewMessageModal} />
       )}
-      {/* {showPaymentElement &&
-      selectedTipPrice &&
-      messageId &&
-      selectedUser?.subscriptionSetting?.connectAccountId &&
-      selectedUser?.subscriptionSetting?.priceId &&
-      currentUser ? (
-        <>
-          <TipPaymentModal
-            setShowPaymentModal={setShowPaymentElement}
-            connectAccountId={
-              selectedUser?.subscriptionSetting?.connectAccountId
-            }
-            messageId={messageId}
-            customerId={currentUser?.stripe_customer_id}
-            price={Number(selectedTipPrice)}
-            subscribedToId={selectedUser?.id}
-          />
-        </>
-      ) : null} */}
-      <div className={`h-full px-5 md:w-2/3 lg:w-[50%]`}>
+      <div
+        className={`h-full ${
+          router.query.handle! && "hidden lg:block"
+        } px-5 md:w-2/3 lg:w-[50%]`}
+      >
         <div className="flex items-center justify-between">
           <span>Messages</span>
           <button
