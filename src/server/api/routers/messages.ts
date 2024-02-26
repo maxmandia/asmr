@@ -1,10 +1,9 @@
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { resend } from "~/config/resend";
+import MessageNotificationEmail from "~/components/MessageNotificationEmail";
+import { logError } from "~/lib/helpers/log-error";
 
 export const messagesRouter = createTRPCRouter({
   sendMessage: protectedProcedure
@@ -17,30 +16,67 @@ export const messagesRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const recipient = await ctx.db.user.findUnique({
-        where: {
-          id: input.recipientId,
-        },
-      });
-
-      if (!recipient) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
+      try {
+        const recipient = await ctx.db.user.findUnique({
+          where: {
+            id: input.recipientId,
+          },
         });
+
+        if (!recipient) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "User not found",
+          });
+        }
+
+        const message = await ctx.db.message.create({
+          data: {
+            isTip: input.isTip,
+            message: input.message,
+            receiverId: input.recipientId,
+            senderId: ctx.auth.userId,
+            tipPrice: input.tipPrice,
+          },
+          select: {
+            id: true,
+            senderId: true,
+            receiverId: true,
+            createdAt: true,
+            message: true,
+            isTip: true,
+            tipPrice: true,
+            wasRead: true,
+            wasNotified: true,
+            sender: {
+              select: {
+                id: true,
+                email: true,
+                handle: true,
+                profile_picture_url: true,
+              },
+            },
+            receiver: {
+              select: {
+                id: true,
+                email: true,
+                handle: true,
+              },
+            },
+          },
+        });
+
+        await resend.emails.send({
+          from: "hi@messaging.hushasmr.com",
+          to: recipient.email,
+          subject: "New Message on Hush ASMR",
+          react: MessageNotificationEmail({ message }) as any,
+        });
+
+        return message;
+      } catch (error) {
+        logError("messages", "failed to send a message", error as Error);
       }
-
-      const message = await ctx.db.message.create({
-        data: {
-          isTip: input.isTip,
-          message: input.message,
-          receiverId: input.recipientId,
-          senderId: ctx.auth.userId,
-          tipPrice: input.tipPrice,
-        },
-      });
-
-      return message;
     }),
 
   getMessages: protectedProcedure
