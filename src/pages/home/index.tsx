@@ -36,6 +36,11 @@ export default function Home() {
         <UserPostsContainer
           data={showFollowing ? followingData?.posts ?? [] : data ?? []}
           subscribedUsers={followingData?.subscribedUserIds ?? []}
+          isLoading={
+            showFollowing
+              ? followingIsLoading || followingIsError
+              : isLoading || isError
+          }
         />
       </div>
     </div>
