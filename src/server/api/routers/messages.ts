@@ -66,12 +66,14 @@ export const messagesRouter = createTRPCRouter({
           },
         });
 
-        await resend.emails.send({
-          from: "hi@messaging.hushasmr.com",
-          to: recipient.email,
-          subject: "New Message on Hush ASMR",
-          react: MessageNotificationEmail({ message }) as any,
-        });
+        if (!input.isTip) {
+          await resend.emails.send({
+            from: "hi@messaging.hushasmr.com",
+            to: recipient.email,
+            subject: "New Message on Hush ASMR",
+            react: MessageNotificationEmail({ message }) as any,
+          });
+        }
 
         return message;
       } catch (error) {
