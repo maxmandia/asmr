@@ -66,7 +66,9 @@ export const messagesRouter = createTRPCRouter({
           },
         });
 
-        if (!input.isTip) {
+        // Only send an email if the message is not a tip and the environment is not development
+        // We send tip notifications seperatley
+        if (!input.isTip && !Boolean(process.env.NODE_ENV === "development")) {
           await resend.emails.send({
             from: "hi@messaging.hushasmr.com",
             to: recipient.email,
