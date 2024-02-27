@@ -73,6 +73,15 @@ export const messagesRouter = createTRPCRouter({
             subject: "New Message on Hush ASMR",
             react: MessageNotificationEmail({ message }) as any,
           });
+
+          await ctx.db.message.update({
+            where: {
+              id: message.id,
+            },
+            data: {
+              wasNotified: true,
+            },
+          });
         }
 
         return message;
