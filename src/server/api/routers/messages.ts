@@ -78,6 +78,10 @@ export const messagesRouter = createTRPCRouter({
         return message;
       } catch (error) {
         logError("messages", "failed to send a message", error as Error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to send a message",
+        });
       }
     }),
 
