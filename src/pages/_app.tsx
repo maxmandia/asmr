@@ -25,15 +25,15 @@ type AppPropsWithLayout = AppProps & {
 const sf = localFont({
   src: [
     {
-      path: "../../public/fonts/SF-Pro-Rounded-Bold.otf",
+      path: "../../public/fonts/SFRounded-Bold.woff2",
       weight: "700",
     },
     {
-      path: "../../public/fonts/SF-Pro-Rounded-Medium.otf",
+      path: "../../public/fonts/SFRounded-Medium.woff2",
       weight: "500",
     },
     {
-      path: "../../public/fonts/SF-Pro-Rounded-Heavy.otf",
+      path: "../../public/fonts/SFRounded-Heavy.woff2",
       weight: "800",
     },
   ],
