@@ -14,11 +14,9 @@ function TipPaymentModal({
   connectAccountId,
   subscribedToId,
   setShowPaymentModal,
-  messageId,
   price,
 }: {
   customerId: string;
-  messageId: number;
   price: number;
   connectAccountId: string;
   subscribedToId: string;
@@ -33,7 +31,6 @@ function TipPaymentModal({
     customerId,
     connectAccountId,
     creatorId: subscribedToId,
-    messageId,
   });
 
   if (!tipData?.clientSecret) {
@@ -58,7 +55,11 @@ function TipPaymentModal({
         stripe={stripePromise}
         options={options}
       >
-        <StripeForm isTip={true} setShowPaymentModal={setShowPaymentModal} />
+        <StripeForm
+          recipientId={subscribedToId}
+          isTip={true}
+          setShowPaymentModal={setShowPaymentModal}
+        />
       </Elements>
     </Overlay>
   );

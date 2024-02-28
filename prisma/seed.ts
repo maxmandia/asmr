@@ -51,11 +51,11 @@ async function main() {
     },
   });
   await prisma.user.upsert({
-    where: { email: "max@prisma.io" },
+    where: { email: "mmandia511@gmail.com" },
     update: {},
     create: {
       id: "user_2W5yMCDxXqt6qvZZzOJ9LKNmHca",
-      email: "max@prisma.io",
+      email: "mmandia511@gmail.com",
       stripe_customer_id: "cus_Ozocd5CWheamgv",
       name: "Max",
       profile_picture_url:
