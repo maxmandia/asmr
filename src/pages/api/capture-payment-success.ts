@@ -31,12 +31,7 @@ export default async function handler(
         return resp.status(200).json({ status: "ok" });
       }
 
-      const emailResponse = await sendPaymentEmail(
-        recievingUser?.email,
-        "tip",
-        object.amount / 100,
-      );
-      console.log(emailResponse);
+      await sendPaymentEmail(recievingUser?.email, "tip", object.amount / 100);
 
       return resp.status(200).json({ status: "ok" });
     } else {

@@ -10,15 +10,18 @@ import { api } from "~/lib/utils/api";
 
 export default function StripeForm({
   setShowPaymentModal,
-
   isTip = false,
+  recipientId = null,
 }: {
   setShowPaymentModal: React.Dispatch<React.SetStateAction<boolean>>;
   isTip?: boolean;
+  recipientId?: string | null;
 }) {
   const elements = useElements();
   const stripe = useStripe();
   const utils = api.useContext();
+
+  const { mutateAsync: sendMessage } = api.messages.sendMessage.useMutation();
 
   async function paymentHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -27,7 +30,7 @@ export default function StripeForm({
         throw new Error("Stripe isn't working right now");
       }
 
-      await stripe.confirmPayment({
+      const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
         confirmParams: {
           return_url: `${URL}/home`,
@@ -36,16 +39,26 @@ export default function StripeForm({
         redirect: "if_required",
       });
 
-      if (isTip) {
-        utils.posts.invalidate();
-      } else {
-        utils.messages.invalidate();
+      if (error) {
+        throw new Error(error.message);
       }
 
+      if (isTip) {
+        if (!recipientId) {
+          throw new Error("Recipient ID not found");
+        }
+        await sendMessage({
+          recipientId,
+          isTip: true,
+          tipPrice: (paymentIntent?.amount / 100).toString(),
+        });
+      }
+      utils.messages.invalidate();
       setShowPaymentModal(false);
       toast.success("Payment successful!");
     } catch (error: any) {
-      toast.error(error);
+      setShowPaymentModal(false);
+      toast.error(error.message);
     }
   }
 
