@@ -20,7 +20,6 @@ function MessageId() {
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [showTipMenu, setShowTipMenu] = useState(false);
-  const [messageId, setMessageId] = useState<number | null>(null);
   const [selectedTipPrice, setSelectedTipPrice] = useState("");
   const [showPaymentElement, setShowPaymentElement] = useState(false);
   const {
@@ -39,17 +38,16 @@ function MessageId() {
     handle: query.handle as string,
   });
 
-  const { mutate: sendMessage, mutateAsync: sendTipMessageAsync } =
-    api.messages.sendMessage.useMutation({
-      onSuccess: (data) => {
-        if (!data.isTip) {
-          utils.messages.invalidate();
-        }
-        if (inputRef?.current && inputRef.current.value) {
-          inputRef.current.value = "";
-        }
-      },
-    });
+  const { mutate: sendMessage } = api.messages.sendMessage.useMutation({
+    onSuccess: (data) => {
+      if (!data.isTip) {
+        utils.messages.invalidate();
+      }
+      if (inputRef?.current && inputRef.current.value) {
+        inputRef.current.value = "";
+      }
+    },
+  });
 
   async function tipHandler(tipAmount: string) {
     if (selectedUser === null) {
@@ -60,14 +58,10 @@ function MessageId() {
       return toast.error("This user has not set up their Stripe account yet");
     }
 
-    const message = await sendTipMessageAsync({
-      recipientId: selectedUser.id,
-      isTip: true,
-      tipPrice: tipAmount,
-    });
-
+    // pass the tip amount to the payment modal
     setSelectedTipPrice(tipAmount);
-    setMessageId(message.id);
+
+    // show the payment modal
     setShowPaymentElement(true);
   }
 
@@ -103,7 +97,6 @@ function MessageId() {
     <div className="md:relative md:h-full md:w-full">
       {showPaymentElement &&
       selectedTipPrice &&
-      messageId &&
       selectedUser?.subscriptionSetting?.connectAccountId &&
       selectedUser?.subscriptionSetting?.priceId &&
       currentUser ? (
@@ -113,7 +106,6 @@ function MessageId() {
             connectAccountId={
               selectedUser?.subscriptionSetting?.connectAccountId
             }
-            messageId={messageId}
             customerId={currentUser?.stripe_customer_id}
             price={Number(selectedTipPrice)}
             subscribedToId={selectedUser?.id}
