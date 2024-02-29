@@ -169,19 +169,12 @@ export const stripeRouter = createTRPCRouter({
         }
         // create a connect account
         const account = await stripe.accounts.create({
-          type: "express",
+          type: "standard",
           email: user.email,
           metadata: {
             userId: user.id,
           },
-          capabilities: {
-            card_payments: {
-              requested: true,
-            },
-            transfers: {
-              requested: true,
-            },
-          },
+
           business_type: "individual",
           country: input.countryCode,
         });
