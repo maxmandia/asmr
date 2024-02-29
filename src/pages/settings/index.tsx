@@ -29,7 +29,7 @@ function Settings() {
     },
   );
   const { mutate: expressAccountMutation } =
-    api.stripe.createExpressAccount.useMutation({
+    api.stripe.createConnectAccount.useMutation({
       onMutate: () => {
         posthog.capture("creator_started_express_setup");
       },

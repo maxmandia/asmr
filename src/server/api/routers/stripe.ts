@@ -122,7 +122,7 @@ export const stripeRouter = createTRPCRouter({
       }
     }),
 
-  createExpressAccount: protectedProcedure
+  createConnectAccount: protectedProcedure
     .input(
       z.object({
         countryCode: z.string().optional(),
