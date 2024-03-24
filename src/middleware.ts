@@ -21,6 +21,8 @@ export default authMiddleware({
     "/api/capture-account-updated",
     "/.well-known/apple-developer-merchantid-domain-association",
     "/api/cron/notifications",
+    "/terms-of-service",
+    "/privacy-policy",
   ],
 });
 
