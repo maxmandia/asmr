@@ -22,6 +22,9 @@ export default {
         input_hover: "#2F2F2F",
         grey: "#808080",
       },
+      backgroundImage: {
+        sky: "url('/images/sky.webp')",
+      },
       screens: {
         md: "540px",
       },
