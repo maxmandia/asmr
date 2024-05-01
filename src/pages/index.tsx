@@ -205,7 +205,7 @@ function Landing() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center gap-10 px-4 py-[200px] md:py-[300px] lg:flex-row lg:flex-wrap lg:items-center">
+      <div className="flex flex-col items-center justify-center gap-10 px-4 py-[200px] lg:flex-row lg:flex-wrap lg:items-center">
         <div
           style={boxShadowStyle}
           className={`${styles.gradient_border} relative flex h-[340px]  max-w-[400px] flex-col items-center justify-center rounded-[50px] border-[2px] border-solid border-transparent bg-input p-5`}
@@ -354,7 +354,7 @@ function Landing() {
           </Link>
         </div>
       </div> */}
-      <div className="flex flex-col items-center justify-center py-[100px] md:py-[300px]">
+      <div className="flex flex-col items-center justify-center md:py-[100px]">
         <div className="flex  w-full flex-col items-center font-sf">
           <span className="text-[120px] font-bold leading-none lg:text-[400px]">
             Hush<span className="text-[50px] lg:text-[75px]">.</span>
