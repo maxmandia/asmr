@@ -24,6 +24,7 @@ const config = {
       "utfs.io",
       "i.imgur.com",
       "www.gravatar.com",
+      "images.ctfassets.net",
     ],
   },
 };
