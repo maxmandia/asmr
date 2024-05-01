@@ -83,22 +83,19 @@ function Landing() {
   return (
     <div>
       <Head>
-        <title>Watch Sexy Asmr Videos</title>
+        <title>Watch Asmr Videos</title>
         <meta property="og:title" content="Hush Asmr" key="title" />
-        <meta
-          name="description"
-          content="Discover sexy asmr videos and sounds. Watch the best asmr girls on the internet."
-        />
+        <meta name="description" content="Discover asmr videos and sounds." />
       </Head>
       <div className="flex h-screen flex-col items-center gap-2 py-40">
         <span className="mr-20 -rotate-[34deg] self-end text-[30px] md:ml-[500px] md:self-center md:text-[40px] lg:text-[50px]">
           🦋
         </span>
         <h1 className="font-sf text-[50px] font-bold leading-none md:text-[80px] lg:text-[90px]">
-          Sexy ASMR
+          Hush ASMR
         </h1>
         <h3 className="w-[290px] text-center font-sf text-[20px] text-[#797979] md:w-full md:text-[24px]">
-          Sexy ASMR videos get discovered on Hush.
+          ASMR videos get discovered on Hush.
         </h3>
         <div className="my-5 flex items-end gap-[5px] rounded-[11px] bg-[#C9CBD2] p-[5px] text-[16px]">
           <button
@@ -208,7 +205,7 @@ function Landing() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center gap-10 px-4 py-[200px] md:py-[300px] lg:flex-row lg:flex-wrap lg:items-center">
+      <div className="flex flex-col items-center justify-center gap-10 px-4 py-[200px] lg:flex-row lg:flex-wrap lg:items-center">
         <div
           style={boxShadowStyle}
           className={`${styles.gradient_border} relative flex h-[340px]  max-w-[400px] flex-col items-center justify-center rounded-[50px] border-[2px] border-solid border-transparent bg-input p-5`}
@@ -274,11 +271,11 @@ function Landing() {
           <div className="flex w-[98%] flex-col gap-3">
             <CookieIcon height={50} width={50} />
             <h2 className="font-sf text-[28px] font-bold leading-[33px]">
-              Relaxing, fun, sexy asmr - here for you 24/7.{" "}
+              Relaxing, fun, soothing asmr - here for you 24/7.{" "}
             </h2>
             <p className="text-[18px] leading-[22px] text-[#797979]">
-              Soothing, playful, sensual ASMR; always here, always your own -
-              made just the way you like it.
+              Soothing, playful ASMR; always here, always your own - made just
+              the way you like it.
             </p>
           </div>
           <div className="flex items-center gap-1 overflow-hidden pt-6">
@@ -297,7 +294,7 @@ function Landing() {
           </div>
         </div>
       </div>
-      <div className="flex w-full flex-col gap-[150px] bg-[#6EA7D1] bg-sky bg-cover bg-no-repeat px-4 py-[100px] font-sf md:py-[200px]">
+      {/* <div className="flex w-full flex-col gap-[150px] bg-[#6EA7D1] bg-sky bg-cover bg-no-repeat px-4 py-[100px] font-sf md:py-[200px]">
         <div className="flex flex-col items-center justify-center ">
           <h4 className="text-[20px] md:text-[30px]">Start messaging</h4>
           <h2 className="w-[300px] text-center text-[32px] font-bold md:w-[500px] md:text-[50px]">
@@ -356,8 +353,8 @@ function Landing() {
             improve your mood
           </Link>
         </div>
-      </div>
-      <div className="flex flex-col items-center justify-center py-[100px] md:py-[300px]">
+      </div> */}
+      <div className="flex flex-col items-center justify-center md:py-[100px]">
         <div className="flex  w-full flex-col items-center font-sf">
           <span className="text-[120px] font-bold leading-none lg:text-[400px]">
             Hush<span className="text-[50px] lg:text-[75px]">.</span>
