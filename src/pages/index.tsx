@@ -216,8 +216,8 @@ function Landing() {
               Unlock content from your favorite creators.
             </h2>
             <p className="text-[18px] leading-[22px] text-[#797979]">
-              Access exclusive ASMR content from the world’s best - but keep it
-              on the <span className="text-sf font-bold">Hush.</span>
+              Access exclusive ASMR content from the world&apos;s best - but
+              keep it on the <span className="text-sf font-bold">Hush.</span>
             </p>
           </div>
           <div className="flex items-center gap-1 overflow-hidden pt-6">
@@ -246,7 +246,7 @@ function Landing() {
             </h2>
             <p className="text-[18px] leading-[22px] text-[#797979]">
               Send tips, photos, videos and more for an intimate experience
-              that’s truly magical.
+              that&apos;s truly magical.
             </p>
           </div>
           <div className="overflow-none flex items-center gap-1 pt-6">
@@ -298,7 +298,7 @@ function Landing() {
         <div className="flex flex-col items-center justify-center ">
           <h4 className="text-[20px] md:text-[30px]">Start messaging</h4>
           <h2 className="w-[300px] text-center text-[32px] font-bold md:w-[500px] md:text-[50px]">
-            The world’s hottest ASMR girls
+            The world's hottest ASMR girls
           </h2>
           <p className="max-w-[75%] py-3 text-center text-[18px] font-medium md:max-w-[35%] md:text-[22px]">
             Explore their creative expressions and find your perfect relaxation
@@ -379,6 +379,13 @@ function Landing() {
           </li>
           <Link href={"/terms-of-service"}>Terms of Service</Link>
           <Link href={"/privacy-policy"}>Privacy Policy</Link>
+          <Link
+            href="https://getnycreservations.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            NYC Restaurant Reservations
+          </Link>
           <span className="m-auto w-fit pt-5 font-mono font-medium text-grey">
             Hush ASMR © 2024
           </span>
